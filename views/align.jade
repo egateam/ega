@@ -1,0 +1,25 @@
+extends layout
+block pageContent
+    .wrapper
+         form.form-align(class="form-horizontal", method="post", action="/align", id="alignForm")
+             div.form-group
+                 label(for="alignName" class="control-label col-xs-4") Name this alignment
+                 div.col-xs-8
+                     input(class="form-control", type="text", id="alignName")
+             div.form-group
+                 label(for="targetSeq" class="control-label col-xs-4") Select one sequence as target
+                 div.col-xs-8
+                     select(class="form-control", id="targetSeq")
+                         if (files.length === 0)
+                             option No files.
+                         each file, index in files
+                             option= file.name
+             div.form-group
+                 label(for="querySeq" class="control-label col-xs-4") Select one or more sequences as queries
+                 div.col-xs-8
+                     select(multiple, class="form-control", id="querySeq")
+                         if (files.length === 0)
+                             option No files.
+                         each file, index in files
+                             option= file.name
+             input(class="btn btn-lg btn-primary btn-block" type="submit", value="Begin aligning")

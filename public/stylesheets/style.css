@@ -1,0 +1,79 @@
+body {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3em;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #00B7FF;
+}
+
+.wrapper {
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+/*login form*/
+.form-signin {
+    max-width: 26em;
+    padding: 1em 2em 2em;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, .1);
+}
+
+input[type="text"] {
+    margin-bottom: -1px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+input[type="password"] {
+    margin-bottom: 20px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+/*upload form*/
+.form-fileUpload {
+    max-width: 26em;
+    padding: 1em 2em 2em;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, .1);
+}
+
+/*file list*/
+.list-files {
+    max-width: 40em;
+    margin: 0 auto;
+}
+
+.list-group-item div {
+    float: left
+}
+
+.list-group-item {
+    height: 3em;
+    width: 100%;
+    clear: both
+}
+
+.list-group-item .name {
+    width: 30em
+}
+
+.list-group-item .action {
+    width: 3em;
+    float: right
+}
+
+/*align form*/
+.form-align {
+    max-width: 50em;
+    padding: 1em 2em 2em;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, .1);
+}

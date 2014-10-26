@@ -1,0 +1,12 @@
+# packages installed by npm
+node_modules
+
+# uploaded files
+upload
+
+# webstorm project files
+.idea
+
+# put any other files you don't want to check in here,
+# such as .DS_Store (OSX), *.bak, etc.
+*.log

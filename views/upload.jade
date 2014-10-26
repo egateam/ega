@@ -1,0 +1,24 @@
+extends layout
+block pageContent
+    .wrapper
+        form.form-fileUpload(method="post", action="/upload", enctype="multipart/form-data", id="fileUploadForm")
+            label(for="payload") Select a file to upload: <br/> (single file size limit: 20MB)
+            input(class="btn btn-lg btn-block", id="payload", type="file", name="myFile", accept="*")
+            input(class="btn btn-lg btn-primary btn-block" type="submit", value="Upload")
+    .wrapper
+        ul.list-files(class="list-group")
+            h3 Your files:
+            if (files.length === 0)
+                li(class="list-group-item")
+                    | No files.
+            each file, index in files
+                li(class="list-group-item")
+                    .num
+                        span= index + 1
+                            | .&nbsp;
+                    .name
+                        span= file.name
+                    .action
+                        form(action='/upload/#{file._id}', method='post')
+                            input(type='hidden', value=file._id.toString(), name='id')
+                            input(type='submit', class='btn btn-danger btn-xs file-delete', value='delete')
