@@ -1,5 +1,5 @@
 doctype html
-html
+html(lang="en")
     head
         title= title
         //indicate that our site is mobile optimized
@@ -10,6 +10,7 @@ html
         //on our web server and will be delivered faster to the client than our own server.
         link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap-theme.min.css')
         link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css')
+        link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/css/bootstrap-select.min.css')
     body
         block navBar
             nav(class='navbar navbar-default', role='navigation')
@@ -37,10 +38,11 @@ html
         script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js')
         script(src='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js')
         script(src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.1.47/jquery.form-validator.min.js")
+        script(src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/js/bootstrap-select.min.js")
         script(type='text/javascript').
-            /* important to locate this script AFTER the closing form element, so form object is loaded in DOM before setup is called */
             $.validate({
                 modules : 'date, security, file'
             });
+            $('.selectpicker').selectpicker();
         div(class="row col-lg-12")
             p(style='height: auto; background-color: #f5f5f5; text-align: center; margin-top: 2em;') &copy;&nbsp; 2014 &nbsp; Site maintained by wangq.
