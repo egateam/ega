@@ -36,6 +36,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
+// multer uploading middleware
 app.use(multer({
     dest: './upload/',
     rename: function (fieldname, filename) {
