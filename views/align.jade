@@ -1,15 +1,15 @@
 extends layout
 block pageContent
     .wrapper
-         form.form-align(class="form-horizontal", method="post", action="/align", id="alignForm")
+         form.form-align(class="form-horizontal", method="post", action="/align", id="alignForm", role="form")
              div.form-group
                  label(for="alignName" class="control-label col-xs-4") Name this alignment
                  div.col-xs-8
-                     input(class="form-control", type="text", id="alignName")
+                     input(class="form-control", type="text", id="alignName", name="alignName", data-validation="length alphanumeric", data-validation-length="min4")
              div.form-group
                  label(for="targetSeq" class="control-label col-xs-4") Select one sequence as target
                  div.col-xs-8
-                     select(class="form-control", id="targetSeq")
+                     select(class="form-control", id="targetSeq", name="targetSeq")
                          if (files.length === 0)
                              option No files.
                          each file, index in files
@@ -17,7 +17,7 @@ block pageContent
              div.form-group
                  label(for="querySeq" class="control-label col-xs-4") Select one or more sequences as queries
                  div.col-xs-8
-                     select(multiple, class="form-control", id="querySeq")
+                     select(multiple, class="form-control", id="querySeq", name="querySeq", data-validation="required")
                          if (files.length === 0)
                              option No files.
                          each file, index in files

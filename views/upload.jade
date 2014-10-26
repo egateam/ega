@@ -3,7 +3,7 @@ block pageContent
     .wrapper
         form.form-fileUpload(method="post", action="/upload", enctype="multipart/form-data", id="fileUploadForm")
             label(for="payload") Select a file to upload: <br/> (single file size limit: 20MB)
-            input(class="btn btn-lg btn-block", id="payload", type="file", name="myFile", accept="*")
+            input(class="btn btn-lg btn-block", id="payload", type="file", name="myFile", accept="*", data-validation="required size", data-validation-max-size="20M" )
             input(class="btn btn-lg btn-primary btn-block" type="submit", value="Upload")
     .wrapper
         ul.list-files(class="list-group")
