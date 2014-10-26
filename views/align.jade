@@ -23,7 +23,11 @@ block pageContent
                          each file, index in files
                              option= file.name
              div.form-group
-                 label(class="control-label col-xs-4") Select a realignment method
+                 label(for="alignLength" class="control-label col-xs-4") Minimum align fragment legnth (we recommend a value larger than 100)
+                 div.col-xs-8
+                     input(class="form-control", type="text", id="alignLength", name="alignLength", data-validation="number", value=1000)
+             div.form-group
+                 label(class="control-label col-xs-4") Select a realigning method
                  div.col-xs-8
                      div(class="btn-group", data-toggle="buttons")
                          label(class="btn btn-default active") MAFFT

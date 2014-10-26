@@ -17,7 +17,7 @@ router.get('/', function (req, res) {
 
 router.post('/', function (req, res, next) {
     if (req.files) {
-        console.log(util.inspect(req.files));
+        //console.log(util.inspect(req.files));
         if (req.files.myFile.size === 0) {
             return next(new Error("Hey, first would you select a file?"));
         }

@@ -15,4 +15,9 @@ router.get('/', function (req, res) {
     });
 });
 
+router.post('/', function (req, res, next) {
+    console.log(util.inspect(req.body));
+    res.redirect('/align');
+});
+
 module.exports = router;
