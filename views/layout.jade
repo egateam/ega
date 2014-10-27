@@ -48,14 +48,17 @@ html(lang="en")
             // flash message
             .container
                 if messages.error
-                    .alert.alert-danger
-                        div= messages.error
+                    .alert.alert-dismissible.alert-danger
+                        button(type="button" class="close" data-dismiss="alert" aria-hidden="true") &times;
+                        p= messages.error
                 if messages.info
-                    .alert.alert-info
-                        div= messages.info
+                    .alert.alert-dismissible.alert-info
+                        button(type="button" class="close" data-dismiss="alert" aria-hidden="true") &times;
+                        p= messages.info
                 if messages.success
-                    .alert.alert-success
-                        div= messages.success
+                    .alert.alert-dismissible.alert-success
+                        button(type="button" class="close" data-dismiss="alert" aria-hidden="true") &times;
+                        p= messages.success
             //These are populated by extension views
             block content
         // footer was push down
