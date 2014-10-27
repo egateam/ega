@@ -7,7 +7,8 @@ var favicon = require('serve-favicon'),
     cookieParser = require('cookie-parser'),
     fs = require("fs"),
     path = require('path'),
-    multer = require("multer")
+    multer = require("multer"),
+    flash = require('express-flash')
     ;
 
 // auth related middleware
@@ -58,16 +59,9 @@ app.use(session({
     saveUninitialized: true,
     secret: settings.main.secret
 }));
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
-
-// if there's a flash message, transfer
-// it to the context, then clear it
-app.use(function (req, res, next) {
-    res.locals.flash = req.session.flash;
-    delete req.session.flash;
-    next();
-});
 
 // multer uploading middleware
 app.use(multer({
@@ -273,10 +267,7 @@ app.post('/forgot', function (req, res, next) {
                 if (error) {
                     console.log(error);
                 } else {
-                    req.session.flash = {
-                        type: 'warning',
-                        message: 'An e-mail has been sent to ' + user.email + ' with further instructions.'
-                    };
+                    req.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
                     console.log("Message sent: " + response.message);
                 }
                 done(error, 'done');
@@ -291,10 +282,7 @@ app.post('/forgot', function (req, res, next) {
 app.get('/reset/:token', function (req, res) {
     User.findOne({resetPasswordToken: req.params.token, resetPasswordExpires: {$gt: Date.now()}}, function (err, user) {
         if (!user) {
-            req.session.flash = {
-                type: 'warning',
-                message: 'Password reset token is invalid or has expired.'
-            };
+            req.flash('error', 'Password reset token is invalid or has expired.');
             return res.redirect('/forgot');
         }
         res.render('reset', {
@@ -311,10 +299,7 @@ app.post('/reset/:token', function (req, res, next) {
                 resetPasswordExpires: {$gt: Date.now()}
             }, function (error, user) {
                 if (!user) {
-                    req.session.flash = {
-                        type: 'warning',
-                        message: 'Password reset token is invalid or has expired.'
-                    };
+                    req.flash('error', 'Password reset token is invalid or has expired.');
                     return res.redirect('back');
                 }
 
@@ -330,10 +315,7 @@ app.post('/reset/:token', function (req, res, next) {
             });
         },
         function (user, done) {
-            req.session.flash = {
-                type: 'success',
-                message: 'Success! Your password has been changed.'
-            };
+            req.flash('success', 'Success! Your password has been changed.');
             done(null, 'done');
         }
     ], function (error) {

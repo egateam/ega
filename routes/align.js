@@ -16,10 +16,7 @@ router.get('/', function (req, res) {
 
 router.post('/', function (req, res, next) {
     console.log(util.inspect(req.body));
-    req.session.flash = {
-        type: 'info',
-        message: "Start aligning with your parameters: " + JSON.stringify(req.body)
-    };
+    req.flash('info', "Start aligning with your parameters: " + JSON.stringify(req.body));
     res.redirect(303, '/process');
 });
 
