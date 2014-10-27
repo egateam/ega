@@ -8,6 +8,7 @@ router.get('/', function (req, res) {
         res.render('align', {
             files: files || [],
             title: 'EGA',
+            user: req.user,
             id: 'align'
         });
     });

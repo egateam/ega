@@ -10,6 +10,7 @@ router.get('/', function (req, res) {
         res.render('upload', {
             files: files || [],
             title: 'EGA',
+            user: req.user,
             id: 'upload'
         });
     });

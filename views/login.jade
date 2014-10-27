@@ -1,9 +1,13 @@
 extends layout
 block content
     div.wrapper
-        form.form-signin(method="post", id="loginForm")
-            h2.form-signin-heading Please login
-            input(class="form-control", id="username", type="text", name="User", placeholder="Enter your e-mail")
-            input(class="form-control", id="password", type="password", name="Password", placeholder="Password")
-            input(class="btn btn-lg btn-primary btn-block" type="submit", value="Log In")
-
+        form.form-login(method="post", id="loginForm")
+            legend Login
+            .form-group
+                label(for='username') Username
+                input.form-control(type='text', name='username', autofocus)
+            .form-group
+                label(for='password') Password
+                input.form-control(type='password', name='password')
+            button.btn.btn-primary(type='submit') Login
+            a.btn.btn-link(href='/forgot') Forgot Password?
