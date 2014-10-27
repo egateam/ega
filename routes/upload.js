@@ -23,7 +23,11 @@ router.post('/', function (req, res, next) {
         }
         fs.exists(req.files.myFile.path, function (exists) {
             if (exists) {
-                res.redirect('/upload');
+                req.session.flash = {
+                    type: 'success',
+                    message: '[' + req.files.myFile.name + '] has been uploaded successfully.'
+                };
+                res.redirect(303, '/upload');
             } else {
                 res.end("Well, please check your file.");
             }
@@ -34,7 +38,7 @@ router.post('/', function (req, res, next) {
 router.post('/:file_id', function (req, res, next) {
     req.db.files.findById(req.params.file_id, function (error, file) {
         if (error) return next(error);
-        if (!file) return next(new Error('Task is not found.'));
+        if (!file) return next(new Error('File is not found.'));
         req.db.files.removeById(file._id, function (error, count) {
             if (error) return next(error);
             if (count !== 1) return next(new Error('Something went wrong.'));
@@ -47,7 +51,12 @@ router.post('/:file_id', function (req, res, next) {
         else {
             console.info('File record %s does not exist in file system.', file.path);
         }
-        res.redirect('/upload');
+        req.session.flash = {
+            type: 'warning',
+            message:  '[' + file.name + '] has been deleted.'
+        };
+        res.redirect(303, '/upload');
+        //res.render('upload', {message: req.flash('info')});
     });
 });
 

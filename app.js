@@ -4,9 +4,10 @@ var favicon = require('serve-favicon'),
     logger = require('morgan'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
+    fs = require("fs"),
     path = require('path'),
-    multer = require('multer'),
-    fs = require("fs")
+    multer = require("multer");
+    flash = require('connect-flash')
     ;
 
 // connect mongodb
@@ -39,6 +40,25 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+
+// session
+var credentials = require('./credentials.js');
+app.use(require('cookie-parser')(credentials.cookieSecret));
+app.use(require('express-session')({
+    cookie: {maxAge: 60000},
+    resave: true,
+    saveUninitialized: true,
+    secret: credentials.cookieSecret
+}));
+app.use(flash());
+
+// if there's a flash message, transfer
+// it to the context, then clear it
+app.use(function(req, res, next){
+    res.locals.flash = req.session.flash;
+    delete req.session.flash;
+    next();
+});
 
 // multer uploading middleware
 app.use(multer({

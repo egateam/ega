@@ -37,6 +37,11 @@ html(lang="en")
             //These are populated by extension views
             block pageTitle
             block pageContent
+            // alert type: warning error success info
+            -if(flash)
+                div(class="alert alert-dismissible alert-" + flash.type)
+                    button(type="button" class="close" data-dismiss="alert" aria-hidden="true") &times;
+                    p= flash.message
         // footer was push down
         div(id="footer")
             .container
