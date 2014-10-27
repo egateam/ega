@@ -1,5 +1,5 @@
 extends layout
-block pageContent
+block content
     .wrapper
          form.form-align(class="form-horizontal", method="post", action="/align", id="alignForm", role="form")
              div.form-group
@@ -37,3 +37,5 @@ block pageContent
                          label(class="btn btn-default") NONE
                              input(type="radio", name="reAlignmentMethod", id="reAlignmentMethod", value="NONE")
              input(class="btn btn-lg btn-primary btn-block" type="submit", value="Begin aligning")
+    .wrapper
+         div.col-xs-8

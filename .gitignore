@@ -11,4 +11,4 @@ upload
 # such as .DS_Store (OSX), *.bak, etc.
 *.log
 *.bak
-credentials.js
+settings.js

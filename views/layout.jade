@@ -35,8 +35,7 @@ html(lang="en")
                                             li
                                                 a(href='#{key}') #{val}
             //These are populated by extension views
-            block pageTitle
-            block pageContent
+            block content
             // alert type: warning error success info
             -if(flash)
                 div(class="alert alert-dismissible alert-" + flash.type)

@@ -6,8 +6,7 @@ var favicon = require('serve-favicon'),
     cookieParser = require('cookie-parser'),
     fs = require("fs"),
     path = require('path'),
-    multer = require("multer");
-    flash = require('connect-flash')
+    multer = require("multer")
     ;
 
 // connect mongodb
@@ -42,15 +41,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 // session
-var credentials = require('./credentials.js');
-app.use(require('cookie-parser')(credentials.cookieSecret));
+var settings = require('./settings');
+app.use(require('cookie-parser')(settings.cookie.secret));
 app.use(require('express-session')({
     cookie: {maxAge: 60000},
     resave: true,
     saveUninitialized: true,
-    secret: credentials.cookieSecret
+    secret: settings.cookie.secret
 }));
-app.use(flash());
 
 // if there's a flash message, transfer
 // it to the context, then clear it
