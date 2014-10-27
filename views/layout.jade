@@ -15,18 +15,18 @@ html(lang="en")
         // Wrap all page content here
         div(id="wrap")
             block navBar
-                nav(class='navbar navbar-default', role='navigation')
-                    .container-fluid
-                        .navbar-header
-                            button(class='navbar-toggle', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
-                                span.sronly
-                                span.icon-bar
-                                span.icon-bar
-                                span.icon-bar
-                            a(class='navbar-brand', href='/#') Home
-                        #bs-example-navbar-collapse-1(class='collapse navbar-collapse')
-                            ul(class='nav navbar-nav')
-                                - var obj = { 'upload':'Upload', 'align':'Align', 'process':'Process', 'about':'About', 'login':'Login' }
+                div(class="navbar navbar-default navbar-static-top" role="navigation")
+                    div(class="container")
+                        div(class="navbar-header")
+                            button(type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse")
+                                span(class="sr-only") Toggle navigation
+                                span(class="icon-bar")
+                                span(class="icon-bar")
+                                span(class="icon-bar")
+                            a(class="navbar-brand" href="/") Home
+                        div(class="navbar-collapse collapse")
+                            ul(class="nav navbar-nav")
+                                - var obj = { 'upload':'Upload', 'align':'Align', 'process':'Process', 'about':'About'}
                                     - each val, key in obj
                                         - if (id == key)
                                             li.active
@@ -34,6 +34,17 @@ html(lang="en")
                                         - else
                                             li
                                                 a(href='#{key}') #{val}
+                            ul(class="nav navbar-nav navbar-right")
+                                if user
+                                    li.active
+                                        a(class="navbar-brand", href='/#')= 'Hi,' + user.username
+                                    li
+                                        a(href='/logout') Logout
+                                else
+                                    li
+                                        a(href='/login') Login
+                                    li
+                                        a(href='/signup') Signup
             //These are populated by extension views
             block content
             // alert type: warning error success info
