@@ -4,10 +4,10 @@ block content
         form.form-reset(method="post", id="resetForm")
             legend Reset Password
             .form-group
-                label(for='password') New Password
-                input.form-control(type='password', name='password', value='', placeholder='New password', autofocus=true)
+                label(for='password_confirmation') Password
+                input.form-control(type='password', name='password_confirmation', value='',data-validation="length", data-validation-length="min6", autofocus)
             .form-group
-                label(for='confirm') Confirm Password
-                input.form-control(type='password', name='confirm', value='', placeholder='Confirm password')
+                label(for='password') Confirm Password
+                input.form-control(type='password', name='password', value='',data-validation="confirmation", data-validation-length="min6")
             .form-group
                 button.btn.btn-primary(type='submit') Update Password
