@@ -9,15 +9,19 @@ var favicon = require('serve-favicon'),
     fs = require("fs")
     ;
 
+// connect mongodb
 var mongoskin = require('mongoskin');
 var db = mongoskin.db('mongodb://localhost:27017/ega?auto_reconnect', {safe: true});
 var app = express();
 
+// route section
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var upload = require('./routes/upload');
 var align = require('./routes/align');
+var process = require('./routes/process');
 
+// store db to req so every routes can use it
 app.use(function (req, res, next) {
     req.db = {};
     req.db.files = db.collection('files');
@@ -52,19 +56,27 @@ app.use(multer({
     onFileUploadComplete: function (file) {
         if (!file.truncated) {
             file.realpath = fs.realpathSync(file.path);
-            db.collection('files').save(file, function (error, file) {
+            db.collection('files').findOne({"name": file.name}, function (error, result) {
                 if (error) return next(error);
-                if (!file) return next(new Error('Failed to save.'));
-                console.info('Added %s with id=%s', file.name, file._id);
+                if (result) {
+                    console.log(file.name + ' already exists!');
+                }
+                else {
+                    db.collection('files').save(file, function (error, file) {
+                        if (error) return next(error);
+                        if (!file) return next(new Error('Failed to save.'));
+                        console.info('Added %s with id=%s', file.name, file._id);
+                    });
+                    console.log(file.fieldname + ' uploaded to  ' + file.path);
+                }
             });
-            console.log(file.fieldname + ' uploaded to  ' + file.path);
         }
         else {
             console.log(file.fieldname + ' is truncated');
         }
     },
     onFileSizeLimit: function (file) {
-        console.log('Failed: ', file.originalname);
+        console.log('File exceeds size limit: ', file.originalname);
         fs.unlink('./' + file.path); // delete the partially written file
     }
 }));
@@ -73,6 +85,7 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/upload', upload);
 app.use('/align', align);
+app.use('/process', process);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
