@@ -34,7 +34,7 @@ a {
     margin: 1em 0;
 }
 
-/*login form*/
+/* login form */
 .form-login, .form-signup, .form-reset, .form-forgot {
     max-width: 26em;
     padding: 1em 2em 2em;
@@ -55,7 +55,7 @@ input[type="password"] {
     border-top-right-radius: 0;
 }
 
-/*upload form*/
+/* upload form */
 .form-fileUpload {
     max-width: 26em;
     padding: 1em 2em 2em;
@@ -64,7 +64,7 @@ input[type="password"] {
     border: 1px solid rgba(0, 0, 0, .1);
 }
 
-/*file list*/
+/* file list */
 .list-files {
     max-width: 40em;
     margin: 0 auto;
@@ -89,7 +89,7 @@ input[type="password"] {
     float: right
 }
 
-/*align form*/
+/* align form */
 .form-align {
     max-width: 50em;
     padding: 1em 2em 2em;
