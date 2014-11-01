@@ -176,14 +176,20 @@ passport.deserializeUser(function (id, done) {
     });
 });
 
+app.get('/login', function (req, res) {
+    res.render('login', {title: 'EGA', user: req.user, id: 'login'});
+});
+
 app.post('/login', function (req, res, next) {
     passport.authenticate('local', function (err, user, info) {
         if (err) return next(err)
         if (!user) {
+            req.flash('error', 'Username and/or Password Not Recognized.');
             return res.redirect('/login')
         }
         req.logIn(user, function (err) {
             if (err) return next(err);
+            req.flash('success', 'Hi there! ' + user.username + ', welcome aboard.');
             return res.redirect('/');
         });
     })(req, res, next);
