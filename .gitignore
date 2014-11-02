@@ -11,4 +11,6 @@ upload
 # such as .DS_Store (OSX), *.bak, etc.
 *.log
 *.bak
+
+# keep secret file secret
 settings.js
