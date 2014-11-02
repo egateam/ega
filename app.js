@@ -14,8 +14,6 @@ var favicon = require('serve-favicon'),
 // auth related middleware
 var session = require('express-session'),
     mongoose = require('mongoose'),
-    nodemailer = require('nodemailer'),
-    smtpTransport = require('nodemailer-smtp-transport'),
     passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
     bcrypt = require('bcrypt-nodejs'),
@@ -40,6 +38,9 @@ app.use(function (req, res, next) {
 })
 app.locals.appname = 'EGA: Easy Genome Aligner'
 app.locals.moment = require('moment');
+
+// mailgun mail service
+var mailgun = require('mailgun-js')({apiKey: settings.mailgun.api_key, domain: settings.mailgun.domain});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -250,31 +251,23 @@ app.post('/forgot', function (req, res, next) {
             });
         },
         function (token, user, done) {
-            var transporter = nodemailer.createTransport(smtpTransport({
-                host: settings.sendmail.host,
-                auth: {
-                    user: settings.sendmail.user,
-                    pass: settings.sendmail.pass
-                },
-                secure: false,
-                tls: {rejectUnauthorized: false},
-                debug: true
-            }));
-            var mailOptions = {
+            var data = {
+                from: settings.mailgun.from_who,
                 to: user.email,
-                from: 'noreply passwordreset@demo.com',
                 subject: 'EGA Password Reset',
                 text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
                 'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
                 'http://' + req.headers.host + '/reset/' + token + '\n\n' +
                 'If you did not request this, please ignore this email and your password will remain unchanged.\n'
             };
-            transporter.sendMail(mailOptions, function (error, response) {
+
+            mailgun.messages().send(data, function (error, body) {
                 if (error) {
                     console.log(error);
-                } else {
+                }
+                else {
                     req.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
-                    console.log("Message sent: " + response.message);
+                    console.log("Message sent: " + body);
                 }
                 done(error, 'done');
             });
