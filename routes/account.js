@@ -1,4 +1,5 @@
 var async = require('async');
+var util = require("util");
 var crypto = require('crypto');
 var passport = require('passport');
 var User = require('../models/User');
