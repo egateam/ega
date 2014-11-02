@@ -71,8 +71,8 @@ exports.postSignup = function (req, res, next) {
         password: req.body.password
     });
 
-    User.findOne({username: req.body.username}, function (err, existingUser) {
-        if (existingUser) {
+    User.findOne({username: req.body.username}, function (err, existing) {
+        if (existing) {
             req.flash('errors', 'Account with that username address already exists.');
             return res.redirect('/signup');
         }

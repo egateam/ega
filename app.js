@@ -1,6 +1,6 @@
 var express = require('express');
 
-// basic middleware
+// basic middlewares
 var favicon = require('serve-favicon'),
     logger = require('morgan'),
     bodyParser = require('body-parser'),
@@ -11,14 +11,10 @@ var favicon = require('serve-favicon'),
     flash = require('express-flash')
     ;
 
-// auth related middleware
+// auth related middlewares
 var session = require('express-session'),
     mongoose = require('mongoose'),
     passport = require('passport'),
-    LocalStrategy = require('passport-local').Strategy,
-    bcrypt = require('bcrypt-nodejs'),
-    async = require('async'),
-    crypto = require('crypto'),
     expressValidator = require('express-validator')
     ;
 
@@ -27,16 +23,6 @@ var app = express();
 var settings = require('./settings');
 app.set('port', settings.main.port);
 
-// connect mongodb
-var mongoskin = require('mongoskin');
-var db = mongoskin.db('mongodb://localhost:27017/ega?auto_reconnect', {safe: true});
-
-// store db to req so every routes can use it
-app.use(function (req, res, next) {
-    req.db = {};
-    req.db.files = db.collection('files');
-    next();
-})
 app.locals.appname = 'EGA: Easy Genome Aligner'
 app.locals.moment = require('moment');
 
@@ -63,6 +49,9 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
+var passportConf = require('./models/passport');
+var File = require('./models/File');
+
 // multer uploading middleware
 app.use(multer({
     dest: './upload/',
@@ -79,16 +68,24 @@ app.use(multer({
     onFileUploadComplete: function (file) {
         if (!file.truncated) {
             file.realpath = fs.realpathSync(file.path);
-            db.collection('files').findOne({"name": file.name}, function (error, result) {
+            File.findOne({name: file.name}, function (error, existing) {
                 if (error) return next(error);
-                if (result) {
+                if (existing) {
                     console.log(file.name + ' already exists!');
                 }
                 else {
-                    db.collection('files').save(file, function (error, file) {
-                        if (error) return next(error);
-                        if (!file) return next(new Error('Failed to save.'));
-                        console.info('Added %s with id=%s', file.name, file._id);
+                    var fileRecord = new File({
+                        name: file.name,
+                        encoding: file.encoding,
+                        mimetype: file.mimetype,
+                        path: file.path,
+                        extension: file.extension,
+                        size: file.size,
+                        realpath: file.realpath
+                    });
+                    fileRecord.save(function (err) {
+                        if (err) return next(err);
+                        console.info('Added %s with id=%s', fileRecord.name, fileRecord._id);
                     });
                     console.log(file.fieldname + ' uploaded to  ' + file.path);
                 }
@@ -115,26 +112,22 @@ app.use('/upload', upload);
 app.use('/align', align);
 app.use('/process', process);
 
-// define models
-mongoose.connect('mongodb://localhost:27017/ega', {safe: true});
+// connect mongodb
+mongoose.connect('mongodb://localhost:27017/ega', {server: {auto_reconnect: true}});
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
 
-/**
- * API keys and Passport configuration.
- */
-var passportConf = require('./models/passport');
-
-var accountRouter = require('./routes/account');
-
-app.get('/login', accountRouter.getLogin);
-app.post('/login', accountRouter.postLogin);
-app.get('/logout', accountRouter.logout);
-app.get('/signup', accountRouter.getSignup);
-app.post('/signup', accountRouter.postSignup);
-app.get('/forgot', accountRouter.getForgot);
-app.post('/forgot', accountRouter.postForgot);
-app.get('/reset/:token', accountRouter.getReset);
-app.post('/reset/:token', accountRouter.postReset);
-
+// account related routers
+var accountController = require('./routes/account');
+app.get('/login', accountController.getLogin);
+app.post('/login', accountController.postLogin);
+app.get('/logout', accountController.logout);
+app.get('/signup', accountController.getSignup);
+app.post('/signup', accountController.postSignup);
+app.get('/forgot', accountController.getForgot);
+app.post('/forgot', accountController.postForgot);
+app.get('/reset/:token', accountController.getReset);
+app.post('/reset/:token', accountController.postReset);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

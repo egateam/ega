@@ -24,7 +24,6 @@
     "method-override": "^2.3.0",
     "moment": "^2.8.3",
     "mongoose": "^3.8.18",
-    "mongoskin": "^1.4.4",
     "morgan": "^1.4.1",
     "multer": "^0.1.6",
     "passport": "^0.2.1",
