@@ -18,7 +18,8 @@ var session = require('express-session'),
     LocalStrategy = require('passport-local').Strategy,
     bcrypt = require('bcrypt-nodejs'),
     async = require('async'),
-    crypto = require('crypto')
+    crypto = require('crypto'),
+    expressValidator = require('express-validator')
     ;
 
 // app
@@ -39,9 +40,6 @@ app.use(function (req, res, next) {
 app.locals.appname = 'EGA: Easy Genome Aligner'
 app.locals.moment = require('moment');
 
-// mailgun mail service
-var mailgun = require('mailgun-js')({apiKey: settings.mailgun.api_key, domain: settings.mailgun.domain});
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -51,6 +49,7 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(expressValidator());
 
 // session
 app.use(cookieParser(settings.main.secret));
@@ -119,208 +118,23 @@ app.use('/process', process);
 // define models
 mongoose.connect('mongodb://localhost:27017/ega', {safe: true});
 
-var userSchema = new mongoose.Schema({
-    username: {type: String, required: true, unique: true},
-    email: {type: String, required: true, unique: true},
-    password: {type: String, required: true},
-    resetPasswordToken: String,
-    resetPasswordExpires: Date
-});
+/**
+ * API keys and Passport configuration.
+ */
+var passportConf = require('./models/passport');
 
-userSchema.pre('save', function (next) {
-    var user = this;
-    var SALT_FACTOR = 5;
+var accountRouter = require('./routes/account');
 
-    if (!user.isModified('password')) return next();
+app.get('/login', accountRouter.getLogin);
+app.post('/login', accountRouter.postLogin);
+app.get('/logout', accountRouter.logout);
+app.get('/signup', accountRouter.getSignup);
+app.post('/signup', accountRouter.postSignup);
+app.get('/forgot', accountRouter.getForgot);
+app.post('/forgot', accountRouter.postForgot);
+app.get('/reset/:token', accountRouter.getReset);
+app.post('/reset/:token', accountRouter.postReset);
 
-    bcrypt.genSalt(SALT_FACTOR, function (err, salt) {
-        if (err) return next(err);
-
-        bcrypt.hash(user.password, salt, null, function (err, hash) {
-            if (err) return next(err);
-            user.password = hash;
-            next();
-        });
-    });
-});
-
-userSchema.methods.comparePassword = function (candidatePassword, cb) {
-    bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
-        if (err) return cb(err);
-        cb(null, isMatch);
-    });
-};
-
-var User = mongoose.model('User', userSchema);
-
-passport.use(new LocalStrategy(function (username, password, done) {
-    User.findOne({username: username}, function (err, user) {
-        if (err) return done(err);
-        if (!user) return done(null, false, {message: 'Incorrect username.'});
-        user.comparePassword(password, function (err, isMatch) {
-            if (isMatch) {
-                return done(null, user);
-            } else {
-                return done(null, false, {message: 'Incorrect password.'});
-            }
-        });
-    });
-}));
-
-passport.serializeUser(function (user, done) {
-    done(null, user.id);
-});
-
-passport.deserializeUser(function (id, done) {
-    User.findById(id, function (err, user) {
-        done(err, user);
-    });
-});
-
-app.get('/login', function (req, res) {
-    res.render('login', {title: 'EGA', user: req.user, id: 'login'});
-});
-
-app.post('/login', function (req, res, next) {
-    passport.authenticate('local', function (err, user, info) {
-        if (err) return next(err)
-        if (!user) {
-            req.flash('error', 'Username and/or Password Not Recognized.');
-            return res.redirect('/login')
-        }
-        req.logIn(user, function (err) {
-            if (err) return next(err);
-            req.flash('success', 'Hi there! ' + user.username + ', welcome aboard.');
-            return res.redirect('/');
-        });
-    })(req, res, next);
-});
-
-app.get('/signup', function (req, res) {
-    res.render('signup', {
-        user: req.user
-    });
-});
-
-app.post('/signup', function (req, res) {
-    var user = new User({
-        username: req.body.username,
-        email: req.body.email,
-        password: req.body.password
-    });
-
-    user.save(function (err) {
-        req.logIn(user, function (err) {
-            res.redirect('/');
-        });
-    });
-});
-
-app.get('/logout', function (req, res) {
-    req.logout();
-    res.redirect('/');
-});
-
-app.get('/forgot', function (req, res) {
-    res.render('forgot', {
-        user: req.user
-    });
-});
-
-app.post('/forgot', function (req, res, next) {
-    async.waterfall([
-        function (done) {
-            crypto.randomBytes(20, function (error, buf) {
-                var token = buf.toString('hex');
-                done(error, token);
-            });
-        },
-        function (token, done) {
-            User.findOne({email: req.body.email}, function (error, user) {
-                if (!user) {
-                    req.flash('error', 'No account with that email address exists.');
-                    return res.redirect('/forgot');
-                }
-
-                user.resetPasswordToken = token;
-                user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
-
-                user.save(function (error) {
-                    done(error, token, user);
-                });
-            });
-        },
-        function (token, user, done) {
-            var data = {
-                from: settings.mailgun.from_who,
-                to: user.email,
-                subject: 'EGA Password Reset',
-                text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-                'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-                'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-            };
-
-            mailgun.messages().send(data, function (error, body) {
-                if (error) {
-                    console.log(error);
-                }
-                else {
-                    req.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
-                    console.log("Message sent: " + body);
-                }
-                done(error, 'done');
-            });
-        }
-    ], function (error) {
-        if (error) return next(error);
-        res.redirect('/forgot');
-    });
-});
-
-app.get('/reset/:token', function (req, res) {
-    User.findOne({resetPasswordToken: req.params.token, resetPasswordExpires: {$gt: Date.now()}}, function (err, user) {
-        if (!user) {
-            req.flash('error', 'Password reset token is invalid or has expired.');
-            return res.redirect('/forgot');
-        }
-        res.render('reset', {
-            user: req.user
-        });
-    });
-});
-
-app.post('/reset/:token', function (req, res, next) {
-    async.waterfall([
-        function (done) {
-            User.findOne({
-                resetPasswordToken: req.params.token,
-                resetPasswordExpires: {$gt: Date.now()}
-            }, function (error, user) {
-                if (!user) {
-                    req.flash('error', 'Password reset token is invalid or has expired.');
-                    return res.redirect('back');
-                }
-
-                user.password = req.body.password;
-                user.resetPasswordToken = undefined;
-                user.resetPasswordExpires = undefined;
-
-                user.save(function (error) {
-                    req.logIn(user, function (error) {
-                        done(error, user);
-                    });
-                });
-            });
-        },
-        function (user, done) {
-            req.flash('success', 'Success! Your password has been changed.');
-            done(null, 'done');
-        }
-    ], function (error) {
-        res.redirect('/');
-    });
-});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
