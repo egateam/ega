@@ -1,18 +1,15 @@
 var express = require('express');
 
-// basic middlewares
+// middleware
 var favicon = require('serve-favicon'),
     logger = require('morgan'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
-    fs = require("fs"),
     path = require('path'),
     multer = require("multer"),
-    flash = require('express-flash')
-    ;
-
-// auth related middlewares
-var session = require('express-session'),
+    flash = require('express-flash'),
+    session = require('express-session'),
+    MongoStore = require('connect-mongo')(session),
     mongoose = require('mongoose'),
     passport = require('passport'),
     expressValidator = require('express-validator')
@@ -37,14 +34,22 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(expressValidator());
 
+// connect mongodb
+mongoose.connect('mongodb://localhost:27017/ega', {server: {auto_reconnect: true}});
+mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
+
 // session
 app.use(cookieParser(settings.main.secret));
 app.use(session({
     cookie: {maxAge: 6000000},
     resave: true,
     saveUninitialized: true,
+    store: new MongoStore({
+        db : mongoose.connection.db
+    }),
     secret: settings.main.secret
 }));
+
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
@@ -56,49 +61,14 @@ var File = require('./models/File');
 app.use(multer({
     dest: './upload/',
     rename: function (fieldname, filename) {
-        return filename.replace(/\W+/g, '_').toLowerCase();
+        return filename.replace(/\W/g, '_').toLowerCase();
     },
     limits: {
         fileSize: 20 * 1024 * 1024
     },
     onFileUploadStart: function (file) {
-        //TODO : apply security check : user auth, file size, number...
         console.log(file.fieldname + ' is starting ...');
     },
-    onFileUploadComplete: function (file) {
-        if (!file.truncated) {
-            file.realpath = fs.realpathSync(file.path);
-            File.findOne({name: file.name}, function (error, existing) {
-                if (error) return next(error);
-                if (existing) {
-                    console.log(file.name + ' already exists!');
-                }
-                else {
-                    var fileRecord = new File({
-                        name: file.name,
-                        encoding: file.encoding,
-                        mimetype: file.mimetype,
-                        path: file.path,
-                        extension: file.extension,
-                        size: file.size,
-                        realpath: file.realpath
-                    });
-                    fileRecord.save(function (err) {
-                        if (err) return next(err);
-                        console.info('Added %s with id=%s', fileRecord.name, fileRecord._id);
-                    });
-                    console.log(file.fieldname + ' uploaded to  ' + file.path);
-                }
-            });
-        }
-        else {
-            console.log(file.fieldname + ' is truncated');
-        }
-    },
-    onFileSizeLimit: function (file) {
-        console.log('File exceeds size limit: ', file.originalname);
-        fs.unlink('./' + file.path); // delete the partially written file
-    }
 }));
 
 // route section
@@ -108,14 +78,9 @@ var align = require('./routes/align');
 var process = require('./routes/process');
 
 app.use('/', routes);
-app.use('/upload', upload);
-app.use('/align', align);
-app.use('/process', process);
-
-// connect mongodb
-mongoose.connect('mongodb://localhost:27017/ega', {server: {auto_reconnect: true}});
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
+app.use('/upload', passportConf.isLoggedIn, upload);
+app.use('/align', passportConf.isLoggedIn, align);
+app.use('/process', passportConf.isLoggedIn, process);
 
 // account related routers
 var accountController = require('./routes/account');

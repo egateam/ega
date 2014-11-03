@@ -26,3 +26,14 @@ passport.deserializeUser(function (id, done) {
         done(err, user);
     });
 });
+
+// Login Required middleware.
+exports.isLoggedIn = function(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    else {
+        req.flash('error', "Only registered user can access this page. You can login with username: guest and password: password" );
+        res.redirect('/login');
+    }
+};
