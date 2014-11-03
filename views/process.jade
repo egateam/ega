@@ -1,4 +1,15 @@
 extends layout
 block content
+    .wrapper
+        h2 data
+        pre
+        script(type='text/javascript').
+            var data = !{string};
+            var jsonPretty = JSON.stringify(data, null, '    ');
+            alert(jsonPretty);
+            $("pre").text(jsonPretty);
+
+
+
 
 

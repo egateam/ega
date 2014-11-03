@@ -20,8 +20,10 @@ router.get('/', function (req, res, next) {
 
 router.post('/', function (req, res, next) {
     console.log(util.inspect(req.body));
-    req.flash('info', "Start aligning with your parameters: " + JSON.stringify(req.body));
-    res.redirect(303, '/process');
+
+    //http://stackoverflow.com/questions/19035373/redirecting-in-express-passing-some-context
+    var string = encodeURIComponent(JSON.stringify(req.body));
+    res.redirect(303, '/process/' + string);
 });
 
 module.exports = router;
