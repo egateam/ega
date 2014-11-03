@@ -70,7 +70,7 @@ router.post('/', function (req, res, next) {
                                     });
                                     fileRecord.save(function (error) {
                                         if (error) return next(error);
-                                        console.info('Added %s by username=', fileRecord.name, fileRecord.username);
+                                        console.info('Added %s by username=%s', fileRecord.name, fileRecord.username);
                                     });
                                     console.log('[%s] uploaded to [%s]', file.fieldname, newPath);
 
