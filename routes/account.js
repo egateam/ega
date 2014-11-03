@@ -71,15 +71,17 @@ exports.postSignup = function (req, res, next) {
         password: req.body.password
     });
 
-    User.findOne({username: req.body.username}, function (err, existing) {
+    User.findOne({$or : [{username: req.body.username}, {email: req.body.email} ]}, function (err, existing) {
         if (existing) {
-            req.flash('errors', 'Account with that username address already exists.');
+            console.log('Account with that username/email already exists.');
+            req.flash('error', 'Account with that username/email already exists.');
             return res.redirect('/signup');
         }
         user.save(function (err) {
             if (err) return next(err);
             req.logIn(user, function (err) {
                 if (err) return next(err);
+                req.flash('success', 'Hi, ' + user.username + ', welcome to EGA.');
                 res.redirect('/');
             });
         });
