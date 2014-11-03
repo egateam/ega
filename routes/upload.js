@@ -42,7 +42,7 @@ router.post('/', function (req, res, next) {
                 if (existing) {
                     console.log('[%s] already exists!', file.name);
                     fs.unlink('./' + file.path); // delete tmp file
-                    req.flash('error', '[%s] already exists!', file.name);
+                    req.flash('error', '<strong>[%s]</strong> already exists!', file.name);
                     res.redirect('/upload');
                 }
                 else {
@@ -76,7 +76,7 @@ router.post('/', function (req, res, next) {
 
                                     fs.exists(newPath, function (exists) {
                                         if (exists) {
-                                            req.flash('success', '[%s] has been uploaded successfully.', file.name);
+                                            req.flash('success', '<strong>[%s]</strong> has been uploaded successfully.', file.name);
                                             res.redirect('/upload');
                                         } else {
                                             res.end("Well, please check your file.");
@@ -115,7 +115,7 @@ router.post('/:file_id', function (req, res, next) {
         else {
             console.info('File record %s does not exist in file system.', file.path);
         }
-        req.flash('info', '[' + file.name + '] has been deleted.');
+        req.flash('info', '<strong>[%s]</strong> has been deleted.', file.name);
         res.redirect(303, '/upload');
     });
 });

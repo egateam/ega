@@ -33,7 +33,7 @@ exports.isLoggedIn = function(req, res, next) {
         return next();
     }
     else {
-        req.flash('error', "Only registered user can access this page. You can login with username: guest and password: password" );
+        req.flash('error', "Only registered user can access this page. You can login with username: <strong>guest</strong> and password: <strong>password</strong>." );
         res.redirect('/login');
     }
 };

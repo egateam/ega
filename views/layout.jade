@@ -12,6 +12,7 @@ html(lang="en")
         link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css')
         link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap-glyphicons.css')
         link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/css/bootstrap-select.min.css')
+
     body
         // Wrap all page content here
         div(id="wrap")
@@ -51,15 +52,15 @@ html(lang="en")
                 if messages.error
                     .alert.alert-dismissible.alert-danger
                         button(type="button" class="close" data-dismiss="alert" aria-hidden="true") &times;
-                        span= messages.error
+                        div !{messages.error}
                 if messages.info
                     .alert.alert-dismissible.alert-info
                         button(type="button" class="close" data-dismiss="alert" aria-hidden="true") &times;
-                        span= messages.info
+                        div !{messages.info}
                 if messages.success
                     .alert.alert-dismissible.alert-success
                         button(type="button" class="close" data-dismiss="alert" aria-hidden="true") &times;
-                        span= messages.success
+                        div !{messages.success}
             // Main page contents. These are populated by extension views
             block content
         // footer was push down

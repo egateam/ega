@@ -32,7 +32,7 @@ exports.postLogin = function (req, res, next) {
         }
         req.logIn(user, function (err) {
             if (err) return next(err);
-            req.flash('success', 'Hi there! ' + user.username + ', welcome aboard.');
+            req.flash('success', 'Hi there, <strong>%s</strong>! welcome aboard.', user.username);
             return res.redirect('/');
         });
     })(req, res, next);
@@ -81,7 +81,7 @@ exports.postSignup = function (req, res, next) {
             if (err) return next(err);
             req.logIn(user, function (err) {
                 if (err) return next(err);
-                req.flash('success', 'Hi, ' + user.username + ', welcome to EGA.');
+                req.flash('success', 'Hi, <strong>%s</strong>, welcome to EGA.', user.username);
                 res.redirect('/');
             });
         });
@@ -142,7 +142,7 @@ exports.postForgot = function (req, res, next) {
                     console.log(error);
                 }
                 else {
-                    req.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
+                    req.flash('info', 'An e-mail has been sent to <strong>%s</strong> with further instructions.', user.email);
                     console.log("Message sent: " + body);
                 }
                 done(error, 'done');
@@ -200,7 +200,7 @@ exports.postReset = function (req, res, next) {
             });
         },
         function (user, done) {
-            req.flash('success', 'Success! Your password has been changed.');
+            req.flash('success', '<strong>Success!</strong> Your password has been changed.');
             done(null, 'done');
         }
     ], function (error) {
