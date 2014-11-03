@@ -28,12 +28,14 @@ passport.deserializeUser(function (id, done) {
 });
 
 // Login Required middleware.
-exports.isLoggedIn = function(req, res, next) {
+exports.isLoggedIn = function (req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     }
     else {
-        req.flash('error', "Only registered user can access this page. You can login with username: <strong>guest</strong> and password: <strong>password</strong>." );
+        req.flash('error', "Only registered user can access this page. "
+        + "You can login with username: <strong>guest</strong> and password: <strong>password</strong>. "
+        + "Just give it a try.");
         res.redirect('/login');
     }
 };

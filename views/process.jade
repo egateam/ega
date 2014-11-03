@@ -1,15 +1,18 @@
 extends layout
 block content
     .wrapper
-        h2 data
-        pre
+        h3 arguments
+        pre.lang-js.arguments
         script(type='text/javascript').
             var data = !{string};
             var jsonPretty = JSON.stringify(data, null, '    ');
-            alert(jsonPretty);
-            $("pre").text(jsonPretty);
-
-
-
-
+            $( "pre.arguments" ).text(jsonPretty);
+        script(type='text/javascript').
+            (function (jQuery) {
+                jQuery(document).ready(function () {
+                    $('pre').addClass('prettyprint');
+                    $('pre').addClass('linenums');
+                    prettyPrint();
+                });
+            }(jQuery))
 
