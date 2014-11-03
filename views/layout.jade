@@ -38,7 +38,7 @@ html(lang="en")
                             ul(class="nav navbar-nav navbar-right")
                                 if user
                                     li.active
-                                        a(class="navbar-brand", href='/#')= 'Hi,' + user.username
+                                        a(class="navbar-brand", href='/#')= 'Hi, ' + user.username
                                     li
                                         a(href='/logout') Logout
                                 else
@@ -51,15 +51,15 @@ html(lang="en")
                 if messages.error
                     .alert.alert-dismissible.alert-danger
                         button(type="button" class="close" data-dismiss="alert" aria-hidden="true") &times;
-                        p= messages.error
+                        span= messages.error
                 if messages.info
                     .alert.alert-dismissible.alert-info
                         button(type="button" class="close" data-dismiss="alert" aria-hidden="true") &times;
-                        p= messages.info
+                        span= messages.info
                 if messages.success
                     .alert.alert-dismissible.alert-success
                         button(type="button" class="close" data-dismiss="alert" aria-hidden="true") &times;
-                        p= messages.success
+                        span= messages.success
             // Main page contents. These are populated by extension views
             block content
         // footer was push down
