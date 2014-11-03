@@ -33,10 +33,10 @@ html(lang="en")
                                     - each val, key in obj
                                         - if (id == key)
                                             li.active
-                                                a(href='#{key}') #{val}
+                                                a(href='/#{key}') #{val}
                                         - else
                                             li
-                                                a(href='#{key}') #{val}
+                                                a(href='/#{key}') #{val}
                             ul(class="nav navbar-nav navbar-right")
                                 if user
                                     li.active
