@@ -3,12 +3,15 @@ var router = express.Router();
 var util = require("util");
 var File = require('../models/File');
 
-router.get('/', function (req, res) {
-    File.find().lean().exec(function (error, files) {
-        if (error) return next(error);
+router.get('/', function (req, res, next) {
+    File.find({username: req.user.username}).lean().exec(function (error, files) {
+        if (error) {
+            console.log(error);
+            return next(error);
+        }
         res.render('align', {
             files: files || [],
-            title: 'EGA',
+            title: 'EGA Align',
             user: req.user,
             id: 'align'
         });
