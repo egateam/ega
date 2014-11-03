@@ -54,30 +54,37 @@ router.post('/', function (req, res, next) {
                             fs.unlink(file.path, function () {
                                 if (error) return next(error);
 
-                                // save file record to mongo
-                                var fileRecord = new File({
-                                    name: file.name,
-                                    encoding: file.encoding,
-                                    mimetype: file.mimetype,
-                                    path: newPath,
-                                    extension: file.extension,
-                                    size: file.size,
-                                    username: username
-                                });
-                                fileRecord.save(function (error) {
+                                fs.realpath(newPath, function (error, resolvedPath) {
                                     if (error) return next(error);
-                                    console.info('Added %s by username=', fileRecord.name, fileRecord.username);
-                                });
-                                console.log('[%s] uploaded to [%s]', file.fieldname, newPath);
 
-                                fs.exists(newPath, function (exists) {
-                                    if (exists) {
-                                        req.flash('success', '[%s] has been uploaded successfully.', file.name);
-                                        res.redirect('/upload');
-                                    } else {
-                                        res.end("Well, please check your file.");
-                                    }
+                                    // save file record to mongo
+                                    var fileRecord = new File({
+                                        name: file.name,
+                                        encoding: file.encoding,
+                                        mimetype: file.mimetype,
+                                        path: newPath,
+                                        realpath: resolvedPath,
+                                        extension: file.extension,
+                                        size: file.size,
+                                        username: username
+                                    });
+                                    fileRecord.save(function (error) {
+                                        if (error) return next(error);
+                                        console.info('Added %s by username=', fileRecord.name, fileRecord.username);
+                                    });
+                                    console.log('[%s] uploaded to [%s]', file.fieldname, newPath);
+
+                                    fs.exists(newPath, function (exists) {
+                                        if (exists) {
+                                            req.flash('success', '[%s] has been uploaded successfully.', file.name);
+                                            res.redirect('/upload');
+                                        } else {
+                                            res.end("Well, please check your file.");
+                                        }
+                                    });
                                 });
+
+
                             });
                         });
                     });
