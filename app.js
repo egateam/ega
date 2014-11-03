@@ -41,7 +41,7 @@ mongoose.connection.on('error', console.error.bind(console, 'connection error:')
 // session
 app.use(cookieParser(settings.main.secret));
 app.use(session({
-    cookie: {maxAge: 6000000},
+    cookie: {maxAge: 600000000},
     resave: true,
     saveUninitialized: true,
     store: new MongoStore({
@@ -132,3 +132,5 @@ if (!module.parent) {
 }
 
 module.exports = app;
+
+//cloc.pl  . --exclude-dir=.git,.idea,node_modules,upload --by-file
