@@ -1,12 +1,21 @@
 extends layout
 block content
+    // arguments
+    .wrapper
+        if (string)
+            .panel.panel-default(id="argumentsPanel")
+                .panel-heading
+                    h3.panel-title arguments
+                .panel-body
+                    pre.prettyprint.linenums.lang-js(id="arguments")
 
     .wrapper
-        .panel.panel-info(id="argumentsPanel")
-            .panel-heading
-                h3.panel-title arguments
-            .panel-body
-                pre.lang-js(id="arguments")
+        if (jobs.length === 0)
+            p No jobs.
+        each item in jobs
+            p #{item}
+        pre(id='log')
+
     // http://stackoverflow.com/questions/8399547/how-to-add-line-numbers-to-all-lines-in-google-prettify
     style.
         .prettyprint ol.linenums > li {
@@ -15,13 +24,27 @@ block content
     script(type='text/javascript').
         var data = !{string};
         var jsonPretty = JSON.stringify(data, null, '    ');
-        $( "pre#arguments" ).text(jsonPretty);
+        $("pre#arguments").text(jsonPretty);
     script(type='text/javascript').
         (function (jQuery) {
             jQuery(document).ready(function () {
-                $('pre').addClass('prettyprint');
-                $('pre').addClass('linenums');
                 prettyPrint();
             });
         }(jQuery))
 
+    style.
+        #log {
+            background-color: #eee;
+            height: 300px;
+            width: 800px;
+            word-wrap: break-word;
+            overflow: auto;
+        }
+    script(type='text/javascript').
+        var socket = io.connect('http://localhost');
+        socket.on('news', function (data) {
+            $('#log').append(data.data);
+            //scroll the div to follow last line added!
+            var objDiv = document.getElementById("log");
+            objDiv.scrollTop = objDiv.scrollHeight;
+        });
