@@ -1,11 +1,17 @@
 extends layout
 block content
+
     .wrapper
         .panel.panel-info(id="argumentsPanel")
             .panel-heading
                 h3.panel-title arguments
             .panel-body
                 pre.lang-js(id="arguments")
+    // http://stackoverflow.com/questions/8399547/how-to-add-line-numbers-to-all-lines-in-google-prettify
+    style.
+        .prettyprint ol.linenums > li {
+            list-style-type: decimal;
+        }
     script(type='text/javascript').
         var data = !{string};
         var jsonPretty = JSON.stringify(data, null, '    ');

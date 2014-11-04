@@ -133,4 +133,4 @@ if (!module.parent) {
 
 module.exports = app;
 
-//cloc.pl  . --exclude-dir=.git,.idea,node_modules,upload --by-file
+// cloc.pl . --exclude-dir=.git,.idea,node_modules,upload --by-file

@@ -50,6 +50,7 @@ html(lang="en")
                                         a(href='/signup') Create Account
             // flash message
             .container
+                // use !{var} here so html mark can be properly displayed
                 if messages.error
                     .alert.alert-dismissible.alert-danger
                         button(type="button" class="close" data-dismiss="alert" aria-hidden="true") &times;
@@ -67,8 +68,8 @@ html(lang="en")
         // footer was push down
         div(id="footer")
             .container.text-center
-                p(class="text-muted credit") &copy;&nbsp; 2014 &nbsp; Site maintained by wangq.
-        script(src="http://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js")
+                p.text-muted.credit &copy;&nbsp; 2014 &nbsp; Site maintained by wangq.
+        script(src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js")
         script(src='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js')
         script(src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.1.47/jquery.form-validator.min.js")
         script(src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/js/bootstrap-select.min.js")
