@@ -8,19 +8,21 @@ block content
             input(class="btn btn-lg btn-primary btn-block" type="submit", value="Upload")
     // file list
     .wrapper
-        ul.list-group(id="filesList")
-            h3 Your files:
-            if (files.length === 0)
-                li(class="list-group-item")
-                    | No files.
-            each file, index in files
-                li(class="list-group-item")
-                    .num
-                        span= index + 1
-                            | .&nbsp;&nbsp;
-                    .name
-                        span= file.name
-                    .action
-                        form(action='/upload/#{file._id}', method='post')
-                            input(type='hidden', value=file._id.toString(), name='id')
-                            input(type='submit', class='btn btn-danger btn-xs file-delete', value='delete')
+        .panel.panel-default(id="filesList")
+            .panel-heading
+                h4 Your files
+            ul.list-group
+                if (files.length === 0)
+                    li(class="list-group-item")
+                        | No files.
+                each file, index in files
+                    li(class="list-group-item")
+                        .num
+                            span= index + 1
+                                | .&nbsp;&nbsp;
+                        .name
+                            span= file.name
+                        .action
+                            form(action='/upload/#{file._id}', method='post')
+                                input(type='hidden', value=file._id.toString(), name='id')
+                                input(type='submit', class='btn btn-danger btn-xs file-delete', value='delete')
