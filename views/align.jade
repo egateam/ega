@@ -1,34 +1,34 @@
 extends layout
 block content
     .wrapper
-         form.form-align(class="form-horizontal", method="post", action="/align", id="alignForm", role="form")
-             div.form-group
+         form.form-horizontal(method="post", action="/align", id="alignForm", role="form")
+             .form-group
                  label(for="alignName" class="control-label col-xs-4") Name this alignment
-                 div.col-xs-8
+                 .col-xs-8
                      input(class="form-control", type="text", id="alignName", name="alignName", data-validation="length alphanumeric", data-validation-length="min4")
-             div.form-group
+             .form-group
                  label(for="targetSeq" class="control-label col-xs-4") Select one sequence as target
-                 div.col-xs-8
+                 .col-xs-8
                      select(class="form-control selectpicker", id="targetSeq", name="targetSeq")
                          if (files.length === 0)
                              option No files.
                          each file, index in files
                              option= file.name
-             div.form-group
+             .form-group
                  label(for="querySeq" class="control-label col-xs-4") Select one or more sequences as queries
-                 div.col-xs-8
+                 .col-xs-8
                      select(multiple, class="form-control selectpicker", id="querySeq", name="querySeq", data-validation="required")
                          if (files.length === 0)
                              option No files.
                          each file, index in files
                              option= file.name
-             div.form-group
+             .form-group
                  label(for="alignLength" class="control-label col-xs-4") Minimum align fragment legnth (we recommend a value larger than 100)
-                 div.col-xs-8
+                 .col-xs-8
                      input(class="form-control", type="text", id="alignLength", name="alignLength", data-validation="number", value=1000)
-             div.form-group
+             .form-group
                  label(class="control-label col-xs-4") Select a realigning method
-                 div.col-xs-8
+                 .col-xs-8
                      div(class="btn-group", data-toggle="buttons")
                          label(class="btn btn-default active") MAFFT
                              input(type="radio", name="reAlignmentMethod", id="reAlignmentMethod", value="MAFFT", checked)

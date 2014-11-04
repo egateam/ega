@@ -1,15 +1,15 @@
 extends layout
 block content
     .wrapper
-        div.panel.panel-info
-            div.panel-heading
+        .panel.panel-info(id="argumentsPanel")
+            .panel-heading
                 h3.panel-title arguments
-            div.panel-body
-                pre.lang-js.arguments
+            .panel-body
+                pre.lang-js(id="arguments")
     script(type='text/javascript').
         var data = !{string};
         var jsonPretty = JSON.stringify(data, null, '    ');
-        $( "pre.arguments" ).text(jsonPretty);
+        $( "pre#arguments" ).text(jsonPretty);
     script(type='text/javascript').
         (function (jQuery) {
             jQuery(document).ready(function () {
