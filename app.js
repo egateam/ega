@@ -1,40 +1,23 @@
 var express = require('express');
 
 // middleware
-var favicon          = require('serve-favicon'),
-    logger           = require('morgan'),
-    bodyParser       = require('body-parser'),
-    cookieParser     = require('cookie-parser'),
-    path             = require('path'),
-    multer           = require("multer"),
-    flash            = require('express-flash'),
-    session          = require('express-session'),
-    MongoStore       = require('connect-mongo')(session),
-    mongoose         = require('mongoose'),
-    passport         = require('passport'),
-    expressValidator = require('express-validator')
+var favicon      = require('serve-favicon'),
+    logger       = require('morgan'),
+    bodyParser   = require('body-parser'),
+    cookieParser = require('cookie-parser'),
+    path         = require('path'),
+    multer       = require("multer"),
+    flash        = require('express-flash'),
+    session      = require('express-session'),
+    mongoose     = require('mongoose'),
+    passport     = require('passport')
     ;
+
+var RedisStore = require('connect-redis')(session);
 
 // app
 var app = express();
 var settings = require('./settings');
-
-// socket.io
-var http   = require('http'),
-    server = http.createServer(app),
-    io     = require('socket.io').listen(server);
-
-app.locals.appname = 'EGA: Easy Genome Aligner';
-app.locals.moment = require('moment');
-app.set('port', settings.main.port);
-app.set('io', io);
-app.set('server', server);
-
-// store io to req so every routes can use it
-app.use(function (req, res, next) {
-    req.io = io;
-    next();
-});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -45,20 +28,21 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(expressValidator());
-
-// connect mongodb
-mongoose.connect('mongodb://localhost:27017/ega', {server: {auto_reconnect: true}});
-mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
 
 // session
 app.use(cookieParser(settings.main.secret));
 app.use(session({
-    cookie:            {maxAge: 600000000},
+    cookie:            {
+        maxAge:   600000000,
+        httpOnly: false
+    },
     resave:            true,
     saveUninitialized: true,
-    store:             new MongoStore({
-        db: mongoose.connection.db
+    store:             new RedisStore({
+        host: 'localhost',
+        port: 6379,
+        db:   2
+        //pass: 'RedisPASS'
     }),
     secret:            settings.main.secret
 }));
@@ -66,6 +50,24 @@ app.use(session({
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
+
+// connect mongodb
+mongoose.connect('mongodb://localhost:27017/ega', {server: {auto_reconnect: true}});
+mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
+
+// socket.io
+var http   = require('http'),
+    server = http.createServer(app),
+    io     = require('socket.io').listen(server);
+
+var redis = require('socket.io-redis');
+io.adapter(redis({host: 'localhost', port: 6379}));
+
+app.locals.appname = 'EGA: Easy Genome Aligner';
+app.locals.moment = require('moment');
+app.set('port', settings.main.port);
+app.set('io', io);
+app.set('server', server);
 
 var passportConf = require('./models/passport');
 var File = require('./models/File');

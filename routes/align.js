@@ -31,33 +31,14 @@ router.post('/', function (req, res, next) {
     var job_id = req.user.username + '-' + req.body.alignName;
     console.log("Running job: [%s]", job_id);
 
-    var child;
-    if (req.session.hasOwnProperty('jobs')) {
-        if (req.session.jobs.hasOwnProperty(job_id)) {
-            console.log("Job is running: [%s]", job_id);
-        }
-        else {
-            console.log("Create job: [%s]", job_id);
-            child = spawn('ping', ['-n', '20', '127.0.0.1'], {
-                detached: true
-            });
-            req.session.jobs[job_id] = child;
-            console.log("Store job to session: [%s]", job_id);
-        }
-    }
-    else {
-        console.log("Create job: [%s]", job_id);
-        req.session.jobs = {};
-        child = spawn('ping', ['-n', '20', '127.0.0.1'], {
-            detached: true
-        });
-        req.session.jobs[job_id] = child;
-        console.log("Store job to session: [%s]", job_id);
-    }
+    // leave router early due to unknown reasons caused hanging after submit
+    res.redirect('/process');
 
-    console.log("Jobs [%s]", util.inspect(_.keys(req.session.jobs)));
+    var child = spawn('ping', ['-n', '50', '127.0.0.1'], {
+        detached: true
+    });
 
-    console.log("Watch job:[%s]", job_id);
+    console.log("Store job to session: [%s]", job_id);
 
     readline.createInterface({
         input:    child.stdout,
@@ -80,7 +61,6 @@ router.post('/', function (req, res, next) {
         req.app.get('io').emit('news', {data: "[Job: " + job_id + "] " + "*** closed\n"})
     });
 
-    //res.redirect('/process');
 });
 
 module.exports = router;

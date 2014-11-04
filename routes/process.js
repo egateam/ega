@@ -5,7 +5,7 @@ var util = require("util");
 var _ = require('lodash');
 
 router.get('/', function (req, res, next) {
-    console.log("Jobs [%s]", util.inspect(req.session.jobs));
+
     res.render('process', {title: 'EGA Prosess', user: req.user, id: 'process', jobs: _.keys(req.session.jobs)});
 });
 
