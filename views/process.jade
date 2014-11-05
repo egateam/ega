@@ -54,7 +54,7 @@ block content
 
     // for console
     script(type='text/javascript').
-        var socket = io.connect('http://localhost');
+        var socket = io.connect();
         socket.on('news', function (data) {
             $('#consoleLog').append(data.data);
             //scroll the div to follow last line added!
