@@ -103,3 +103,22 @@ input[type="password"] {
     max-width: 40em;
     margin: 0 auto;
 }
+
+/*console panel*/
+#consolePanel {
+    max-width: 60em;
+    margin: 0 auto;
+}
+
+#consoleLog {
+    background-color: #eee;
+    height: 300px;
+    word-wrap: break-word;
+    overflow: auto;
+}
+
+/* allJobs list */
+#allJobsList {
+    max-width: 40em;
+    margin: 0 auto;
+}

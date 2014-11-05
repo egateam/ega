@@ -70,7 +70,6 @@ app.set('io', io);
 app.set('server', server);
 
 var passportConf = require('./models/passport');
-var File = require('./models/File');
 
 // multer uploading middleware
 app.use(multer({
