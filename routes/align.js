@@ -84,7 +84,7 @@ router.post('/', function (req, res, next) {
                 input:    child.stdout,
                 terminal: false
             }).on('line', function (line) {
-                var str = "[Stdout: " + job_id + "] " + line + "\n";
+                var str = "[Stdout: " + req.body.alignName + "] " + line + "\n";
                 req.app.get('io').emit('news', {data: str})
             });
 
@@ -92,13 +92,13 @@ router.post('/', function (req, res, next) {
                 input:    child.stderr,
                 terminal: false
             }).on('line', function (line) {
-                var str = "[Stderr: " + job_id + "] " + line + "\n";
+                var str = "[Stderr: " + req.body.alignName + "] " + line + "\n";
                 req.app.get('io').emit('news', {data: str})
             });
 
             child.on('close', function () {
                 console.log('*** closed');
-                req.app.get('io').emit('news', {data: "[Job: " + job_id + "] " + "*** closed\n"})
+                req.app.get('io').emit('news', {data: "[Job: " + req.body.alignName + "] " + "*** closed\n"})
                 Job.findOne({
                     "job_id": job_id, status: "running"
                 }, function (error, job) {
@@ -113,9 +113,9 @@ router.post('/', function (req, res, next) {
                     job.save(function (error) {
                         if (error) return next(error);
                     });
-                    console.log('Job [%s] finished and recorded', job.jod_id);
+                    console.log('Job [%s] finished and recorded', job_id);
 
-                    req.flash('success', "Job <strong>[%s]</strong> finished and recorded!", job.jod_id);
+                    req.flash('success', "Job <strong>[%s]</strong> finished and recorded!", job_id);
                 });
             });
         }

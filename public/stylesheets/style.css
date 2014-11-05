@@ -106,13 +106,13 @@ input[type="password"] {
 
 /*console panel*/
 #consolePanel {
-    max-width: 60em;
+    max-width: 50em;
     margin: 0 auto;
 }
 
 #consoleLog {
     background-color: #eee;
-    height: 300px;
+    max-height: 300px;
     word-wrap: break-word;
     overflow: auto;
 }
