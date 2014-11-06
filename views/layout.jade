@@ -41,7 +41,7 @@ html(lang="en")
                             ul.nav.navbar-nav.navbar-right
                                 if user
                                     li.active
-                                        a.navbar-brand(href="/#")= "Hi, " + user.username
+                                        a(href="/#")= "Hi, " + user.username
                                     li
                                         a(href="/logout") Logout
                                 else
