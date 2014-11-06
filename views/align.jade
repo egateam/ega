@@ -1,15 +1,15 @@
 extends layout
 block content
     .wrapper
-         form.form-horizontal(method="post", action="/align", id="alignForm", role="form")
+         form.form-horizontal(method="post" action="/align" id="alignForm" role="form")
              .form-group
                  label.control-label.col-xs-4(for="alignName") Name this alignment
                  .col-xs-8
-                     input.form-control.input-tooltip(type="text", id="alignName", name="alignName", data-validation="length alphanumeric", data-validation-length="min4", data-toggle="tooltip", data-original-title="This name should be unique in your account")
+                     input.form-control(type="text" id="alignName" name="alignName" data-validation="length alphanumeric" data-validation-length="min4" data-toggle="tooltip" data-original-title="This name should be unique in your account.")
              .form-group
                  label.control-label.col-xs-4(for="targetSeq") Select one as target
                  .col-xs-8
-                     select.form-control.selectpicker(id="targetSeq", name="targetSeq")
+                     select.form-control.selectpicker(id="targetSeq" name="targetSeq" data-validation="required" data-toggle="tooltip" data-original-title="Most.")
                          if (files.length === 0)
                              option No files.
                          each file, index in files
@@ -17,7 +17,7 @@ block content
              .form-group
                  label.control-label.col-xs-4(for="querySeq") Select one or more as queries
                  .col-xs-8
-                     select.form-control.selectpicker(multiple, id="querySeq", name="querySeq", data-validation="required")
+                     select.form-control.selectpicker(multiple id="querySeq" name="querySeq" data-validation="required" data-toggle="tooltip" data-original-title="Most.")
                          if (files.length === 0)
                              option No files.
                          each file, index in files
@@ -25,18 +25,18 @@ block content
              .form-group
                  label.control-label.col-xs-4(for="alignLength") Minimum fragment legnth
                  .col-xs-8
-                     input.form-control.input-tooltip(type="text", id="alignLength", name="alignLength", value=1000, data-validation="number", data-toggle="tooltip", data-original-title="we recommend a value larger than 100 bp")
+                     input.form-control(type="text" id="alignLength" name="alignLength" value=1000, data-validation="number" data-toggle="tooltip" title="we recommend a value larger than 100 bp.")
              .form-group
                  label.control-label.col-xs-4 Select a realigning method
                  .col-xs-8
                      .btn-group(data-toggle="buttons")
-                         label(class="btn btn-default active") MAFFT
-                             input(type="radio", name="reAlignmentMethod", id="reAlignmentMethod", value="MAFFT", checked)
-                         label(class="btn btn-default") ClustalW
-                             input(type="radio", name="reAlignmentMethod", id="reAlignmentMethod", value="ClustalW")
-                         label(class="btn btn-default") NONE
-                             input(type="radio", name="reAlignmentMethod", id="reAlignmentMethod", value="NONE")
-             input(class="btn btn-lg btn-primary btn-block" type="submit", value="Begin aligning")
+                         label.btn.btn-default.active(data-toggle="tooltip" data-original-title="Recommended. Fast.") MAFFT
+                             input(type="radio" name="reAlignmentMethod" id="reAlignmentMethod" value="MAFFT" checked)
+                         label.btn.btn-default(data-toggle="tooltip" data-original-title="Slow but more accurate.") ClustalW
+                             input(type="radio" name="reAlignmentMethod" id="reAlignmentMethod" value="ClustalW")
+                         label.btn.btn-default(data-toggle="tooltip" data-original-title="Not recommended. Select this if you want a crude alignment.") NONE
+                             input(type="radio" name="reAlignmentMethod" id="reAlignmentMethod" value="NONE")
+             input(class="btn btn-lg btn-primary btn-block" type="submit" value="Begin aligning")
 
     // allJobs table
     .wrapper
@@ -87,20 +87,22 @@ block content
                                             | &nbsp;#{job.status}
                                     if (job.status === 'finished')
                                         td.cell-align
-                                            form(action='/align/download/#{job._id}', method='post')
-                                                input(type='hidden', value=job._id.toString(), name='id')
-                                                input(type='submit', class='btn btn-info btn-xs', value='download')
+                                            form(action='/align/download/#{job._id}' method='post')
+                                                input(type='hidden' value=job._id.toString(), name='id')
+                                                input(type='submit' class='btn btn-info btn-xs' value='download')
                                     else
                                         td
                                     td.cell-align
-                                        form(action='/align/delete/#{job._id}', method='post')
-                                            input(type='hidden', value=job._id.toString(), name='id')
-                                            input(type='submit', class='btn btn-danger btn-xs', value='delete')
+                                        form(action='/align/delete/#{job._id}' method='post')
+                                            input(type='hidden' value=job._id.toString(), name='id')
+                                            input(type='submit' class='btn btn-danger btn-xs' value='delete')
 
     // for tooltip
     script(type='text/javascript').
         $(document).ready(function () {
-            $(".input-tooltip").tooltip({
-                placement : 'bottom'
+            $('.selectpicker').selectpicker();
+
+            $("[data-toggle=tooltip]").tooltip({
+                placement: 'bottom'
             });
         });
