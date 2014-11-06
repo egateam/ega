@@ -19,17 +19,17 @@ html(lang="en")
         // Wrap all page content here
         div(id="wrap")
             block navBar
-                div(class="navbar navbar-default navbar-static-top" role="navigation")
-                    div(class="container")
-                        div(class="navbar-header")
-                            button(type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse")
+                .navbar.navbar-default.navbar-static-topdiv(role="navigation")
+                    .container
+                        .navbar-headerdiv
+                            button.navbar-toggle(type="button" data-toggle="collapse" data-target=".navbar-collapse")
                                 span(class="sr-only") Toggle navigation
                                 span(class="icon-bar")
                                 span(class="icon-bar")
                                 span(class="icon-bar")
-                            a(class="navbar-brand" href="/") Home
-                        div(class="navbar-collapse collapse")
-                            ul(class="nav navbar-nav")
+                            a.navbar-brand(href="/") Home
+                        .navbar-collapse.collapse
+                            ul.nav.navbar-nav
                                 - var obj = { 'upload':'Upload', 'align':'Align', 'process':'Process', 'about':'About'}
                                     - each val, key in obj
                                         - if (id == key)
@@ -38,10 +38,10 @@ html(lang="en")
                                         - else
                                             li
                                                 a(href='/#{key}') #{val}
-                            ul(class="nav navbar-nav navbar-right")
+                            ul.nav.navbar-nav.navbar-right
                                 if user
                                     li.active
-                                        a(class="navbar-brand", href='/#')= 'Hi, ' + user.username
+                                        a.navbar-brand(href='/#')= 'Hi, ' + user.username
                                     li
                                         a(href='/logout') Logout
                                 else
@@ -54,19 +54,19 @@ html(lang="en")
                 // use !{var} here so html mark can be properly displayed
                 if messages.error
                     .alert.alert-dismissible.alert-danger
-                        button(type="button" class="close" data-dismiss="alert" aria-hidden="true") &times;
+                        button.close(type="button" data-dismiss="alert" aria-hidden="true") &times;
                         div !{messages.error}
                 if messages.info
                     .alert.alert-dismissible.alert-info
-                        button(type="button" class="close" data-dismiss="alert" aria-hidden="true") &times;
+                        button.close(type="button" data-dismiss="alert" aria-hidden="true") &times;
                         div !{messages.info}
                 if messages.success
                     .alert.alert-dismissible.alert-success
-                        button(type="button" class="close" data-dismiss="alert" aria-hidden="true") &times;
+                        button.close(type="button" data-dismiss="alert" aria-hidden="true") &times;
                         div !{messages.success}
             // Main page contents. These are populated by extension views
             block content
-        // footer was push down
+        // push down footer
         div(id="footer")
             .container.text-center
                 p.text-muted.credit &copy;&nbsp; 2014 &nbsp; Site maintained by wangq.
@@ -76,7 +76,12 @@ html(lang="en")
         script(src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.1.47/jquery.form-validator.min.js")
         script(src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/js/bootstrap-select.min.js")
         script(type='text/javascript').
-            $.validate({
-                modules : 'date, security, file'
+            $(document).ready(function () {
+                $('.selectpicker').selectpicker();
+                $("[data-toggle=tooltip]").tooltip({
+                    placement: 'bottom'
+                });
+                $.validate({
+                    modules: 'date, security, file'
+                });
             });
-

@@ -2,17 +2,18 @@ extends layout
 block content
     // upload file form
     .wrapper
-        form.form-horizontal(method="post", action="/upload", enctype="multipart/form-data", id="fileUploadForm")
-            label(for="payload") Select a file to upload: <br/> (single file size limit: 20MB)
-            input(class="btn btn-lg btn-block", id="payload", type="file", name="myFile", accept="*", data-validation="required size", data-validation-max-size="20M" )
-            input(class="btn btn-lg btn-primary btn-block" type="submit", value="Upload")
+        form.form-horizontal(method="post" action="/upload" enctype="multipart/form-data" id="fileUploadForm")
+            label(for="payload" data-toggle="tooltip" data-original-title="single file size limit: 20MB")
+                | Select a file to upload:
+            input.btn.btn-block(id="payload" type="file" name="myFile" accept="*" data-validation="required size" data-validation-max-size="20M")
+            input.btn.btn-lg.btn-primary.btn-block(type="submit" value="Upload")
     // file list
     .wrapper
         .panel.panel-default(id="filesList")
             .panel-heading
                 h4 Your files
             if (files.length === 0)
-                li(class="list-group-item")
+                li.list-group-item
                     | No files.
             else
                 .table-responsive
@@ -32,4 +33,4 @@ block content
                                     td.cell-align
                                         form(action='/upload/#{file._id}', method='post')
                                             input(type='hidden', value=file._id.toString(), name='id')
-                                            input(type='submit', class='btn btn-danger btn-xs file-delete', value='delete')
+                                            input.btn.btn-danger.btn-xs(type='submit' value='delete')

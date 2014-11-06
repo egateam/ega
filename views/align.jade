@@ -3,29 +3,29 @@ block content
     .wrapper
          form.form-horizontal(method="post" action="/align" id="alignForm" role="form")
              .form-group
-                 label.control-label.col-xs-4(for="alignName") Name this alignment
+                 label.control-label.col-xs-4(for="alignName" data-toggle="tooltip" data-original-title="This name should be unique in your account.") Name this alignment
                  .col-xs-8
-                     input.form-control(type="text" id="alignName" name="alignName" data-validation="length alphanumeric" data-validation-length="min4" data-toggle="tooltip" data-original-title="This name should be unique in your account.")
+                     input.form-control(type="text" id="alignName" name="alignName" data-validation="length alphanumeric" data-validation-length="min4")
              .form-group
-                 label.control-label.col-xs-4(for="targetSeq") Select one as target
+                 label.control-label.col-xs-4(for="targetSeq" data-toggle="tooltip" data-original-title="Select the most reliable/accurate one.") Select one as target
                  .col-xs-8
-                     select.form-control.selectpicker(id="targetSeq" name="targetSeq" data-validation="required" data-toggle="tooltip" data-original-title="Most.")
+                     select.form-control.selectpicker(id="targetSeq" name="targetSeq" data-validation="required" )
                          if (files.length === 0)
                              option No files.
                          each file, index in files
                              option= file.name
              .form-group
-                 label.control-label.col-xs-4(for="querySeq") Select one or more as queries
+                 label.control-label.col-xs-4(for="querySeq" data-toggle="tooltip" data-original-title="Most.") Select one or more as queries
                  .col-xs-8
-                     select.form-control.selectpicker(multiple id="querySeq" name="querySeq" data-validation="required" data-toggle="tooltip" data-original-title="Most.")
+                     select.form-control.selectpicker(multiple id="querySeq" name="querySeq" data-validation="required")
                          if (files.length === 0)
                              option No files.
                          each file, index in files
                              option= file.name
              .form-group
-                 label.control-label.col-xs-4(for="alignLength") Minimum fragment legnth
+                 label.control-label.col-xs-4(for="alignLength" data-toggle="tooltip" title="we recommend a value larger than 100 bp.") Minimum fragment legnth
                  .col-xs-8
-                     input.form-control(type="text" id="alignLength" name="alignLength" value=1000, data-validation="number" data-toggle="tooltip" title="we recommend a value larger than 100 bp.")
+                     input.form-control(type="text" id="alignLength" name="alignLength" value=1000 data-validation="number")
              .form-group
                  label.control-label.col-xs-4 Select a realigning method
                  .col-xs-8
@@ -89,20 +89,11 @@ block content
                                         td.cell-align
                                             form(action='/align/download/#{job._id}' method='post')
                                                 input(type='hidden' value=job._id.toString(), name='id')
-                                                input(type='submit' class='btn btn-info btn-xs' value='download')
+                                                input.btn.btn-info.btn-xs(type='submit' value='download')
                                     else
                                         td
                                     td.cell-align
                                         form(action='/align/delete/#{job._id}' method='post')
                                             input(type='hidden' value=job._id.toString(), name='id')
-                                            input(type='submit' class='btn btn-danger btn-xs' value='delete')
+                                            input.btn.btn-danger.btn-xs(type='submit' value='delete')
 
-    // for tooltip
-    script(type='text/javascript').
-        $(document).ready(function () {
-            $('.selectpicker').selectpicker();
-
-            $("[data-toggle=tooltip]").tooltip({
-                placement: 'bottom'
-            });
-        });
