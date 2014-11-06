@@ -23,7 +23,7 @@ block content
                          each file, index in files
                              option= file.name
              .form-group
-                 label(for="alignLength") Minimum fragment legnth
+                 label.control-label.col-xs-4(for="alignLength") Minimum fragment legnth
                  .col-xs-8
                      input.form-control.input-tooltip(type="text", id="alignLength", name="alignLength", value=1000, data-validation="number", data-toggle="tooltip", data-original-title="we recommend a value larger than 100 bp")
              .form-group
@@ -48,7 +48,7 @@ block content
                     | No Jobs.
             else
                 .table-responsive
-                    table.table
+                    table.table.table-bordered
                         thead
                             tr
                                 th #
@@ -62,7 +62,8 @@ block content
                             each job, index in allJobs
                                 tr
                                     td= index + 1
-                                    td= job.name
+                                    td
+                                        strong= job.name
                                     // moment() means now
                                     if job.createDate
                                         td= moment(job.createDate).format("YY/MM/DD HH:mm")
@@ -85,13 +86,13 @@ block content
                                             span.glyphicon.glyphicon-ok
                                             | &nbsp;#{job.status}
                                     if (job.status === 'finished')
-                                        td.vertical-align
+                                        td.cell-align
                                             form(action='/align/download/#{job._id}', method='post')
                                                 input(type='hidden', value=job._id.toString(), name='id')
                                                 input(type='submit', class='btn btn-info btn-xs', value='download')
                                     else
                                         td
-                                    td.vertical-align
+                                    td.cell-align
                                         form(action='/align/delete/#{job._id}', method='post')
                                             input(type='hidden', value=job._id.toString(), name='id')
                                             input(type='submit', class='btn btn-danger btn-xs', value='delete')

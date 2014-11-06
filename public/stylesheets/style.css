@@ -105,6 +105,8 @@ input[type="password"] {
 }
 
 /* http://stackoverflow.com/questions/13771101/centering-a-button-vertically-in-table-cell-using-twitter-bootstrap */
-.table tbody>tr>td.vertical-align {
+.table tbody>tr>td.cell-align {
     vertical-align: middle;
+    float: none;
+    text-align: center;
 }
