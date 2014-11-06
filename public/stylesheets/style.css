@@ -70,25 +70,6 @@ input[type="password"] {
     margin: 0 auto;
 }
 
-.list-group-item div {
-    float: left
-}
-
-.list-group-item {
-    height: 3em;
-    width: 100%;
-    clear: both
-}
-
-.list-group-item .name {
-    width: 30em
-}
-
-.list-group-item .action {
-    width: 3em;
-    float: right
-}
-
 /* align form */
 #alignForm {
     max-width: 50em;
@@ -119,6 +100,11 @@ input[type="password"] {
 
 /* allJobs list */
 #allJobsList {
-    max-width: 40em;
+    max-width: 50em;
     margin: 0 auto;
+}
+
+/* http://stackoverflow.com/questions/13771101/centering-a-button-vertically-in-table-cell-using-twitter-bootstrap */
+.table tbody>tr>td.vertical-align {
+    vertical-align: middle;
 }
