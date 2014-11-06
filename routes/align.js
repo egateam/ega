@@ -88,10 +88,6 @@ router.post('/', function (req, res, next) {
                         console.info('Added %s by username=%s', jobRecord.name, jobRecord.username);
                     });
 
-                    // redirect early due to unknown reasons caused hanging after submit
-                    // rest codes will still be executed
-                    res.redirect('/process');
-
                     var child = spawn(command, args);
                     console.log('Job pid [%s].', child.pid);
 
@@ -154,6 +150,9 @@ router.post('/', function (req, res, next) {
                             }
                         });
                     });
+
+                    // return is needed otherwise the page will be hanging.
+                    return res.redirect('/process');
                 }
             });
         }
