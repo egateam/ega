@@ -7,7 +7,7 @@ block content
                  .col-xs-8
                      input.input-tooltip(class="form-control", type="text", id="alignName", name="alignName", data-validation="length alphanumeric", data-validation-length="min4", data-toggle="tooltip", data-original-title="This name should be unique in your account")
              .form-group
-                 label(for="targetSeq" class="control-label col-xs-4") Select one sequence as target
+                 label(for="targetSeq" class="control-label col-xs-4") Select one as target
                  .col-xs-8
                      select(class="form-control selectpicker", id="targetSeq", name="targetSeq")
                          if (files.length === 0)
@@ -15,7 +15,7 @@ block content
                          each file, index in files
                              option= file.name
              .form-group
-                 label(for="querySeq" class="control-label col-xs-4") Select one or more sequences as queries
+                 label(for="querySeq" class="control-label col-xs-4") Select one or more as queries
                  .col-xs-8
                      select(multiple, class="form-control selectpicker", id="querySeq", name="querySeq", data-validation="required")
                          if (files.length === 0)
@@ -23,7 +23,7 @@ block content
                          each file, index in files
                              option= file.name
              .form-group
-                 label(for="alignLength" class="control-label col-xs-4") Minimum align fragment legnth
+                 label(for="alignLength" class="control-label col-xs-4") Minimum fragment legnth
                  .col-xs-8
                      input.input-tooltip(class="form-control", type="text", id="alignLength", name="alignLength", value=1000, data-validation="number", data-toggle="tooltip", data-original-title="we recommend a value larger than 100")
              .form-group
@@ -51,31 +51,51 @@ block content
                     table.table
                         thead
                             tr
-                                th Index
+                                th #
                                 th Name
                                 th Created
                                 th Finished
                                 th Status
+                                th
+                                th
                         tbody
-                            each item, index in allJobs
+                            each job, index in allJobs
                                 tr
                                     td= index + 1
-                                    td= item.name
+                                    td= job.name
                                     // moment() means now
-                                    if item.createDate
-                                        td= moment(item.createDate).format("YYYY/MM/DD HH:mm")
+                                    if job.createDate
+                                        td= moment(job.createDate).format("YY/MM/DD HH:mm")
                                     else
                                         td
-                                    if item.finishDate
-                                        td= moment(item.finishDate).format("YYYY/MM/DD HH:mm")
+                                    if job.finishDate
+                                        td= moment(job.finishDate).format("YY/MM/DD HH:mm")
                                     else
                                         td
-                                    if (item.status === 'running')
-                                        td.info= item.status
-                                    else if (item.status === 'failed')
-                                        td.danger= item.status
+                                    if (job.status === 'running')
+                                        td.info
+                                            span.glyphicon.glyphicon-cog
+                                            | &nbsp;#{job.status}
+                                    else if (job.status === 'failed')
+                                        td.danger
+                                            span.glyphicon.glyphicon-remove
+                                            | &nbsp;#{job.status}
                                     else
-                                        td.success= item.status
+                                        td.success
+                                            span.glyphicon.glyphicon-ok
+                                            | &nbsp;#{job.status}
+                                    if (job.status === 'finished')
+                                        td.vertical-align
+                                            form(action='/align/download/#{job._id}', method='post')
+                                                input(type='hidden', value=job._id.toString(), name='id')
+                                                input(type='submit', class='btn btn-info btn-xs', value='download')
+                                    else
+                                        td
+                                    td.vertical-align
+                                        form(action='/align/delete/#{job._id}', method='post')
+                                            input(type='hidden', value=job._id.toString(), name='id')
+                                            input(type='submit', class='btn btn-danger btn-xs', value='delete')
+
     script(type='text/javascript').
         $(document).ready(function () {
             $(".input-tooltip").tooltip({

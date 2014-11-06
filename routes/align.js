@@ -98,8 +98,9 @@ router.post('/', function (req, res, next) {
                     console.log("Store job to session: [%s]", job_id);
                     Job.findOne({
                         "job_id": job_id, status: "running"
-                    }, function (error, job) {
+                    }).exec( function (error, job) {
                         if (error) return next(error);
+                        console.log(util.inspect(job));
                         if (job) {
                             job.pid = child.pid;
 
@@ -156,6 +157,28 @@ router.post('/', function (req, res, next) {
                 }
             });
         }
+    });
+});
+
+router.post('/delete/:job_id', function (req, res, next) {
+    Job.findOne({"_id": req.params.job_id}).exec(function (error, job) {
+        if (error) return next(error);
+        if (!job) return next(new Error('Job is not found.'));
+
+        Job.findOneAndRemove({"_id": req.params.job_id}, function (error) {
+            if (error) return next(error);
+            console.info('Deleted job record %s with id=%s completed.', job.name, job._id);
+        });
+
+        //if (fs.existsSync(file.path)) {
+        //    fs.unlink(file.path);
+        //    console.info('File record %s is deleted from file system.', file.path);
+        //}
+        //else {
+        //    console.info('File record %s does not exist in file system.', file.path);
+        //}
+        req.flash('info', '<strong>[%s]</strong> has been deleted.', job.name);
+        res.redirect(303, '/align');
     });
 });
 
