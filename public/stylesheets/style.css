@@ -93,7 +93,7 @@ input[type="password"] {
 
 #consoleLog {
     background-color: #eee;
-    max-height: 300px;
+    height: 18em;
     word-wrap: break-word;
     overflow: auto;
 }
