@@ -10,24 +10,12 @@ router.get('/', function (req, res, next) {
     Job.findOne({"username": username, status: "running"}).exec(function (error, job) {
         if (error) return next(error);
         res.render('process', {
-            title: 'EGA Prosess',
+            title: 'EGA Process',
             user:  req.user,
             id:    'process',
             job:   job ? JSON.stringify(job) : ''
         });
     });
 });
-
-//router.get('/:string', function (req, res, next) {
-//    var string = decodeURIComponent(req.params.string);
-//
-//    res.render('process', {
-//        title:  'EGA Prosess',
-//        user:   req.user,
-//        id:     'process',
-//        string: string,
-//        jobs:   _.keys(req.session.jobs)
-//    });
-//});
 
 module.exports = router;

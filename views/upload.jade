@@ -21,12 +21,14 @@ block content
                             tr
                                 th #
                                 th Name
-                                th Action
+                                th Type
+                                th
                         tbody
                             each file, index in files
                                 tr
                                     td= index + 1
                                     td= file.name
+                                    td
                                     td
                                         form(action='/upload/#{file._id}', method='post')
                                             input(type='hidden', value=file._id.toString(), name='id')
