@@ -3,33 +3,33 @@ block content
     .wrapper
          form.form-horizontal(method="post", action="/align", id="alignForm", role="form")
              .form-group
-                 label(for="alignName" class="control-label col-xs-4") Name this alignment
+                 label.control-label.col-xs-4(for="alignName") Name this alignment
                  .col-xs-8
-                     input.input-tooltip(class="form-control", type="text", id="alignName", name="alignName", data-validation="length alphanumeric", data-validation-length="min4", data-toggle="tooltip", data-original-title="This name should be unique in your account")
+                     input.form-control.input-tooltip(type="text", id="alignName", name="alignName", data-validation="length alphanumeric", data-validation-length="min4", data-toggle="tooltip", data-original-title="This name should be unique in your account")
              .form-group
-                 label(for="targetSeq" class="control-label col-xs-4") Select one as target
+                 label.control-label.col-xs-4(for="targetSeq") Select one as target
                  .col-xs-8
-                     select(class="form-control selectpicker", id="targetSeq", name="targetSeq")
+                     select.form-control.selectpicker(id="targetSeq", name="targetSeq")
                          if (files.length === 0)
                              option No files.
                          each file, index in files
                              option= file.name
              .form-group
-                 label(for="querySeq" class="control-label col-xs-4") Select one or more as queries
+                 label.control-label.col-xs-4(for="querySeq") Select one or more as queries
                  .col-xs-8
-                     select(multiple, class="form-control selectpicker", id="querySeq", name="querySeq", data-validation="required")
+                     select.form-control.selectpicker(multiple, id="querySeq", name="querySeq", data-validation="required")
                          if (files.length === 0)
                              option No files.
                          each file, index in files
                              option= file.name
              .form-group
-                 label(for="alignLength" class="control-label col-xs-4") Minimum fragment legnth
+                 label(for="alignLength") Minimum fragment legnth
                  .col-xs-8
-                     input.input-tooltip(class="form-control", type="text", id="alignLength", name="alignLength", value=1000, data-validation="number", data-toggle="tooltip", data-original-title="we recommend a value larger than 100")
+                     input.form-control.input-tooltip(type="text", id="alignLength", name="alignLength", value=1000, data-validation="number", data-toggle="tooltip", data-original-title="we recommend a value larger than 100 bp")
              .form-group
-                 label(class="control-label col-xs-4") Select a realigning method
+                 label.control-label.col-xs-4 Select a realigning method
                  .col-xs-8
-                     div(class="btn-group", data-toggle="buttons")
+                     .btn-group(data-toggle="buttons")
                          label(class="btn btn-default active") MAFFT
                              input(type="radio", name="reAlignmentMethod", id="reAlignmentMethod", value="MAFFT", checked)
                          label(class="btn btn-default") ClustalW
@@ -96,6 +96,7 @@ block content
                                             input(type='hidden', value=job._id.toString(), name='id')
                                             input(type='submit', class='btn btn-danger btn-xs', value='delete')
 
+    // for tooltip
     script(type='text/javascript').
         $(document).ready(function () {
             $(".input-tooltip").tooltip({

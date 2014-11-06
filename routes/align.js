@@ -160,12 +160,12 @@ router.post('/', function (req, res, next) {
     });
 });
 
-router.post('/delete/:job_id', function (req, res, next) {
-    Job.findOne({"_id": req.params.job_id}).exec(function (error, job) {
+router.post('/delete/:_id', function (req, res, next) {
+    Job.findOne({"_id": req.params._id}).exec(function (error, job) {
         if (error) return next(error);
         if (!job) return next(new Error('Job is not found.'));
 
-        Job.findOneAndRemove({"_id": req.params.job_id}, function (error) {
+        Job.findOneAndRemove({"_id": req.params._id}, function (error) {
             if (error) return next(error);
             console.info('Deleted job record %s with id=%s completed.', job.name, job._id);
         });

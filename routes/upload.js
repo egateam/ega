@@ -7,7 +7,6 @@ var path = require("path");
 var File = require('../models/File');
 
 router.get('/', function (req, res, next) {
-    //console.log(util.inspect( req.user));
     File.find({username: req.user.username}).lean().exec(function (error, files) {
         if (error) {
             return next(error);
@@ -96,12 +95,12 @@ router.post('/', function (req, res, next) {
     }
 });
 
-router.post('/:file_id', function (req, res, next) {
-    File.findOne({"_id": req.params.file_id}).exec(function (error, file) {
+router.post('/:_id', function (req, res, next) {
+    File.findOne({"_id": req.params._id}).exec(function (error, file) {
         if (error) return next(error);
         if (!file) return next(new Error('File is not found.'));
 
-        File.findOneAndRemove({"_id": req.params.file_id}, function (error) {
+        File.findOneAndRemove({"_id": req.params._id}, function (error) {
             if (error) return next(error);
             console.info('Deleted file record %s with id=%s completed.', file.name, file._id);
         });

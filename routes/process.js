@@ -1,7 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var util = require("util");
-var _ = require('lodash');
 var Job = require('../models/Job');
 
 router.get('/', function (req, res, next) {
