@@ -31,6 +31,6 @@ block content
                                     td= file.name
                                     td
                                     td.cell-align
-                                        form(action='/upload/#{file._id}', method='post')
-                                            input(type='hidden', value=file._id.toString(), name='id')
-                                            input.btn.btn-danger.btn-xs(type='submit' value='delete')
+                                        form(action="/upload/#{file._id}" method="post")
+                                            input(type="hidden" value=file._id.toString() name="id")
+                                            input.btn.btn-danger.btn-xs(type="submit" value="delete")

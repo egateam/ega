@@ -1,11 +1,11 @@
 extends ../layout
 block content
-    div.wrapper
-        form.form-horizontal(method="post", id="forgotForm")
+    .wrapper
+        form.form-horizontal(method="post" id="forgotForm")
             legend Forgot Password
             .form-group
-                label(for='email') Email
-                input.form-control(type='text', name='email', data-validation="required email", autofocus)
-            button.btn.btn-primary(type='submit')
+                label(for="email") Email
+                input.form-control(type="text" name="email" data-validation="required email" autofocus)
+            button.btn.btn-primary(type="submit")
                 span.glyphicon.glyphicon-envelope
                 | &nbsp;Reset Password

@@ -1,20 +1,20 @@
 extends ../layout
 block content
-    div.wrapper
-        form.form-horizontal(method="post", id="signupForm")
+    .wrapper
+        form.form-horizontal(method="post" id="signupForm")
             legend Signup
             .form-group
-                label(for='username') Username
-                input.form-control(type='text', name='username', data-validation="required length", data-validation-length="min4", autofocus)
+                label(for="username") Username
+                input.form-control(type="text" name="username" data-validation="required length" data-validation-length="min4" autofocus)
             .form-group
-                label(for='email') Email
-                input.form-control(type='text', name='email', data-validation="required email")
+                label(for="email") Email
+                input.form-control(type="text" name="email" data-validation="required email")
             .form-group
-                label(for='password_confirmation') Password
-                input.form-control(type='password', name='password_confirmation', data-validation="length", data-validation-length="min6")
+                label(for="password_confirmation") Password
+                input.form-control(type="password" name="password_confirmation" data-validation="length" data-validation-length="min6")
             .form-group
-                label(for='password') Confirm Password
-                input.form-control(type='password', name='password', data-validation="confirmation", data-validation-length="min6")
-            button.btn.btn-primary(type='submit')
+                label(for="password") Confirm Password
+                input.form-control(type="password" name="password" data-validation="confirmation" data-validation-length="min6")
+            button.btn.btn-primary(type="submit")
                 span.glyphicon.glyphicon-plus
                 | &nbsp;Signup

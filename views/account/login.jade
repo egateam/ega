@@ -1,15 +1,15 @@
 extends ../layout
 block content
-    div.wrapper
-        form.form-horizontal(method="post", id="loginForm")
+    .wrapper
+        form.form-horizontal(method="post" id="loginForm")
             legend Login
             .form-group
-                label(for='username') Username
-                input.form-control(type='text', name='username', autofocus)
+                label(for="username") Username
+                input.form-control(type="text" name="username" autofocus)
             .form-group
-                label(for='password') Password
-                input.form-control(type='password', name='password')
-            button.btn.btn-primary(type='submit')
+                label(for="password") Password
+                input.form-control(type="password" name="password")
+            button.btn.btn-primary(type="submit")
                 span.glyphicon.glyphicon-user
                 | &nbsp;Login
-            a.btn.btn-link(href='/forgot') Forgot Password?
+            a.btn.btn-link(href="/forgot") Forgot Password?

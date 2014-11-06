@@ -25,11 +25,11 @@ block content
         .prettyprint ol.linenums > li {
             list-style-type: decimal;
         }
-    script(type='text/javascript').
+    script(type="text/javascript").
         var data = !{job};
-        var jsonPretty = JSON.stringify(data, null, '    ');
+        var jsonPretty = JSON.stringify(data, null, "    ");
         $("pre#arguments").text(jsonPretty);
-    script(type='text/javascript').
+    script(type="text/javascript").
         (function (jQuery) {
             jQuery(document).ready(function () {
                 prettyPrint();
@@ -37,10 +37,10 @@ block content
         }(jQuery))
 
     // for console
-    script(type='text/javascript').
+    script(type="text/javascript").
         var socket = io.connect();
-        socket.on('news', function (data) {
-            $('#consoleLog').append(data.data);
+        socket.on("news", function (data) {
+            $("#consoleLog").append(data.data);
             //scroll the div to follow last line added!
             var objDiv = document.getElementById("consoleLog");
             objDiv.scrollTop = objDiv.scrollHeight;

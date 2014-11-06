@@ -3,18 +3,18 @@ html(lang="en")
     head
         title= title
         //indicate that our site is mobile optimized
-        meta(name='viewport', content='width=device-width, initial-scale=1.0')
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
         //reference our site-specific css
-        link(rel='stylesheet', href='/stylesheets/style.css')
+        link(rel="stylesheet", href="/stylesheets/style.css")
         //add bootstrap dependencies from CDNjs. Using a CDN to distribute these files puts less pressure
         //on our web server and will be delivered faster to the client than our own server.
-        link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap-theme.min.css')
-        link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css')
-        link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap-glyphicons.css')
-        link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/css/bootstrap-select.min.css')
-        link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css')
+        link(rel="stylesheet", href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap-theme.min.css")
+        link(rel="stylesheet", href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css")
+        link(rel="stylesheet", href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap-glyphicons.css")
+        link(rel="stylesheet", href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/css/bootstrap-select.min.css")
+        link(rel="stylesheet", href="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css")
     body
-        script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js')
+        script(src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js")
         script(src="/socket.io/socket.io.js")
         // Wrap all page content here
         div(id="wrap")
@@ -30,25 +30,25 @@ html(lang="en")
                             a.navbar-brand(href="/") Home
                         .navbar-collapse.collapse
                             ul.nav.navbar-nav
-                                - var obj = { 'upload':'Upload', 'align':'Align', 'process':'Process', 'about':'About'}
+                                - var obj = { "upload":"Upload", "align":"Align", "process":"Process", "about":"About"}
                                     - each val, key in obj
                                         - if (id == key)
                                             li.active
-                                                a(href='/#{key}') #{val}
+                                                a(href="/#{key}") #{val}
                                         - else
                                             li
-                                                a(href='/#{key}') #{val}
+                                                a(href="/#{key}") #{val}
                             ul.nav.navbar-nav.navbar-right
                                 if user
                                     li.active
-                                        a.navbar-brand(href='/#')= 'Hi, ' + user.username
+                                        a.navbar-brand(href="/#")= "Hi, " + user.username
                                     li
-                                        a(href='/logout') Logout
+                                        a(href="/logout") Logout
                                 else
                                     li
-                                        a(href='/login') Login
+                                        a(href="/login") Login
                                     li
-                                        a(href='/signup') Create Account
+                                        a(href="/signup") Create Account
             // flash message
             .container
                 // use !{var} here so html mark can be properly displayed
@@ -72,16 +72,16 @@ html(lang="en")
                 p.text-muted.credit &copy;&nbsp; 2014 &nbsp; Site maintained by wangq.
         // scripts for all pages
         script(src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js")
-        script(src='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js')
+        script(src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js")
         script(src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.1.47/jquery.form-validator.min.js")
         script(src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/js/bootstrap-select.min.js")
-        script(type='text/javascript').
+        script(type="text/javascript").
             $(document).ready(function () {
-                $('.selectpicker').selectpicker();
+                $(".selectpicker").selectpicker();
                 $("[data-toggle=tooltip]").tooltip({
-                    placement: 'bottom'
+                    placement: "bottom"
                 });
                 $.validate({
-                    modules: 'date, security, file'
+                    modules: "date, security, file"
                 });
             });

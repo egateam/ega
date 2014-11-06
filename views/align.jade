@@ -73,11 +73,11 @@ block content
                                         td= moment(job.finishDate).format("YY/MM/DD HH:mm")
                                     else
                                         td
-                                    if (job.status === 'running')
+                                    if (job.status === "running")
                                         td.info
                                             span.glyphicon.glyphicon-cog
                                             | &nbsp;#{job.status}
-                                    else if (job.status === 'failed')
+                                    else if (job.status === "failed")
                                         td.danger
                                             span.glyphicon.glyphicon-remove
                                             | &nbsp;#{job.status}
@@ -85,15 +85,15 @@ block content
                                         td.success
                                             span.glyphicon.glyphicon-ok
                                             | &nbsp;#{job.status}
-                                    if (job.status === 'finished')
+                                    if (job.status === "finished")
                                         td.cell-align
-                                            form(action='/align/download/#{job._id}' method='post')
-                                                input(type='hidden' value=job._id.toString(), name='id')
-                                                input.btn.btn-info.btn-xs(type='submit' value='download')
+                                            form(action="/align/download/#{job._id}" method="post")
+                                                input(type="hidden" value=job._id.toString() name="id")
+                                                input.btn.btn-info.btn-xs(type="submit" value="download")
                                     else
                                         td
                                     td.cell-align
-                                        form(action='/align/delete/#{job._id}' method='post')
-                                            input(type='hidden' value=job._id.toString(), name='id')
-                                            input.btn.btn-danger.btn-xs(type='submit' value='delete')
+                                        form(action="/align/delete/#{job._id}" method="post")
+                                            input(type="hidden" value=job._id.toString() name="id")
+                                            input.btn.btn-danger.btn-xs(type="submit" value="delete")
 
