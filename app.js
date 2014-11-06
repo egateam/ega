@@ -33,7 +33,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser(settings.main.secret));
 app.use(session({
     cookie:            {
-        maxAge:   3600000 * 24 * 30, // one month
+        maxAge:   1000 * 3600 * 24 * 30, // one month in ms
         httpOnly: false
     },
     resave:            true,
