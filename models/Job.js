@@ -2,9 +2,10 @@ var mongoose = require('mongoose');
 
 var jobSchema = new mongoose.Schema({
     name:       {type: String, required: true},
-    job_id:     {type: String, required: true},
+    job_id:     {type: String, required: true, unique: true},
     pid:        Number,
-    path:       String,
+    command:    String,
+    args:       [String],
     realpath:   String,
     argument:   {
         alignName:         String,
@@ -16,6 +17,8 @@ var jobSchema = new mongoose.Schema({
     username:   {type: String, required: true},
     createDate: Date,
     finishDate: Date,
+    exitCode:   String,
+    exitSignal: String,
     // running, failed, finished
     status:     String
 });

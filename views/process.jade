@@ -5,7 +5,7 @@ block content
         if (job)
             .panel.panel-default(id="argumentsPanel")
                 .panel-heading
-                    h3.panel-title arguments
+                    h3.panel-title Running job arguments
                 .panel-body
                     pre.prettyprint.linenums.lang-js(id="arguments")
 
@@ -15,25 +15,6 @@ block content
                 h3.panel-title Console message
             .panel-body
                 pre(id='consoleLog')
-
-    // allJobs list
-    .wrapper
-        .panel.panel-default(id="allJobsList")
-            .panel-heading
-                h4 Your Jobs
-            ul.list-group
-                if (allJobs.length === 0)
-                    li(class="list-group-item")
-                        | No Jobs.
-                each item, index in allJobs
-                    li(class="list-group-item")
-                        .num
-                            span= index + 1
-                            | .&nbsp;&nbsp;
-                        .name
-                            span= item.name
-                        .status
-                            span= item.status
 
     // for arguments
     // http://stackoverflow.com/questions/8399547/how-to-add-line-numbers-to-all-lines-in-google-prettify

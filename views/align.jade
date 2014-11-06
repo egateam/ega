@@ -5,7 +5,7 @@ block content
              .form-group
                  label(for="alignName" class="control-label col-xs-4") Name this alignment
                  .col-xs-8
-                     input(class="form-control", type="text", id="alignName", name="alignName", data-validation="length alphanumeric", data-validation-length="min4")
+                     input.input-tooltip(class="form-control", type="text", id="alignName", name="alignName", data-validation="length alphanumeric", data-validation-length="min4", data-toggle="tooltip", data-original-title="This name should be unique in your account")
              .form-group
                  label(for="targetSeq" class="control-label col-xs-4") Select one sequence as target
                  .col-xs-8
@@ -23,9 +23,9 @@ block content
                          each file, index in files
                              option= file.name
              .form-group
-                 label(for="alignLength" class="control-label col-xs-4") Minimum align fragment legnth (we recommend a value larger than 100)
+                 label(for="alignLength" class="control-label col-xs-4") Minimum align fragment legnth
                  .col-xs-8
-                     input(class="form-control", type="text", id="alignLength", name="alignLength", data-validation="number", value=1000)
+                     input.input-tooltip(class="form-control", type="text", id="alignLength", name="alignLength", value=1000, data-validation="number", data-toggle="tooltip", data-original-title="we recommend a value larger than 100")
              .form-group
                  label(class="control-label col-xs-4") Select a realigning method
                  .col-xs-8
@@ -38,3 +38,47 @@ block content
                              input(type="radio", name="reAlignmentMethod", id="reAlignmentMethod", value="NONE")
              input(class="btn btn-lg btn-primary btn-block" type="submit", value="Begin aligning")
 
+    // allJobs table
+    .wrapper
+        .panel.panel-default(id="allJobsList")
+            .panel-heading
+                h4 Your Jobs
+            if (allJobs.length === 0)
+                li(class="list-group-item")
+                    | No Jobs.
+            else
+                .table-responsive
+                    table.table
+                        thead
+                            tr
+                                th Index
+                                th Name
+                                th Created
+                                th Finished
+                                th Status
+                        tbody
+                            each item, index in allJobs
+                                tr
+                                    td= index + 1
+                                    td= item.name
+                                    // moment() means now
+                                    if item.createDate
+                                        td= moment(item.createDate).format("YYYY/MM/DD HH:mm")
+                                    else
+                                        td
+                                    if item.finishDate
+                                        td= moment(item.finishDate).format("YYYY/MM/DD HH:mm")
+                                    else
+                                        td
+                                    if (item.status === 'running')
+                                        td.info= item.status
+                                    else if (item.status === 'failed')
+                                        td.danger= item.status
+                                    else
+                                        td.success= item.status
+    script(type='text/javascript').
+        $(document).ready(function () {
+            $(".input-tooltip").tooltip({
+                placement : 'bottom'
+            });
+        });
