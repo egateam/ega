@@ -89,11 +89,11 @@ block content
                                         td.cell-align
                                             form(action="/align/download/#{job._id}" method="post")
                                                 input(type="hidden" value=job._id.toString() name="id")
-                                                input.btn.btn-info.btn-xs(type="submit" value="download")
+                                                input.btn.btn-info.btn-xs(type="submit" value="R" data-toggle="tooltip" data-original-title="Download report.")
                                     else
                                         td
                                     td.cell-align
                                         form(action="/align/delete/#{job._id}" method="post")
                                             input(type="hidden" value=job._id.toString() name="id")
-                                            input.btn.btn-danger.btn-xs(type="submit" value="delete")
+                                            input.btn.btn-danger.btn-xs(type="submit" value="D" data-toggle="tooltip" data-original-title="Delete this job.")
 
