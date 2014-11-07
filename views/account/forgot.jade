@@ -4,8 +4,10 @@ block content
         form.form-horizontal(method="post" id="forgotForm")
             legend Forgot Password
             .form-group
-                label(for="email") Email
-                input.form-control(type="text" name="email" data-validation="required email" autofocus)
+                .input-group
+                    span.input-group-addon
+                        span.fa.fa-fw.fa-envelope
+                    input.form-control(type="text" name="email" placeholder="Email" data-validation="required email" autofocus)
             button.btn.btn-primary(type="submit")
-                span.fa.fa-envelope
+                span.fa.fa-key
                 | &nbsp;Reset Password

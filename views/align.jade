@@ -75,15 +75,15 @@ block content
                                         td
                                     if (job.status === "running")
                                         td.info
-                                            span.fa.fa-spin.fa-cog
+                                            span.fa.fa-fw.fa-spin.fa-spinner
                                             | &nbsp;#{job.status}
                                     else if (job.status === "failed")
                                         td.danger
-                                            span.fa.fa-remove
+                                            span.fa.fa-fw.fa-remove
                                             | &nbsp;#{job.status}
                                     else
                                         td.success
-                                            span.fa.fa-check
+                                            span.fa.fa-fw.fa-check
                                             | &nbsp;#{job.status}
                                     if (job.status === "finished")
                                         td.cell-align

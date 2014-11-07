@@ -16,7 +16,7 @@ a {
 
 /* login form */
 #forgotForm, #loginForm, #resetForm, #signupForm {
-    max-width: 26em;
+    max-width: 22em;
     padding: 1em 2em 2em;
     margin: 0 auto;
     background-color: #fff;

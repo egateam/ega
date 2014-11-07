@@ -4,11 +4,15 @@ block content
         form.form-horizontal(method="post" id="loginForm")
             legend Login
             .form-group
-                label(for="username") Username
-                input.form-control(type="text" name="username" autofocus)
+                .input-group
+                    span.input-group-addon
+                        span.fa.fa-fw.fa-user
+                    input.form-control(type="text" name="username" placeholder="Username" autofocus)
             .form-group
-                label(for="password") Password
-                input.form-control(type="password" name="password")
+                .input-group
+                    span.input-group-addon
+                        span.fa.fa-fw.fa-key
+                    input.form-control(type="password" name="password" placeholder="Password")
             button.btn.btn-primary(type="submit")
                 span.fa.fa-user
                 | &nbsp;Login

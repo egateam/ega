@@ -1,15 +1,18 @@
 extends ../layout
 block content
-    div.wrapper
+    .wrapper
         form.form-horizontal(method="post" id="resetForm")
             legend Reset Password
             .form-group
-                label(for="password_confirmation") Password
-                input.form-control(type="password" name="password_confirmation" value="" data-validation="length" data-validation-length="min6" autofocus)
+                .input-group
+                    span.input-group-addon
+                        span.fa.fa-fw.fa-key
+                    input.form-control(type="password" name="password_confirmation" placeholder="Password" data-validation="length" data-validation-length="min6")
             .form-group
-                label(for="password") Confirm Password
-                input.form-control(type="password" name="password" value="" data-validation="confirmation" data-validation-length="min6")
-            .form-group
-                button.btn.btn-primary(type="submit")
-                    span.fa.fa-lock
-                    | &nbsp;Update Password
+                .input-group
+                    span.input-group-addon
+                        span.fa.fa-fw.fa-key
+                    input.form-control(type="password" name="password" placeholder="Confirm Password" data-validation="confirmation")
+            button.btn.btn-primary(type="submit")
+                span.fa.fa-lock
+                | &nbsp;Update Password
