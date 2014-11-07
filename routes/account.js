@@ -119,7 +119,7 @@ exports.postForgot = function (req, res, next) {
                 }
 
                 user.resetPasswordToken = token;
-                user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+                user.resetPasswordExpires = Date.now() + 1000 * 3600 * 2; // 2 hours
 
                 user.save(function (error) {
                     done(error, token, user);
