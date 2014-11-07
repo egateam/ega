@@ -85,6 +85,11 @@ input[type="password"] {
     margin: 0 auto;
 }
 
+/*override bootstrap default value*/
+.pre-scrollable {
+    max-height: 20em;
+}
+
 /*console panel*/
 #consolePanel {
     max-width: 50em;

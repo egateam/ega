@@ -75,25 +75,27 @@ block content
                                         td
                                     if (job.status === "running")
                                         td.info
-                                            span.glyphicon.glyphicon-cog
+                                            span.fa.fa-spin.fa-cog
                                             | &nbsp;#{job.status}
                                     else if (job.status === "failed")
                                         td.danger
-                                            span.glyphicon.glyphicon-remove
+                                            span.fa.fa-remove
                                             | &nbsp;#{job.status}
                                     else
                                         td.success
-                                            span.glyphicon.glyphicon-ok
+                                            span.fa.fa-check
                                             | &nbsp;#{job.status}
                                     if (job.status === "finished")
                                         td.cell-align
                                             form(action="/align/download/#{job._id}" method="post")
                                                 input(type="hidden" value=job._id.toString() name="id")
-                                                input.btn.btn-info.btn-xs(type="submit" value="R" data-toggle="tooltip" data-original-title="Download report.")
+                                                button.btn.btn-info.btn-xs(type="submit" data-toggle="tooltip" data-original-title="Download report.")
+                                                    span.fa.fa-calculator
                                     else
                                         td
                                     td.cell-align
                                         form(action="/align/delete/#{job._id}" method="post")
                                             input(type="hidden" value=job._id.toString() name="id")
-                                            input.btn.btn-danger.btn-xs(type="submit" value="D" data-toggle="tooltip" data-original-title="Delete this job.")
+                                            button.btn.btn-danger.btn-xs(type="submit" data-toggle="tooltip" data-original-title="Delete this job.")
+                                                span.fa.fa-trash
 

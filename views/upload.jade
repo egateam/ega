@@ -33,4 +33,5 @@ block content
                                     td.cell-align
                                         form(action="/upload/#{file._id}" method="post")
                                             input(type="hidden" value=file._id.toString() name="id")
-                                            input.btn.btn-danger.btn-xs(type="submit" value="delete")
+                                            button.btn.btn-danger.btn-xs(type="submit" data-toggle="tooltip" data-original-title="Delete this job.")
+                                                span.fa.fa-trash
