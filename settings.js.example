@@ -1,0 +1,15 @@
+exports.main = {
+    secret: 'somethingsecret',
+    port: 3000
+};
+
+exports.mailgun = {
+    api_key: 'yourkey',
+    domain: 'yourdomain.mailgun.org',
+    from_who: 'noreply <youremail@yourdomain.edu.cn>'
+};
+
+exports.sockjs_opts = {
+    sockjs_url: "http://cdnjs.cloudflare.com/ajax/libs/sockjs-client/0.3.4/sockjs.min.js",
+    jsessionid: true
+};
