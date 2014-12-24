@@ -7,19 +7,64 @@ var path = require("path");
 var File = require('../models/File');
 
 router.get('/', function (req, res, next) {
-    File.find({username: req.user.username}).lean().exec(function (error, files) {
-        if (error) {
-            return next(error);
-        }
-        res.render('upload', {
-            files: files || [],
-            title: 'EGA Upload',
-            user: req.user,
-            id: 'upload'
-        });
+    res.render('upload', {
+        title: 'EGA Upload',
+        user:  req.user,
+        id:    'upload'
     });
 });
 
+// JSON API for list of files
+router.get('/files', function (req, res, next) {
+    File.find({username: req.user.username}).exec(function (error, files) {
+        if (error) {
+            return next(error);
+        }
+        res.json(files);
+    });
+});
+
+// JSON API for getting a single file
+router.get('/files/:_id', function (req, res, next) {
+    // File ID comes in the URL
+    var fileId = req.params._id;
+
+    File.findById(fileId, '', function (error, file) {
+        if (error) {
+            return next(error);
+        }
+        else if (!file) {
+            res.json({error: true});
+        }
+        else {
+            res.json(file);
+        }
+    });
+});
+
+// API for Delete a file
+router.post('/files/:_id', function (req, res, next) {
+    File.findOne({"_id": req.params._id}).exec(function (error, file) {
+        if (error) return next(error);
+        if (!file) return next(new Error('File is not found.'));
+
+        File.findOneAndRemove({"_id": req.params._id}, function (error) {
+            if (error) return next(error);
+            console.info('Deleted file record %s with id=%s completed.', file.name, file._id);
+        });
+
+        if (fs.existsSync(file.path)) {
+            fs.unlink(file.path);
+            console.info('File record %s is deleted from file system.', file.path);
+        }
+        else {
+            console.info('File record %s does not exist in file system.', file.path);
+        }
+        res.redirect(303, '/upload');
+    });
+});
+
+// Upload a file
 router.post('/', function (req, res, next) {
     if (req.files) {
         if (req.files.myFile.size === 0) {
@@ -58,14 +103,14 @@ router.post('/', function (req, res, next) {
 
                                     // save file record to mongo
                                     var fileRecord = new File({
-                                        name: file.name,
-                                        encoding: file.encoding,
-                                        mimetype: file.mimetype,
-                                        path: newPath,
-                                        realpath: resolvedPath,
+                                        name:      file.name,
+                                        encoding:  file.encoding,
+                                        mimetype:  file.mimetype,
+                                        path:      newPath,
+                                        realpath:  resolvedPath,
                                         extension: file.extension,
-                                        size: file.size,
-                                        username: username
+                                        size:      file.size,
+                                        username:  username
                                     });
                                     fileRecord.save(function (error) {
                                         if (error) return next(error);
@@ -93,28 +138,6 @@ router.post('/', function (req, res, next) {
             fs.unlink('./' + file.path); // delete the partially written file
         }
     }
-});
-
-router.post('/:_id', function (req, res, next) {
-    File.findOne({"_id": req.params._id}).exec(function (error, file) {
-        if (error) return next(error);
-        if (!file) return next(new Error('File is not found.'));
-
-        File.findOneAndRemove({"_id": req.params._id}, function (error) {
-            if (error) return next(error);
-            console.info('Deleted file record %s with id=%s completed.', file.name, file._id);
-        });
-
-        if (fs.existsSync(file.path)) {
-            fs.unlink(file.path);
-            console.info('File record %s is deleted from file system.', file.path);
-        }
-        else {
-            console.info('File record %s does not exist in file system.', file.path);
-        }
-        req.flash('info', '<strong>[%s]</strong> has been deleted.', file.name);
-        res.redirect(303, '/upload');
-    });
 });
 
 module.exports = router;

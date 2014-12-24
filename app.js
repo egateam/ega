@@ -75,7 +75,7 @@ var passportConf = require('./models/passport');
 app.use(multer({
     dest:              './upload/',
     rename:            function (fieldname, filename) {
-        return filename.replace(/\W/g, '_').toLowerCase();
+        return filename.replace(/\W/g, '_').replace(/_+/g, '_');
     },
     limits:            {
         fileSize: 20 * 1024 * 1024

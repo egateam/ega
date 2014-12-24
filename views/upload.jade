@@ -1,22 +1,21 @@
 extends layout
 block content
-    // upload file form
+    // form for uploading a file
     .wrapper
-        form.form-horizontal(method="post" action="/upload" enctype="multipart/form-data" id="fileUploadForm")
+        form#fileUploadForm.form-horizontal(method="post" action="/upload" enctype="multipart/form-data")
             label(for="payload" data-toggle="tooltip" data-original-title="single file size limit: 20MB")
                 | Select a file to upload:
-            input.btn.btn-block(id="payload" type="file" name="myFile" accept="*" data-validation="required size" data-validation-max-size="20M")
+            input#payload.btn.btn-block(type="file" name="myFile" accept="*" data-validation="required size" data-validation-max-size="20M")
             input.btn.btn-lg.btn-primary.btn-block(type="submit" value="Upload")
     // file list
-    .wrapper
-        .panel.panel-default(id="filesList")
+    .wrapper(ng-app="fileApp")
+        div#filesListPanel.panel.panel-default(ng-controller="FileListCtrl")
             .panel-heading
                 h4 Your files
-            if (files.length === 0)
-                li.list-group-item
+            div(ng-switch on="files.length")
+                li.list-group-item(ng-switch-when="0")
                     | No files.
-            else
-                .table-responsive
+                .table-responsive(ng-switch-default)
                     table.table
                         thead
                             tr
@@ -25,13 +24,11 @@ block content
                                 th Type
                                 th
                         tbody
-                            each file, index in files
-                                tr
-                                    td= index + 1
-                                    td= file.name
-                                    td
-                                    td.cell-align
-                                        form(action="/upload/#{file._id}" method="post")
-                                            input(type="hidden" value=file._id.toString() name="id")
-                                            button.btn.btn-danger.btn-xs(type="submit" data-toggle="tooltip" data-original-title="Delete this job.")
-                                                span.fa.fa-trash
+                            tr(ng-repeat="file in files")
+                                td {{$index + 1}}
+                                td
+                                    a(href="/upload/files/{{file._id}}") {{file.name}}
+                                td
+                                td.cell-align
+                                    button.btn.btn-danger.btn-xs(ng-click="deleteFile($index)" data-type="info" data-animation="am-fade-and-scale" bs-tooltip data-title="{{tooltip.delete}}")
+                                        span.fa.fa-trash

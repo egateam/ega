@@ -49,7 +49,7 @@ html(lang="en")
                                 li
                                     a(href="/signup") Create Account
         // flash message
-        .container
+        .container#alerts-container
             // use !{var} here so html mark can be properly displayed
             if messages.error
                 .alert.alert-dismissible.alert-danger
@@ -76,6 +76,12 @@ html(lang="en")
         script(src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js")
         script(src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.1.47/jquery.form-validator.min.js")
         script(src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/js/bootstrap-select.min.js")
+        script(src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.28/angular.min.js")
+        script(src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.28/angular-resource.min.js")
+        script(src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.28/angular-animate.min.js")
+        script(src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.min.js")
+        script(src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.tpl.min.js")
+        script(src='/javascripts/app.js')
         script(type="text/javascript").
             $(document).ready(function () {
                 $(".selectpicker").selectpicker();
