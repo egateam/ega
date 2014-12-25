@@ -33,7 +33,9 @@ block content
         div#jobListPanel.panel.panel-default
             .panel-heading
                 h4 Your jobs
-            .table-responsive
+            li.list-group-item(ng-if="jobs.length == 0")
+                | No files.
+            .table-responsive(ng-if="jobs.length > 0")
                 table.table.table-bordered
                     thead
                         tr

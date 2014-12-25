@@ -8,12 +8,12 @@ block content
             input.btn.btn-lg.btn-primary.btn-block(type="submit" value="Upload" bs-tooltip data-title="{{tooltip.upload}}")
     // file list
     .wrapper(ng-controller="FileListCtrl")
-        div#filesListPanel.panel.panel-default(ng-switch on="files.length")
+        div#filesListPanel.panel.panel-default
             .panel-heading
                 h4 Your files
-            li.list-group-item(ng-switch-when="0")
+            li.list-group-item(ng-if="files.length == 0")
                 | No files.
-            .table-responsive(ng-switch-default)
+            .table-responsive(ng-if="files.length > 0")
                 table.table
                     thead
                         tr
