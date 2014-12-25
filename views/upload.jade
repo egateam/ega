@@ -9,8 +9,7 @@ block content
     // file list
     .wrapper(ng-controller="FileListCtrl")
         div#filesListPanel.panel.panel-default
-            .panel-heading
-                h4 Your files
+            .panel-heading Your files
             li.list-group-item(ng-if="files.length == 0")
                 | No files.
             .table-responsive(ng-if="files.length > 0")

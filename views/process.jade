@@ -2,8 +2,7 @@ extends layout
 block content
     .wrapper
         .panel.panel-default(id="consolePanel")
-            .panel-heading
-                h3.panel-title Console message
+            .panel-heading.panel-title Console message
             .panel-body
                 pre(id='consoleLog')
 
@@ -11,13 +10,11 @@ block content
     .wrapper
         .panel.panel-info(id="argumentsPanel")
             if (job)
-                .panel-heading
-                    h3.panel-title Job arguments
+                .panel-heading.panel-title Job arguments
                 .panel-body
                     pre.pre-scrollable.prettyprint.linenums.lang-js(id="arguments")
             else
-                .panel-heading
-                    h3.panel-title No job
+                .panel-heading.panel-title No running job
 
     // for arguments
     // http://stackoverflow.com/questions/8399547/how-to-add-line-numbers-to-all-lines-in-google-prettify

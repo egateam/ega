@@ -74,8 +74,8 @@ router.post('/', function (req, res, next) {
         var uploadDir = path.join('./upload', username);
 
         // make sure user directory exists
-        mkdirp(uploadDir, function (err) {
-            if (err) console.error(err);
+        mkdirp(uploadDir, function (error) {
+            if (error) console.error(error);
         });
 
         if (!file.truncated) {
