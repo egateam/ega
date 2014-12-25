@@ -34,7 +34,7 @@ block content
         div#jobListPanel.panel.panel-default
             .panel-heading Your jobs
             li.list-group-item(ng-if="jobs.length == 0")
-                | No files.
+                | No jobs.
             .table-responsive(ng-if="jobs.length > 0")
                 table.table.table-bordered
                     thead
@@ -53,11 +53,14 @@ block content
                             td {{ job.createDate | date:"yyyy-MM-dd hh:mm"}}
                             td {{ job.finishDate | date:"yyyy-MM-dd hh:mm"}}
                             td.success(ng-switch-when="finished")
-                                span.fa.fa-fw.fa-check &nbsp;{{job.status}}
+                                span.fa.fa-fw.fa-check
+                                | &nbsp;{{job.status}}
                             td.info(ng-switch-when="running")
-                                span.fa.fa-fw.fa-spinner &nbsp;{{job.status}}
+                                span.fa.fa-fw.fa-spin.fa-spinner
+                                | &nbsp;{{job.status}}
                             td.danger(ng-switch-when="failed")
-                                span.fa.fa-fw.fa-remove &nbsp;{{job.status}}
+                                span.fa.fa-fw.fa-remove
+                                | &nbsp;{{job.status}}
                             td.cell-align
                                 button.btn.btn-danger.btn-xs(ng-click="deleteJob($index)" data-type="info" bs-tooltip data-title="{{tooltip.delete}}")
                                     span.fa.fa-trash
