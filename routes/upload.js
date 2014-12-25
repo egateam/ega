@@ -6,7 +6,7 @@ var mkdirp = require('mkdirp');
 var path = require("path");
 var File = require('../models/File');
 
-router.get('/', function (req, res, next) {
+router.get('/', function (req, res) {
     res.render('upload', {
         title: 'EGA Upload',
         user:  req.user,
@@ -16,49 +16,47 @@ router.get('/', function (req, res, next) {
 
 // JSON API for list of files
 router.get('/files', function (req, res, next) {
-    File.find({username: req.user.username}).exec(function (error, files) {
+    File.find({username: req.user.username}).exec(function (error, items) {
         if (error) {
             return next(error);
         }
-        res.json(files);
+        res.json(items);
     });
 });
 
 // JSON API for getting a single file
 router.get('/files/:_id', function (req, res, next) {
-    // File ID comes in the URL
-    var fileId = req.params._id;
-
-    File.findById(fileId, '', function (error, file) {
+    // ID comes in the URL
+    File.findById(req.params._id, '', function (error, item) {
         if (error) {
             return next(error);
         }
-        else if (!file) {
+        else if (!item) {
             res.json({error: true});
         }
         else {
-            res.json(file);
+            res.json(item);
         }
     });
 });
 
 // API for Delete a file
-router.post('/files/:_id', function (req, res, next) {
-    File.findOne({"_id": req.params._id}).exec(function (error, file) {
+router.post('/files/delete/:_id', function (req, res, next) {
+    File.findOne({"_id": req.params._id}).exec(function (error, item) {
         if (error) return next(error);
-        if (!file) return next(new Error('File is not found.'));
+        if (!item) return next(new Error('File is not found.'));
 
         File.findOneAndRemove({"_id": req.params._id}, function (error) {
             if (error) return next(error);
-            console.info('Deleted file record %s with id=%s completed.', file.name, file._id);
+            console.info('Deleted file record %s with id=%s completed.', item.name, item._id);
         });
 
-        if (fs.existsSync(file.path)) {
-            fs.unlink(file.path);
-            console.info('File record %s is deleted from file system.', file.path);
+        if (fs.existsSync(item.path)) {
+            fs.unlink(item.path);
+            console.info('File record %s is deleted from file system.', item.path);
         }
         else {
-            console.info('File record %s does not exist in file system.', file.path);
+            console.info('File record %s does not exist in file system.', item.path);
         }
         res.redirect(303, '/upload');
     });

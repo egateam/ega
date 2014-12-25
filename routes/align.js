@@ -8,20 +8,59 @@ var spawn = require('child_process').spawn;
 var readline = require('readline');
 var _ = require('lodash');
 
-router.get('/', function (req, res, next) {
-    var username = req.user.username;
-    File.find({username: username}).lean().exec(function (error, files) {
+router.get('/', function (req, res) {
+    res.render('align', {
+        title: 'EGA Align',
+        user:  req.user,
+        id:    'align'
+    });
+});
+
+// JSON API for list of jobs
+router.get('/jobs', function (req, res, next) {
+    Job.find({username: req.user.username}).exec(function (error, items) {
+        if (error) {
+            return next(error);
+        }
+        res.json(items);
+    });
+});
+
+// JSON API for getting a single job
+router.get('/jobs/:_id', function (req, res, next) {
+    // ID comes in the URL
+    Job.findById(req.params._id, '', function (error, item) {
+        if (error) {
+            return next(error);
+        }
+        else if (!item) {
+            res.json({error: true});
+        }
+        else {
+            res.json(item);
+        }
+    });
+});
+
+// API for Delete a job
+router.post('/jobs/delete/:_id', function (req, res, next) {
+    Job.findOne({"_id": req.params._id}).exec(function (error, item) {
         if (error) return next(error);
-        Job.find({"username": username}).lean().exec(function (error, all) {
+        if (!item) return next(new Error('Job is not found.'));
+
+        Job.findOneAndRemove({"_id": req.params._id}, function (error) {
             if (error) return next(error);
-            res.render('align', {
-                files:   files || [],
-                title:   'EGA Align',
-                user:    req.user,
-                id:      'align',
-                allJobs: all || []
-            });
+            console.info('Deleted job record %s with id=%s completed.', item.name, item._id);
         });
+
+        //if (fs.existsSync(file.path)) {
+        //    fs.unlink(file.path);
+        //    console.info('File record %s is deleted from file system.', file.path);
+        //}
+        //else {
+        //    console.info('File record %s does not exist in file system.', file.path);
+        //}
+        res.redirect(303, '/align');
     });
 });
 
@@ -114,7 +153,7 @@ router.post('/', function (req, res, next) {
                         input:    child.stdout,
                         terminal: false
                     }).on('line', function (line) {
-                        var str = "[Stdout: " + req.body.alignName + "] " + line + "\n";
+                        var str = "[" + req.body.alignName + "] " + line + "\n";
                         req.app.get('io').emit('news', {data: str})
                     });
 
@@ -122,7 +161,7 @@ router.post('/', function (req, res, next) {
                         input:    child.stderr,
                         terminal: false
                     }).on('line', function (line) {
-                        var str = "[Stderr: " + req.body.alignName + "] " + line + "\n";
+                        var str = "[" + req.body.alignName + "] " + line + "\n";
                         req.app.get('io').emit('news', {data: str})
                     });
 
@@ -156,28 +195,6 @@ router.post('/', function (req, res, next) {
                 }
             });
         }
-    });
-});
-
-router.post('/delete/:_id', function (req, res, next) {
-    Job.findOne({"_id": req.params._id}).exec(function (error, job) {
-        if (error) return next(error);
-        if (!job) return next(new Error('Job is not found.'));
-
-        Job.findOneAndRemove({"_id": req.params._id}, function (error) {
-            if (error) return next(error);
-            console.info('Deleted job record %s with id=%s completed.', job.name, job._id);
-        });
-
-        //if (fs.existsSync(file.path)) {
-        //    fs.unlink(file.path);
-        //    console.info('File record %s is deleted from file system.', file.path);
-        //}
-        //else {
-        //    console.info('File record %s does not exist in file system.', file.path);
-        //}
-        req.flash('info', '<strong>[%s]</strong> has been deleted.', job.name);
-        res.redirect(303, '/align');
     });
 });
 
