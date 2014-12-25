@@ -12,62 +12,65 @@ html(lang="en")
         link(rel="stylesheet", href="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css")
         link(rel="stylesheet", href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css")
         //reference our site-specific css
+        link(rel="stylesheet", href="/stylesheets/layout.css")
         link(rel="stylesheet", href="/stylesheets/style.css")
     body(ng-app="egaApp")
-        // navbar
-        block navBar
-            .navbar.navbar-default.navbar-static-topdiv(role="navigation")
-                .container
-                    .navbar-headerdiv
-                        button.navbar-toggle(type="button" data-toggle="collapse" data-target=".navbar-collapse")
-                            span(class="sr-only") Toggle navigation
-                            span(class="icon-bar")
-                            span(class="icon-bar")
-                            span(class="icon-bar")
-                        a.navbar-brand(href="/") Home
-                    .navbar-collapse.collapse
-                        ul.nav.navbar-nav
-                            - var obj = { "upload":"Upload", "align":"Align", "process":"Process", "about":"About"}
-                                - each val, key in obj
-                                    - if (id == key)
-                                        li.active
-                                            a(href="/#{key}") #{val}
-                                    - else
-                                        li
-                                            a(href="/#{key}") #{val}
-                        ul.nav.navbar-nav.navbar-right
-                            if user
-                                li.active
-                                    a(href="/#")= "Hi, " + user.username
-                                li
-                                    a(href="/logout") Logout
-                            else
-                                li
-                                    a(href="/login") Login
-                                li
-                                    a(href="/signup") Create Account
-        // flash message
-        .container#alerts-container
-            // use !{var} here so html mark can be properly displayed
-            if messages.error
-                .alert.alert-dismissible.alert-danger
-                    button.close(type="button" data-dismiss="alert" aria-hidden="true") &times;
-                    div !{messages.error}
-            if messages.info
-                .alert.alert-dismissible.alert-info
-                    button.close(type="button" data-dismiss="alert" aria-hidden="true") &times;
-                    div !{messages.info}
-            if messages.success
-                .alert.alert-dismissible.alert-success
-                    button.close(type="button" data-dismiss="alert" aria-hidden="true") &times;
-                    div !{messages.success}
-        // Main page contents. These are populated by extension views
-        block content
+        // Wrap all page content here
+        div#wrap
+            // navbar
+            block navBar
+                .navbar.navbar-default.navbar-static-topdiv(role="navigation")
+                    .container
+                        .navbar-headerdiv
+                            button.navbar-toggle(type="button" data-toggle="collapse" data-target=".navbar-collapse")
+                                span(class="sr-only") Toggle navigation
+                                span(class="icon-bar")
+                                span(class="icon-bar")
+                                span(class="icon-bar")
+                            a.navbar-brand(href="/") Home
+                        .navbar-collapse.collapse
+                            ul.nav.navbar-nav
+                                - var obj = { "upload":"Upload", "align":"Align", "process":"Process", "about":"About"}
+                                    - each val, key in obj
+                                        - if (id == key)
+                                            li.active
+                                                a(href="/#{key}") #{val}
+                                        - else
+                                            li
+                                                a(href="/#{key}") #{val}
+                            ul.nav.navbar-nav.navbar-right
+                                if user
+                                    li.active
+                                        a(href="/#")= "Hi, " + user.username
+                                    li
+                                        a(href="/logout") Logout
+                                else
+                                    li
+                                        a(href="/login") Login
+                                    li
+                                        a(href="/signup") Create Account
+            // flash message
+            .container#alerts-container
+                // use !{var} here so html mark can be properly displayed
+                if messages.error
+                    .alert.alert-dismissible.alert-danger
+                        button.close(type="button" data-dismiss="alert" aria-hidden="true") &times;
+                        div !{messages.error}
+                if messages.info
+                    .alert.alert-dismissible.alert-info
+                        button.close(type="button" data-dismiss="alert" aria-hidden="true") &times;
+                        div !{messages.info}
+                if messages.success
+                    .alert.alert-dismissible.alert-success
+                        button.close(type="button" data-dismiss="alert" aria-hidden="true") &times;
+                        div !{messages.success}
+            // Main page contents. These are populated by extension views
+            block content
+            .push
         // footer
-            http://bootsnipp.com/snippets/featured/easy-sticky-footer
-        .navbar.navbar-default.navbar-fixed-bottom
-            .container
-                p.navbar-text &copy;&nbsp; 2014 &nbsp; Site maintained by wangq.
+            http://ryanfait.com/html5-sticky-footer/
+        footer
+            p &copy;&nbsp; 2014 &nbsp; Site maintained by wangq.
 
         // scripts for all pages
         script(src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js")

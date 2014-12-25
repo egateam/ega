@@ -1,0 +1,17 @@
+/*http://ryanfait.com/html5-sticky-footer/*/
+* {
+    margin: 0;
+}
+
+html, body {
+    height: 100%;
+}
+
+#wrap {
+    min-height: 100%;
+    margin: 0 auto -3em; /* the bottom margin is the negative value of the footer's height */
+}
+
+footer, .push {
+    height: 3em; /* '.push' must be the same height as 'footer' */
+}
