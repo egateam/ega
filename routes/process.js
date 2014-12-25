@@ -15,9 +15,9 @@ router.get('/', function (req, res, next) {
     });
 });
 
-router.get('/:name', function (req, res, next) {
+router.get('/:_id', function (req, res, next) {
     var username = req.user.username;
-    Job.findOne({"username": username, "name": req.params.name}).exec(function (error, job) {
+    Job.findOne({"username": username, "_id": req.params._id}).exec(function (error, job) {
         if (error) return next(error);
         res.render('process', {
             title: 'EGA Process',

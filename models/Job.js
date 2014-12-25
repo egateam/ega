@@ -2,7 +2,6 @@ var mongoose = require('mongoose');
 
 var jobSchema = new mongoose.Schema({
     name:       {type: String, required: true},
-    job_id:     {type: String, required: true, unique: true},
     pid:        Number,
     command:    String,
     args:       [String],

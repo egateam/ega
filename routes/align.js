@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var util = require("util");
+var fs = require("fs");
+var mkdirp = require('mkdirp');
+
 var File = require('../models/File');
 var Job = require('../models/Job');
 
@@ -29,7 +32,7 @@ router.get('/jobs', function (req, res, next) {
 // JSON API for getting a single job
 router.get('/jobs/:_id', function (req, res, next) {
     // ID comes in the URL
-    Job.findById(req.params._id, '', function (error, item) {
+    Job.findOne({username: req.user.username, _id: req.params._id}).exec(function (error, item) {
         if (error) {
             return next(error);
         }
@@ -42,16 +45,37 @@ router.get('/jobs/:_id', function (req, res, next) {
     });
 });
 
+// JSON API for getting the running job
+router.get('/running', function (req, res, next) {
+    Job.findOne({username: req.user.username, status: "running"}).exec(function (error, item) {
+        if (error) {
+            return next(error);
+        }
+        else if (item) {
+            res.json(item);
+        }
+        else {
+            res.json({});
+        }
+    });
+});
+
 // API for Delete a job
 router.post('/jobs/delete/:_id', function (req, res, next) {
-    Job.findOne({"_id": req.params._id}).exec(function (error, item) {
-        if (error) return next(error);
-        if (!item) return next(new Error('Job is not found.'));
-
-        Job.findOneAndRemove({"_id": req.params._id}, function (error) {
-            if (error) return next(error);
-            console.info('Deleted job record %s with id=%s completed.', item.name, item._id);
-        });
+    Job.findOne({username: req.user.username, "_id": req.params._id}).exec(function (error, item) {
+        if (error) {
+            return next(error);
+        }
+        else if (!item) {
+            return next(new Error('Job is not found.'));
+        }
+        else {
+            Job.findOneAndRemove({"_id": req.params._id}, function (error) {
+                if (error) return next(error);
+                console.info('Deleted job record %s with id=%s completed.', item.name, item._id);
+            });
+            res.redirect(303, '/align');
+        }
 
         //if (fs.existsSync(file.path)) {
         //    fs.unlink(file.path);
@@ -60,47 +84,43 @@ router.post('/jobs/delete/:_id', function (req, res, next) {
         //else {
         //    console.info('File record %s does not exist in file system.', file.path);
         //}
-        res.redirect(303, '/align');
     });
 });
 
 router.post('/', function (req, res, next) {
     console.log(util.inspect(req.body));
 
-    ////http://stackoverflow.com/questions/19035373/redirecting-in-express-passing-some-context
-    //var string = encodeURIComponent(JSON.stringify(req.body));
-
-    Job.findOne({status: "running"}).exec(function (error, existing) {
+    Job.findOne({username: req.user.username, status: "running"}).exec(function (error, existing) {
         if (error) return next(error);
         if (existing) {
-            console.log("You have a running job [%s]!", existing.job_id);
-            req.flash('error', "You have a running job <strong>[%s]</strong>!", existing.job_id);
+            console.log("You have a running job [%s]!", existing.name);
+            req.flash('error', "You have a running job <strong>[%s]</strong>!", existing.name);
             return res.redirect('/align');
         }
         else {
-            var job_id = req.user.username + '-' + req.body.alignName;
-
-            Job.findOne({job_id: job_id}, function (err, existing) {
+            Job.findOne({username: req.user.username, name: req.body.alignName}, function (err, existing) {
                 if (existing) {
                     console.log('Job with that name already exists.');
                     req.flash('error', 'Job with that name <strong>[%s]</strong> already exists in your account.', req.body.alignName);
                     return res.redirect('/align');
                 }
                 else {
-                    console.log("Running job: [%s]", job_id);
+                    console.log("Running job: [%s]", req.body.alignName);
                     var argument = {
                         alignName:         req.body.alignName,
                         targetSeq:         req.body.targetSeq,
                         querySeq:          [],
                         alignLength:       req.body.alignLength,
-                        reAlignmentMethod: req.body.reAlignmentMethod,
+                        reAlignmentMethod: req.body.reAlignmentMethod
                     };
 
-                    if (Array.isArray(req.body.querySeq)) {
-                        argument.querySeq = req.body.querySeq;
-                    }
-                    else {
-                        argument.querySeq.push(req.body.querySeq);
+                    if (req.body.hasOwnProperty("querySeq")) {
+                        if (Array.isArray(req.body.querySeq)) {
+                            argument.querySeq = req.body.querySeq;
+                        }
+                        else {
+                            argument.querySeq.push(req.body.querySeq);
+                        }
                     }
 
                     var command = 'ping';
@@ -114,7 +134,6 @@ router.post('/', function (req, res, next) {
 
                     var jobRecord = new Job({
                         name:       req.body.alignName,
-                        job_id:     job_id,
                         command:    command,
                         args:       args,
                         argument:   argument,
@@ -130,10 +149,10 @@ router.post('/', function (req, res, next) {
                     var child = spawn(command, args);
                     console.log('Job pid [%s].', child.pid);
 
-                    console.log("Store job to session: [%s]", job_id);
+                    console.log("Store job to session: [%s]", req.body.alignName);
                     Job.findOne({
-                        "job_id": job_id, status: "running"
-                    }).exec( function (error, job) {
+                        username: req.user.username, "name": req.body.alignName, status: "running"
+                    }).exec(function (error, job) {
                         if (error) return next(error);
                         console.log(util.inspect(job));
                         if (job) {
@@ -169,7 +188,7 @@ router.post('/', function (req, res, next) {
                         console.log('*** closed code=%s, signal=%s', code, signal);
                         req.app.get('io').emit('news', {data: "[Job: " + req.body.alignName + "] " + "*** closed\n"})
                         Job.findOne({
-                            "job_id": job_id, status: "running"
+                            username: req.user.username, "name": req.body.alignName, status: "running"
                         }, function (error, job) {
                             if (error) return next(error);
                             if (job) {
@@ -181,7 +200,7 @@ router.post('/', function (req, res, next) {
                                 job.save(function (error) {
                                     if (error) return next(error);
                                 });
-                                console.log('Job [%s] finished and recorded', job_id);
+                                console.log('Job [%s] finished and recorded', req.body.alignName);
                             }
                             else {
                                 req.flash('error', 'Job error.');

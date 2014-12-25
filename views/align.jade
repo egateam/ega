@@ -1,38 +1,38 @@
 extends layout
 block content
     .wrapper(ng-controller="JobListCtrl")
-        form.form-horizontal(ng-submit="beginAligning()" id="alignForm")
+        form.form-horizontal(id="alignForm" method="post" action="/align" )
             .form-group
                 label.control-label.col-xs-4(bs-tooltip data-title="{{tooltip.alignName}}") Name this alignment
                 .col-xs-8
-                    input.form-control(type="text" ng-model="opts.alignName" data-validation="length alphanumeric" data-validation-length="min4")
+                    input.form-control(type="text" name="alignName" data-validation="length alphanumeric" data-validation-length="min4")
             .form-group
                 label.control-label.col-xs-4(bs-tooltip data-title="{{tooltip.targetSeq}}") Select one as target
                 .col-xs-8
-                    select.form-control(ng-model="opts.targetSeq" ng-options="file._id as file.name for file in files" data-validation="required")
+                    select.form-control(name="targetSeq" data-validation="required")
+                        option(ng-repeat="file in files") {{file.name}}
             .form-group
                 label.control-label.col-xs-4(bs-tooltip data-title="{{tooltip.querySeq}}") Select one or more as queries
                 .col-xs-8
-                    select.form-control(multiple ng-model="opts.querySeq" ng-options="file._id as file.name for file in files" )
+                    select.form-control(name="querySeq" multiple)
+                        option(ng-repeat="file in files") {{file.name}}
             .form-group
                 label.control-label.col-xs-4(bs-tooltip data-title="{{tooltip.alignLength}}") Minimum fragment legnth
                 .col-xs-8
-                    input.form-control(type="text" ng-model="opts.alignLength" value=1000 data-validation="number")
+                    input.form-control(type="number" name="alignLength" value=1000 data-validation="number")
             .form-group
                 label.control-label.col-xs-4 Select a realigning method
                 .col-xs-8
                     .btn-group(data-toggle="buttons" ng-model="opts.reAlignmentMethod" bs-radio-group)
                         label.btn.btn-default(bs-tooltip data-title="{{tooltip.MAFFT}}") MAFFT
-                            input(type="radio" value="MAFFT")
+                            input(type="radio" name="reAlignmentMethod" value="MAFFT")
                         label.btn.btn-default(bs-tooltip data-title="{{tooltip.ClustalW}}") ClustalW
-                            input(type="radio" value="ClustalW")
+                            input(type="radio" name="reAlignmentMethod" value="ClustalW")
             button.btn.btn-lg.btn-primary.btn-block(type="submit") Begin aligning
-
     // job list
     .wrapper(ng-controller="JobListCtrl")
         div#jobListPanel.panel.panel-default
-            .panel-heading
-                h4 Your jobs
+            .panel-heading Your jobs
             li.list-group-item(ng-if="jobs.length == 0")
                 | No files.
             .table-responsive(ng-if="jobs.length > 0")
@@ -45,21 +45,19 @@ block content
                             th Finished
                             th Status
                             th
-                            th
                     tbody
-                        tr(ng-repeat="job in jobs" ng-switch on="jobs.status")
+                        tr(ng-repeat="job in jobs" ng-switch on="job.status")
                             td {{$index + 1}}
                             td
                                 a(href="/process/{{job._id}}") {{job.name}}
                             td {{ job.createDate | date:"yyyy-MM-dd hh:mm"}}
                             td {{ job.finishDate | date:"yyyy-MM-dd hh:mm"}}
+                            td.success(ng-switch-when="finished")
+                                span.fa.fa-fw.fa-check &nbsp;{{job.status}}
                             td.info(ng-switch-when="running")
                                 span.fa.fa-fw.fa-spinner &nbsp;{{job.status}}
                             td.danger(ng-switch-when="failed")
                                 span.fa.fa-fw.fa-remove &nbsp;{{job.status}}
-                            td.success(ng-switch-default)
-                                span.fa.fa-fw.fa-check &nbsp;{{job.status}}
-                            td
                             td.cell-align
                                 button.btn.btn-danger.btn-xs(ng-click="deleteJob($index)" data-type="info" bs-tooltip data-title="{{tooltip.delete}}")
                                     span.fa.fa-trash

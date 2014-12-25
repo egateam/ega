@@ -1,9 +1,9 @@
-var egaAppModule = angular.module('egaApp', ['mgcrea.ngStrap']);
+var egaAppModule = angular.module("egaApp", ["mgcrea.ngStrap"]);
 
 // Controller for the file list
-egaAppModule.controller('FileListCtrl',
+egaAppModule.controller("FileListCtrl",
     function ($scope, $http) {
-        $http.get('/upload/files').success(function (items) {
+        $http.get("/upload/files").success(function (items) {
             $scope.files = items;
         });
 
@@ -13,8 +13,8 @@ egaAppModule.controller('FileListCtrl',
         };
 
         $scope.deleteFile = function (index) {
-            $http.post('/upload/files/delete/' + $scope.files[index]._id).success(function () {
-                $http.get('/upload/files').success(function (files) {
+            $http.post("/upload/files/delete/" + $scope.files[index]._id).success(function () {
+                $http.get("/upload/files").success(function (files) {
                     $scope.files = files;
                 });
             });
@@ -22,19 +22,19 @@ egaAppModule.controller('FileListCtrl',
     });
 
 // Controller for the job list
-egaAppModule.controller('JobListCtrl',
-    function ($scope, $http) {
-        $http.get('/upload/files').success(function (items) {
+egaAppModule.controller("JobListCtrl",
+    function ($scope, $http, $alert) {
+        $http.get("/upload/files").success(function (items) {
             $scope.files = items;
         });
 
-        $http.get('/align/jobs').success(function (items) {
+        $http.get("/align/jobs").success(function (items) {
             $scope.jobs = items;
         });
 
         $scope.tooltip = {
             "delete":      "Delete this job.",
-            "alignName":   "This name should be unique in your account.",
+            "alignName":   "This name should be unique in your account and at least 4 chars.",
             "targetSeq":   "Select the most reliable/accurate one.",
             "querySeq":    "As you wish.",
             "alignLength": "we recommend a value larger than 100 bp.",
@@ -43,23 +43,17 @@ egaAppModule.controller('JobListCtrl',
         };
 
         $scope.opts = {
-            alignLength: 1000,
+            alignName:         null,
+            alignLength:       1000,
             reAlignmentMethod: "MAFFT"
         };
 
-        $scope.beginAligning = function () {
-            $http.post('/align/jobs/delete/' + $scope.jobs[index]._id).success(function () {
-                $http.get('/align/jobs').success(function (items) {
-                    $scope.jobs = items;
-                });
-            });
-        };
-
         $scope.deleteJob = function (index) {
-            $http.post('/align/jobs/delete/' + $scope.jobs[index]._id).success(function () {
-                $http.get('/align/jobs').success(function (items) {
-                    $scope.jobs = items;
+            $http.post("/align/jobs/delete/" + $scope.jobs[index]._id)
+                .success(function () {
+                    $http.get("/align/jobs").success(function (items) {
+                        $scope.jobs = items;
+                    });
                 });
-            });
         };
     });
