@@ -2,8 +2,7 @@ var mongoose = require('mongoose');
 
 var fileSchema = new mongoose.Schema({
     name: {type: String, required: true},
-    encoding: String,
-    mimetype: String,
+    type: String,
     path: {type: String, required: true},
     realpath: {type: String, required: true},
     extension: String,

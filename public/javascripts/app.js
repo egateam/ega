@@ -1,6 +1,6 @@
 'use strict';
 
-var egaAppModule = angular.module("egaApp", ["ngResource", "mgcrea.ngStrap"]);
+var egaAppModule = angular.module("egaApp", ["ngResource", "ngAnimate", "mgcrea.ngStrap"]);
 
 egaAppModule.factory("File", function ($resource, $http) {
     var resource = $resource("/api/files/:id", {id: "@_id"},
@@ -35,9 +35,17 @@ egaAppModule.controller("FileListCtrl",
     function ($scope, $http, File) {
         $scope.files = File.index();
 
+        $scope.types = [".fasta", ".fasta.gz", ".fasta.zip", ".newick"];
+
         $scope.tooltip = {
             "upload": "Single file size limit: 20MB",
-            "delete": "Delete this file."
+            "delete": "Delete this file.",
+            "update": "Edit the type of this file."
+        };
+
+        $scope.updateFile = function (index) {
+            File.update($scope.files[index]);
+            $scope.files = File.index();
         };
 
         $scope.deleteFile = function (index) {

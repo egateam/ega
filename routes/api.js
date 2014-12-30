@@ -32,7 +32,7 @@ exports.updateFile = function (req, res, next) {
         if (error) return next(error);
         if (!item) return next(new Error('File is not found.'));
 
-        item.mimetype = req.body.mimetype;
+        item.type = req.body.type;
 
         item.save(function (error) {
             if (error) return next(error);

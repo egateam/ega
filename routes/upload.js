@@ -54,11 +54,9 @@ router.post('/', function (req, res, next) {
                                     // save file record to mongo
                                     var fileRecord = new File({
                                         name:      file.name,
-                                        encoding:  file.encoding,
-                                        mimetype:  file.mimetype,
+                                        type:      file.mimetype,
                                         path:      newPath,
                                         realpath:  resolvedPath,
-                                        extension: file.extension,
                                         size:      file.size,
                                         username:  username
                                     });
