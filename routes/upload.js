@@ -14,54 +14,6 @@ router.get('/', function (req, res) {
     });
 });
 
-// JSON API for list of files
-router.get('/files', function (req, res, next) {
-    File.find({username: req.user.username}).exec(function (error, items) {
-        if (error) {
-            return next(error);
-        }
-        res.json(items);
-    });
-});
-
-// JSON API for getting a single file
-router.get('/files/:_id', function (req, res, next) {
-    // ID comes in the URL
-    File.findById(req.params._id, '', function (error, item) {
-        if (error) {
-            return next(error);
-        }
-        else if (!item) {
-            res.json({error: true});
-        }
-        else {
-            res.json(item);
-        }
-    });
-});
-
-// API for Delete a file
-router.post('/files/delete/:_id', function (req, res, next) {
-    File.findOne({"_id": req.params._id}).exec(function (error, item) {
-        if (error) return next(error);
-        if (!item) return next(new Error('File is not found.'));
-
-        File.findOneAndRemove({"_id": req.params._id}, function (error) {
-            if (error) return next(error);
-            console.info('Deleted file record %s with id=%s completed.', item.name, item._id);
-        });
-
-        if (fs.existsSync(item.path)) {
-            fs.unlink(item.path);
-            console.info('File record %s is deleted from file system.', item.path);
-        }
-        else {
-            console.info('File record %s does not exist in file system.', item.path);
-        }
-        res.redirect(303, '/upload');
-    });
-});
-
 // Upload a file
 router.post('/', function (req, res, next) {
     if (req.files) {

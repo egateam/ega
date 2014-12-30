@@ -5,7 +5,9 @@ block content
         form#fileUploadForm.form-horizontal(method="post" action="/upload" enctype="multipart/form-data")
             label Select a file to upload:
             input.btn.btn-block(type="file" name="myFile" accept="*" data-validation="required size" data-validation-max-size="20M")
-            input.btn.btn-lg.btn-primary.btn-block(type="submit" value="Upload" bs-tooltip data-title="{{tooltip.upload}}")
+            button.btn.btn-lg.btn-primary.btn-block(type="submit" bs-tooltip data-title="{{tooltip.upload}}")
+                span.fa.fa-plus
+                | &nbsp;Upload
     // file list
     .wrapper(ng-controller="FileListCtrl")
         div#filesListPanel.panel.panel-default
@@ -24,8 +26,8 @@ block content
                         tr(ng-repeat="file in files")
                             td {{$index + 1}}
                             td
-                                a(href="/upload/files/{{file._id}}") {{file.name}}
-                            td
+                                a(href="/api/files/{{file._id}}") {{file.name}}
+                            td {{file.mimetype}}
                             td.cell-align
                                 button.btn.btn-danger.btn-xs(ng-click="deleteFile($index)" data-type="info" bs-tooltip data-title="{{tooltip.delete}}")
                                     span.fa.fa-trash

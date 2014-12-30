@@ -91,10 +91,23 @@ var upload = require('./routes/upload');
 var align = require('./routes/align');
 var process = require('./routes/process');
 
+var api = require('./routes/api');
+
 app.use('/', routes);
 app.use('/upload', passportConf.isLoggedIn, upload);
 app.use('/align', passportConf.isLoggedIn, align);
 app.use('/process', passportConf.isLoggedIn, process);
+
+// Recipes with Angular.js, page 94
+app.get('/api/files', api.files);
+app.get('/api/files/:id', api.file);
+app.put('/api/files/:id', api.updateFile);
+app.delete('/api/files/:id', api.destroyFile);
+
+app.get('/api/jobs', api.jobs);
+app.get('/api/jobs/:id', api.job);
+app.put('/api/jobs/:id', api.updateJob);
+app.delete('/api/jobs/:id', api.destroyJob);
 
 // account related routers
 var accountController = require('./routes/account');
