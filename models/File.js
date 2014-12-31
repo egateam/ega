@@ -7,7 +7,8 @@ var fileSchema = new mongoose.Schema({
     realpath: {type: String, required: true},
     extension: String,
     size: Number,
-    username: {type: String, required: true}
+    username: {type: String, required: true},
+    uploadDate: Date
 });
 
 module.exports = mongoose.model('File', fileSchema);

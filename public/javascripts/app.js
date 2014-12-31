@@ -1,8 +1,8 @@
 'use strict';
 
-var egaAppModule = angular.module("egaApp", ["ngResource", "ngAnimate", "mgcrea.ngStrap"]);
+var egaApp = angular.module("egaApp", ["ngResource", "ngAnimate", "mgcrea.ngStrap"]);
 
-egaAppModule.factory("File", function ($resource, $http) {
+egaApp.factory("File", function ($resource, $http) {
     var resource = $resource("/api/files/:id", {id: "@_id"},
         {
             //'create':  {method: 'POST'},
@@ -16,7 +16,7 @@ egaAppModule.factory("File", function ($resource, $http) {
     return resource;
 });
 
-egaAppModule.factory("Job", function ($resource, $http) {
+egaApp.factory("Job", function ($resource, $http) {
     var resource = $resource("/api/jobs/:id", {id: "@_id"},
         {
             //'create':  {method: 'POST'},
@@ -31,7 +31,7 @@ egaAppModule.factory("Job", function ($resource, $http) {
 });
 
 // Controller for the file list
-egaAppModule.controller("FileListCtrl",
+egaApp.controller("FileListCtrl",
     function ($scope, $http, File) {
         $scope.files = File.index();
 
@@ -56,7 +56,7 @@ egaAppModule.controller("FileListCtrl",
     });
 
 // Controller for the job list
-egaAppModule.controller("JobListCtrl",
+egaApp.controller("JobListCtrl",
     function ($scope, $http, File, Job) {
         $scope.files = File.index();
 
@@ -66,10 +66,40 @@ egaAppModule.controller("JobListCtrl",
             "delete":      "Delete this job.",
             "alignName":   "This name should be unique in your account and at least 4 chars.",
             "targetSeq":   "Select the most reliable/accurate one.",
-            "querySeq":    "As you wish.",
+            "querySeq":    "As you wish, one or more.",
             "alignLength": "we recommend a value larger than 100 bp.",
             "MAFFT":       "Recommended. Fast.",
-            "ClustalW":    "Slow but more accurate."
+            "ClustalW":    "Slow but more accurate.",
+            "guideTree":   "In the absence of a guide tree, EGA will take a while to generate one."
+        };
+
+        //$scope.opts = {
+        //    alignName:         null,
+        //    alignLength:       1000,
+        //    reAlignmentMethod: "MAFFT"
+        //};
+
+        $scope.deleteJob = function (index) {
+            $http.delete("/api/jobs/" + $scope.jobs[index]._id).success(function () {
+                $scope.jobs = Job.index();
+            });
+        };
+    });
+
+egaApp.controller("ProcessCtrl",
+    function ($scope, $http, Job) {
+        $scope.job;
+        //$scope.jsonPretty = JSON.stringify($scope.job.argument, null, "    ");
+
+        $scope.tooltip = {
+            "delete":      "Delete this job.",
+            "alignName":   "This name should be unique in your account and at least 4 chars.",
+            "targetSeq":   "Select the most reliable/accurate one.",
+            "querySeq":    "As you wish, one or more.",
+            "alignLength": "we recommend a value larger than 100 bp.",
+            "MAFFT":       "Recommended. Fast.",
+            "ClustalW":    "Slow but more accurate.",
+            "guideTree":   "In the absence of a guide tree, EGA will take a while to generate one."
         };
 
         //$scope.opts = {

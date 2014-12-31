@@ -10,7 +10,7 @@ router.get('/', function (req, res, next) {
             title: 'EGA Process',
             user:  req.user,
             id:    'process',
-            job:   job ? JSON.stringify(job) : ''
+            job:   job
         });
     });
 });
@@ -23,7 +23,7 @@ router.get('/:_id', function (req, res, next) {
             title: 'EGA Process',
             user:  req.user,
             id:    'process',
-            job:   job ? JSON.stringify(job) : ''
+            job:   job
         });
     });
 });

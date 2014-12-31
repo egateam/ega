@@ -7,31 +7,15 @@ block content
                 pre(id='consoleLog')
 
     // arguments
-    .wrapper
+    .wrapper(ng-controller="ProcessCtrl")
         .panel.panel-info(id="argumentsPanel")
             if (job)
-                .panel-heading.panel-title Job arguments
+                .panel-heading.panel-title(ng-init="job= #{JSON.stringify(job)}") Job: [{{job.name}}]
                 .panel-body
-                    pre.pre-scrollable.prettyprint.linenums.lang-js(id="arguments")
+                    pre.pre-scrollable {{job.argument | json}}
+                        //code
             else
                 .panel-heading.panel-title No running job
-
-    // for arguments
-    // http://stackoverflow.com/questions/8399547/how-to-add-line-numbers-to-all-lines-in-google-prettify
-    style.
-        .prettyprint ol.linenums > li {
-            list-style-type: decimal;
-        }
-    script(type="text/javascript").
-        var data = !{job};
-        var jsonPretty = JSON.stringify(data, null, "    ");
-        $("pre#arguments").text(jsonPretty);
-    script(type="text/javascript").
-        (function (jQuery) {
-            jQuery(document).ready(function () {
-                prettyPrint();
-            });
-        }(jQuery))
 
     // for console
     script(type="text/javascript").
@@ -42,3 +26,4 @@ block content
             var objDiv = document.getElementById("consoleLog");
             objDiv.scrollTop = objDiv.scrollHeight;
         });
+

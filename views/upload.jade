@@ -5,7 +5,7 @@ block content
         form#fileUploadForm.form-horizontal(method="post" action="/upload" enctype="multipart/form-data")
             label Select a file to upload:
             input.btn.btn-block(type="file" name="myFile" accept="*" data-validation="required size" data-validation-max-size="20M")
-            button.btn.btn-lg.btn-primary.btn-block(type="submit" bs-tooltip data-title="{{tooltip.upload}}")
+            button.btn.btn-lg.btn-primary.btn-block(type="submit" data-animation="am-fade-and-scale" bs-tooltip data-title="{{tooltip.upload}}")
                 span.fa.fa-plus
                 | &nbsp;Upload
     // file list
@@ -21,6 +21,7 @@ block content
                             th #
                             th Name
                             th Type
+                            th Date
                             th
                     tbody
                         tr(ng-repeat="file in files")
@@ -33,6 +34,7 @@ block content
                                 | &nbsp;
                                 button.btn.btn-success.btn-xs(ng-click="updateFile($index)" data-type="info" bs-tooltip data-title="{{tooltip.update}}")
                                     span.fa.fa-lg.fa-edit
+                            td {{ file.uploadDate | date:"yyyy-MM-dd hh:mm"}}
                             td.cell-align
                                 button.btn.btn-danger.btn-xs(ng-click="deleteFile($index)" data-type="info" bs-tooltip data-title="{{tooltip.delete}}")
                                     span.fa.fa-lg.fa-trash

@@ -10,12 +10,17 @@ block content
                 label.control-label.col-xs-4(bs-tooltip data-title="{{tooltip.targetSeq}}") Select one as target
                 .col-xs-8
                     select.form-control(name="targetSeq" data-validation="required")
-                        option(ng-repeat="file in files") {{file.name}}
+                        option(ng-repeat="file in files | filter:{type: 'fasta'}") {{file.name}}
             .form-group
                 label.control-label.col-xs-4(bs-tooltip data-title="{{tooltip.querySeq}}") Select one or more as queries
                 .col-xs-8
                     select.form-control(name="querySeq" multiple)
-                        option(ng-repeat="file in files") {{file.name}}
+                        option(ng-repeat="file in files | filter:{type: 'fasta'}") {{file.name}}
+            .form-group
+                label.control-label.col-xs-4(bs-tooltip data-title="{{tooltip.guideTree}}") Guide Tree
+                .col-xs-8
+                    select.form-control(name="guideTree")
+                        option(ng-repeat="file in files | filter:{type: 'newick'}") {{file.name}}
             .form-group
                 label.control-label.col-xs-4(bs-tooltip data-title="{{tooltip.alignLength}}") Minimum fragment legnth
                 .col-xs-8
