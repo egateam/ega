@@ -14,3 +14,5 @@ upload
 
 # keep secret file secret
 settings.js
+
+public/lib
