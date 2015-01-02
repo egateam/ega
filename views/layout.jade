@@ -6,9 +6,8 @@ html(lang="en")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         //add bootstrap dependencies from CDNjs. Using a CDN to distribute these files puts less pressure
         //on our web server and will be delivered faster to the client than our own server.
-        link(rel="stylesheet", href="/lib/bootstrap/dist/css/bootstrap.min.css")
-        link(rel="stylesheet", href="/lib/bootstrap/dist/css/bootstrap-theme.min.css")
-        link(rel="stylesheet", href="/stylesheets/angular-motion.min.css")
+        //link(rel="stylesheet", href="/lib/bootstrap/dist/css/bootstrap.min.css")
+        link(rel="stylesheet", href="/lib/bootswatch/cerulean/bootstrap.min.css")
         link(rel="stylesheet", href="/lib/font-awesome/css/font-awesome.min.css")
         //reference our site-specific css
         link(rel="stylesheet", href="/stylesheets/layout.css")
@@ -75,12 +74,13 @@ html(lang="en")
             p &copy;&nbsp; 2014 &nbsp; Site maintained by wangq.
 
         // scripts for all pages
-        script(src="/lib/jquery-form-validator/form-validator/jquery.form-validator.min.js")
+        script(src="/lib/bootstrap/dist/js/bootstrap.min.js")
         script(src="/lib/angular/angular.min.js")
         script(src="/lib/angular-resource/angular-resource.min.js")
         script(src="/lib/angular-animate/angular-animate.min.js")
         script(src="/lib/angular-strap/dist/angular-strap.min.js")
         script(src="/lib/angular-strap/dist/angular-strap.tpl.min.js")
+        script(src="/lib/jquery-form-validator/form-validator/jquery.form-validator.min.js")
         script(src="/lib/lodash/dist/lodash.min.js")
         script(src="/javascripts/app.js")
         script(type="text/javascript").

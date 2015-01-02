@@ -1,5 +1,6 @@
 extends layout
 block content
+    link(rel="stylesheet", href="/lib/highlightjs/styles/default.css")
     .wrapper
         .panel.panel-default(id="consolePanel")
             .panel-heading.panel-title Console message
@@ -12,10 +13,15 @@ block content
             if (job)
                 .panel-heading.panel-title(ng-init="job= #{JSON.stringify(job)}") Job: [{{job.name}}]
                 .panel-body
-                    pre.pre-scrollable {{job.argument | json}}
-                        //code
+                    pre.pre-scrollable
+                        code.json {{job.argument | json}}
             else
                 .panel-heading.panel-title No running job
+
+    // highlight for arguments
+    script(src="/lib/highlightjs/highlight.pack.js")
+    script(type="text/javascript").
+        hljs.initHighlightingOnLoad();
 
     // for console
     script(type="text/javascript").
