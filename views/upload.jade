@@ -6,8 +6,8 @@ block content
             label Select a file to upload:
             input.btn.btn-block(type="file" name="myFile" accept="*" data-validation="required size" data-validation-max-size="20M")
             button.btn.btn-lg.btn-primary.btn-block(type="submit" data-animation="am-fade-and-scale" bs-tooltip data-title="{{tooltip.upload}}")
-                span.fa.fa-plus
-                | &nbsp;Upload
+                span.fa.fa-file
+                | &nbsp;&nbsp;Upload
     // file list
     .wrapper(ng-controller="FileListCtrl")
         div#filesListPanel.panel.panel-default
