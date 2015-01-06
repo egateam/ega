@@ -98,16 +98,19 @@ app.use('/upload', passportConf.isLoggedIn, upload);
 app.use('/align', passportConf.isLoggedIn, align);
 app.use('/process', passportConf.isLoggedIn, process);
 
-// Recipes with Angular.js, page 94
-app.get('/api/files', api.files);
-app.get('/api/files/:id', api.file);
-app.put('/api/files/:id', api.updateFile);
-app.delete('/api/files/:id', api.destroyFile);
+// "Recipes with Angular.js", page 94
+// Backend Integration with Node Express
+app.get('/api/files', passportConf.isLoggedIn, api.files);
+app.get('/api/files/:id', passportConf.isLoggedIn, api.file);
+app.put('/api/files/:id', passportConf.isLoggedIn, api.updateFile);
+app.delete('/api/files/:id', passportConf.isLoggedIn, api.destroyFile);
 
-app.get('/api/jobs', api.jobs);
-app.get('/api/jobs/:id', api.job);
-app.put('/api/jobs/:id', api.updateJob);
-app.delete('/api/jobs/:id', api.destroyJob);
+app.get('/api/jobs', passportConf.isLoggedIn, api.jobs);
+app.get('/api/jobs/:id', passportConf.isLoggedIn, api.job);
+app.put('/api/jobs/:id', passportConf.isLoggedIn, api.updateJob);
+app.delete('/api/jobs/:id', passportConf.isLoggedIn, api.destroyJob);
+
+app.put('/api/jobs/:id/:file', passportConf.isLoggedIn, api.processJob)
 
 // account related routers
 var accountController = require('./routes/account');
