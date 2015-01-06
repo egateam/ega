@@ -55,8 +55,7 @@ router.post('/', function (req, res, next) {
                                     var fileRecord = new File({
                                         name:       file.name,
                                         type:       file.mimetype,
-                                        path:       newPath,
-                                        realpath:   resolvedPath,
+                                        path:       resolvedPath,
                                         size:       file.size,
                                         username:   username,
                                         uploadDate: Date.now()
