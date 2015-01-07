@@ -58,10 +58,10 @@ block content
                                 a(href="/process/{{job._id}}") {{job.name}}
                             td {{ job.createDate | date:"yyyy-MM-dd hh:mm"}}
                             td {{ job.finishDate | date:"yyyy-MM-dd hh:mm"}}
-                            td.success(ng-switch-when="finished")
+                            td.info(ng-switch-when="finished")
                                 span.fa.fa-fw.fa-check
                                 | &nbsp;{{job.status}}
-                            td.info(ng-switch-when="running")
+                            td.warning(ng-switch-when="running")
                                 span.fa.fa-fw.fa-spin.fa-spinner
                                 | &nbsp;{{job.status}}
                             td.danger(ng-switch-when="failed")

@@ -7,6 +7,8 @@ block content
         .panel.panel-info(id="argumentsPanel")
             if (job)
                 .panel-heading.panel-title(ng-init="job= #{JSON.stringify(job)}") Job: [{{job.name}}]
+                    .pull-right
+                        button.btn.btn-warning.btn-xs Done
                 .panel-body
                     pre.pre-scrollable
                         code.json {{job.argument | json}}
@@ -17,13 +19,31 @@ block content
     if (job)
         .wrapper(ng-controller="ProcessShCtrl" ng-init="job= #{JSON.stringify(job)}")
             table.table.table-bordered(ng-repeat="sh in job.sh_files | filter:{exist: true}")
-                tbody
+                thead
                     tr
+                        th #
+                        th Operation
+                        th Start
+                        th End
+                        th Status
+                        th
+                tbody
+                    tr(ng-switch on="sh.status")
                         td {{$index + 1}}
                         td
-                            a(href="/process/{{job._id}}/{{sh.name}}") {{sh.name}}
+                            a.btn.btn-xs.btn-primary(role="button" href="/process/{{job._id}}/{{sh.name}}") {{sh.name}}
+                        td {{ sh.startDate | date:"yyyy-MM-dd hh:mm"}}
+                        td {{ sh.endDate | date:"yyyy-MM-dd hh:mm"}}
+                        td.success(ng-switch-when="finished")
+                            span.fa.fa-fw.fa-check
+                            | &nbsp;{{sh.status}}
+                        td.warning(ng-switch-when="running")
+                            span.fa.fa-fw.fa-spin.fa-spinner
+                            | &nbsp;{{sh.status}}
+                        td.danger(ng-switch-when="failed")
+                            span.fa.fa-fw.fa-remove
+                            | &nbsp;{{sh.status}}
                         td {{sh.exist}}
-                        td
             div
                 p te
 

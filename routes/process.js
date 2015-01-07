@@ -76,6 +76,12 @@ router.get('/:id/:filename', function (req, res, next) {
             return next(new Error('Job is not found.'));
         }
         else {
+            var existing = _.find(item.sh_files, {status: 'running'});
+            if (existing) {
+                console.log("You have a running operation [%s]!", existing.name);
+                req.flash('error', "You have a running operation <strong>[%s]</strong>!", existing.name);
+                return res.redirect('/process/' + id);
+            }
             for (var i = 0, ln = item.sh_files.length; i < ln; i++) {
                 if (item.sh_files[i].name === filename) {
                     console.log("find file %s", filename);
