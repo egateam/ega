@@ -86,7 +86,36 @@ egaApp.controller("JobListCtrl",
         };
     });
 
-egaApp.controller("ProcessCtrl",
+egaApp.controller("ProcessArgCtrl",
+    function ($scope, $http, Job) {
+        $scope.job;
+        //$scope.jsonPretty = JSON.stringify($scope.job.argument, null, "    ");
+
+        $scope.tooltip = {
+            "delete":      "Delete this job.",
+            "alignName":   "This name should be unique in your account and at least 4 chars.",
+            "targetSeq":   "Select the most reliable/accurate one.",
+            "querySeq":    "As you wish, one or more.",
+            "alignLength": "we recommend a value larger than 100 bp.",
+            "MAFFT":       "Recommended. Fast.",
+            "ClustalW":    "Slow but more accurate.",
+            "guideTree":   "In the absence of a guide tree, EGA will take a while to generate one."
+        };
+
+        //$scope.opts = {
+        //    alignName:         null,
+        //    alignLength:       1000,
+        //    reAlignmentMethod: "MAFFT"
+        //};
+
+        $scope.deleteJob = function (index) {
+            $http.delete("/api/jobs/" + $scope.jobs[index]._id).success(function () {
+                $scope.jobs = Job.index();
+            });
+        };
+    });
+
+egaApp.controller("ProcessShCtrl",
     function ($scope, $http, Job) {
         $scope.job;
         //$scope.jsonPretty = JSON.stringify($scope.job.argument, null, "    ");

@@ -1,14 +1,9 @@
 extends layout
 block content
     link(rel="stylesheet", href="/lib/highlightjs/styles/default.css")
-    .wrapper
-        .panel.panel-default(id="consolePanel")
-            .panel-heading.panel-title Console message
-            .panel-body
-                pre(id='consoleLog')
 
     // arguments
-    .wrapper(ng-controller="ProcessCtrl")
+    .wrapper(ng-controller="ProcessArgCtrl")
         .panel.panel-info(id="argumentsPanel")
             if (job)
                 .panel-heading.panel-title(ng-init="job= #{JSON.stringify(job)}") Job: [{{job.name}}]
@@ -17,6 +12,28 @@ block content
                         code.json {{job.argument | json}}
             else
                 .panel-heading.panel-title No running job
+
+    // list of sh files
+    if (job)
+        .wrapper(ng-controller="ProcessShCtrl" ng-init="job= #{JSON.stringify(job)}")
+            table.table.table-bordered(ng-repeat="sh in job.sh_files | filter:{exist: true}")
+                tbody
+                    tr
+                        td {{$index + 1}}
+                        td
+                            a(href="/process/{{job._id}}/{{sh.name}}") {{sh.name}}
+                        td {{sh.exist}}
+                        td
+            div
+                p te
+
+    // console
+    .wrapper
+        .panel.panel-default(id="consolePanel")
+            .panel-heading.panel-title Console messages
+            .panel-body
+                pre(id='consoleLog')
+
 
     // highlight for arguments
     script(src="/lib/highlightjs/highlight.pack.js")

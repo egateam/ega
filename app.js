@@ -110,8 +110,6 @@ app.get('/api/jobs/:id', passportConf.isLoggedIn, api.job);
 app.put('/api/jobs/:id', passportConf.isLoggedIn, api.updateJob);
 app.delete('/api/jobs/:id', passportConf.isLoggedIn, api.destroyJob);
 
-app.put('/api/jobs/:id/:file', passportConf.isLoggedIn, api.processJob)
-
 // account related routers
 var accountController = require('./routes/account');
 app.get('/login', accountController.getLogin);

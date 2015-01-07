@@ -83,90 +83,36 @@ router.post('/', function (req, res, next) {
                         if (error) console.error(error);
                     });
 
-                    var command = 'ping';
-                    var args;
-                    if (/^win/.test(process.platform)) {
-                        args = ['-n', '30', '127.0.0.1'];
-                    }
-                    else {
-                        args = ['-c', '30', '127.0.0.1'];
-                    }
+                    alignDir = fs.realpathSync(alignDir);
+
+                    // Only .sh files listed below can be executed
+                    var sh_files = [
+                        {
+                            name:  'prepare.sh',
+                            exist: false
+                        },
+                        {
+                            name:  'ping.sh',
+                            exist: false
+                        }
+                    ];
+
+                    var sh_file = path.join(alignDir, 'prepare.sh');
+                    var command = 'ping -c 30 127.0.0.1\n';
+                    fs.writeFileSync(sh_file, command);
 
                     var jobRecord = new Job({
                         name:       alignName,
-                        command:    command,
-                        args:       args,
                         argument:   argument,
                         username:   username,
                         createDate: Date.now(),
+                        path:       alignDir,
+                        sh_files:   sh_files,
                         status:     "running"
                     });
                     jobRecord.save(function (error) {
                         if (error) return next(error);
                         console.info('Added %s by %s', jobRecord.name, jobRecord.username);
-                    });
-
-                    var child = spawn(command, args);
-                    console.log('Job pid [%s].', child.pid);
-
-                    console.log("Store job to database: [%s]", req.body.alignName);
-                    //Job.findOne({
-                    //    username: req.user.username, name: req.body.alignName, status: "running"
-                    //}).exec(function (error, job) {
-                    //    if (error) return next(error);
-                    //    console.log(util.inspect(job));
-                    //    if (job) {
-                    //        job.pid = child.pid;
-                    //
-                    //        job.save(function (error) {
-                    //            if (error) return next(error);
-                    //        });
-                    //        console.log('Job pid [%s] recorded', job.pid);
-                    //    }
-                    //    else {
-                    //        console.log('Can\'t find running job. The job is done or something errors.');
-                    //    }
-                    //});
-
-                    readline.createInterface({
-                        input:    child.stdout,
-                        terminal: false
-                    }).on('line', function (line) {
-                        var str = "[" + req.body.alignName + "] " + line + "\n";
-                        req.app.get('io').emit('news', {data: str})
-                    });
-
-                    readline.createInterface({
-                        input:    child.stderr,
-                        terminal: false
-                    }).on('line', function (line) {
-                        var str = "[" + req.body.alignName + "] " + line + "\n";
-                        req.app.get('io').emit('news', {data: str})
-                    });
-
-                    child.on('exit', function (code, signal) {
-                        console.log('*** closed code=%s, signal=%s', code, signal);
-                        req.app.get('io').emit('news', {data: "[Job: " + req.body.alignName + "] " + "*** closed\n"})
-                        Job.findOne({
-                            username: req.user.username, "name": req.body.alignName, status: "running"
-                        }, function (error, job) {
-                            if (error) return next(error);
-                            if (job) {
-                                job.finishDate = Date.now();
-                                job.exitCode = code;
-                                job.exitSignal = signal;
-                                job.status = code === 0 ? "finished" : "failed";
-
-                                job.save(function (error) {
-                                    if (error) return next(error);
-                                });
-                                console.log('Job [%s] finished and recorded', req.body.alignName);
-                            }
-                            else {
-                                req.flash('error', 'Job error.');
-                                console.log('Job error.');
-                            }
-                        });
                     });
 
                     // return is needed otherwise the page will be hanging.

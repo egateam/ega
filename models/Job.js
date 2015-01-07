@@ -1,11 +1,20 @@
 var mongoose = require('mongoose');
 
+var shSchema = new mongoose.Schema({
+    name:       String,
+    exist:      Boolean,
+    path:       String,
+    pid:        Number,
+    startDate:  Date,
+    endDate:    Date,
+    exitCode:   String,
+    exitSignal: String,
+    // running, failed, finished
+    status:     String
+});
+
 var jobSchema = new mongoose.Schema({
     name:       {type: String, required: true},
-    pid:        Number,
-    command:    String,
-    args:       [String],
-    realpath:   String,
     argument:   {
         alignName:         String,
         targetSeq:         String,
@@ -13,11 +22,11 @@ var jobSchema = new mongoose.Schema({
         alignLength:       Number,
         reAlignmentMethod: String
     },
+    path:       String,
+    sh_files:   [shSchema],
     username:   {type: String, required: true},
     createDate: Date,
     finishDate: Date,
-    exitCode:   String,
-    exitSignal: String,
     // running, failed, finished
     status:     String
 });

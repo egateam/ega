@@ -110,13 +110,29 @@ exports.destroyJob = function (req, res, next) {
             console.info('Deleted job record %s with id=%s completed.', item.name, item._id);
         });
 
-        //if (fs.existsSync(item.path)) {
-        //    fs.unlink(item.path);
-        //    console.info('File record %s is deleted from file system.', item.path);
-        //}
-        //else {
-        //    console.info('File record %s does not exist in file system.', item.path);
-        //}
+        if (fs.existsSync(item.path)) {
+            deleteFolderRecursive(item.path);
+            console.info('Job record %s is deleted from file system.', item.path);
+        }
+        else {
+            console.info('Job record %s does not exist in file system.', item.path);
+        }
         return res.json(true);
     });
+};
+
+// Codes come from
+// http://www.geedew.com/2012/10/24/remove-a-directory-that-is-not-empty-in-nodejs/
+var deleteFolderRecursive = function (path) {
+    if (fs.existsSync(path)) {
+        fs.readdirSync(path).forEach(function (file, index) {
+            var curPath = path + "/" + file;
+            if (fs.lstatSync(curPath).isDirectory()) { // recurse
+                deleteFolderRecursive(curPath);
+            } else { // delete file
+                fs.unlinkSync(curPath);
+            }
+        });
+        fs.rmdirSync(path);
+    }
 };
