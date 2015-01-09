@@ -4,13 +4,10 @@ var util = require("util");
 var fs = require("fs");
 var mkdirp = require('mkdirp');
 var path = require("path");
+var _ = require('lodash');
 
 var File = require('../models/File');
 var Job = require('../models/Job');
-
-var spawn = require('child_process').spawn;
-var readline = require('readline');
-var _ = require('lodash');
 
 router.get('/', function (req, res) {
     res.render('align', {
@@ -31,7 +28,6 @@ router.get('/running', function (req, res, next) {
         }
         else {
             res.json(item);
-
         }
     });
 });
@@ -60,10 +56,15 @@ router.post('/', function (req, res, next) {
                 else {
                     console.log("Running job: [%s]", alignName);
 
+                    if (alignName == 'chr_length' || alignName == 'taxon' || alignName == 'seq_pair' || alignName == 'id2name') {
+                        alignName += '_renamed';
+                    }
+
                     var argument = {
                         alignName:         alignName,
                         targetSeq:         req.body.targetSeq,
                         querySeq:          [],
+                        guideTree:         req.body.guideTree,
                         alignLength:       req.body.alignLength,
                         reAlignmentMethod: req.body.reAlignmentMethod
                     };
@@ -75,15 +76,23 @@ router.post('/', function (req, res, next) {
                         else {
                             argument.querySeq.push(req.body.querySeq);
                         }
+
+                        // filter out targetSeq
+                        argument.querySeq = _.filter(argument.querySeq, function (file) {
+                            return file != argument.targetSeq;
+                        });
                     }
 
+                    console.log(util.inspect(argument));
+
                     // make sure directory exists
-                    var alignDir = path.join('./upload', username, alignName);
-                    mkdirp(alignDir, function (error) {
+                    var userDir = path.join('./upload', username);
+                    userDir = fs.realpathSync(userDir);
+
+                    var alignDir = path.join(userDir, alignName);
+                    mkdirp.sync(alignDir, function (error) {
                         if (error) console.error(error);
                     });
-
-                    alignDir = fs.realpathSync(alignDir);
 
                     // Only .sh files listed below can be executed
                     var sh_files = [
@@ -92,15 +101,95 @@ router.post('/', function (req, res, next) {
                             exist: false
                         },
                         {
-                            name:  'ping.sh',
+                            name:  '1_real_chr.sh',
+                            exist: false
+                        },
+                        {
+                            name:  '2_file_rm.sh',
+                            exist: false
+                        },
+                        {
+                            name:  '3_pair_cmd.sh',
+                            exist: false
+                        },
+                        {
+                            name:  '4_rawphylo.sh',
+                            exist: false
+                        },
+                        {
+                            name:  '5_multi_cmd.sh',
+                            exist: false
+                        },
+                        {
+                            name:  '6_multi_db_only.sh',
                             exist: false
                         }
                     ];
 
+                    // sh header
                     var sh_file = path.join(alignDir, 'prepare.sh');
-                    var command = 'ping -c 30 127.0.0.1\n';
+                    var command =
+                            "#/bin/bash\n\n"
+                            + "sleep 1 \n"
+                            + "echo 'We are going to start...' \n"
+                            + "sleep 1 \n"
+                            + "echo '3...' \n"
+                            + "sleep 1 \n"
+                            + "echo '2...' \n"
+                            + "sleep 1 \n"
+                            + "echo '1!' \n\n";
+
+                    // copying sequences and tree
+                    command += "cd " + alignDir + "\n\n";
+
+                    command += "echo 'Copy target sequence.'\n";
+                    command += "faops split-name " + argument.targetSeq + " " + strip_path(argument.targetSeq);
+                    command += "\n";
+
+                    for (q in argument.querySeq) {
+                        command += "echo 'Copy query [" + q + "] sequence.'\n";
+                        command += "faops split-about " + argument.querySeq[q] + " " + "10000000 " + strip_path(argument.querySeq[q]);
+                        command += "\n";
+                    }
+
+                    if (argument.guideTree) {
+                        command += "echo 'Copy guide tree.'\n";
+                        command += "cp " + argument.guideTree + " .";
+                        command += "\n";
+                    }
+                    command += "\n";
+
+
+                    command += 'perl ~/Scripts/withncbi/taxon/strain_bz.pl ' + "\\\n";
+                    command += '    --file ' + alignDir + '/' + alignName + '.csv ' + "\\\n";
+                    command += '    -w ' + userDir + "\\\n";
+                    command += '    --name ' + alignName + "\\\n";
+                    command += '    --use_name ' + "\\\n";
+                    command += '    -t ' + strip_path(argument.targetSeq) + "\\\n";
+                    for (q in argument.querySeq) {
+                        command += "    -q " + strip_path(argument.querySeq[q]) + "\\\n";
+                    }
+                    command += '    --parallel 4 ' + "\n";
+
                     fs.writeFileSync(sh_file, command);
 
+                    // taxon.csv
+                    var csv_file = path.join(alignDir, alignName + '.csv');
+                    var arbitrary = 100000000; // give them arbitrary ids
+                    var content =
+                            'strain,strain_id,species,species_id,genus,genus_id,family,family_id,order,order_id' + "\n";
+
+                    arbitrary += 1;
+                    content += '"' + strip_path(argument.targetSeq) + '",' + arbitrary + ',"Saccharomyces cerevisiae",4932,Saccharomyces,4930,Saccharomycetaceae,4893,Saccharomycetales,4892' + "\n";
+
+                    for (q in argument.querySeq) {
+                        arbitrary += 1;
+                        content += '"' + strip_path(argument.querySeq[q]) + '",' + arbitrary + ',"Saccharomyces cerevisiae",4932,Saccharomyces,4930,Saccharomycetaceae,4893,Saccharomycetales,4892' + "\n";
+                    }
+
+                    fs.writeFileSync(csv_file, content);
+
+                    // save job to mongo
                     var jobRecord = new Job({
                         name:       alignName,
                         argument:   argument,
@@ -122,5 +211,10 @@ router.post('/', function (req, res, next) {
         }
     });
 });
+
+var strip_path = function (str) {
+    var name = path.basename(str);
+    return name.replace(/\..+$/, '');
+};
 
 module.exports = router;

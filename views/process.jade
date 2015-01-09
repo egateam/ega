@@ -18,7 +18,7 @@ block content
     // list of sh files
     if (job)
         .wrapper(ng-controller="ProcessShCtrl" ng-init="job= #{JSON.stringify(job)}")
-            table.table.table-bordered(ng-repeat="sh in job.sh_files | filter:{exist: true}")
+            table#operationTable.table.table-bordered.table-compact
                 thead
                     tr
                         th #
@@ -28,7 +28,7 @@ block content
                         th Status
                         th
                 tbody
-                    tr(ng-switch on="sh.status")
+                    tr(ng-repeat="sh in job.sh_files | filter:{exist: true}" ng-switch on="sh.status")
                         td {{$index + 1}}
                         td
                             a.btn.btn-xs.btn-primary(role="button" href="/process/{{job._id}}/{{sh.name}}") {{sh.name}}
@@ -44,8 +44,6 @@ block content
                             span.fa.fa-fw.fa-remove
                             | &nbsp;{{sh.status}}
                         td {{sh.exist}}
-            div
-                p te
 
     // console
     .wrapper

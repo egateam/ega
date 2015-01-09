@@ -43,7 +43,7 @@ input[type="password"] {
 
 /* file list */
 #filesListPanel {
-    max-width: 40em;
+    max-width: 50em;
     margin: 0 auto;
 }
 
@@ -57,7 +57,12 @@ input[type="password"] {
 
 /* arguments panel */
 #argumentsPanel {
-    max-width: 40em;
+    max-width: 50em;
+    margin: 0 auto;
+}
+
+#operationTable {
+    max-width: 50em;
     margin: 0 auto;
 }
 

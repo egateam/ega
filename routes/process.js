@@ -97,7 +97,7 @@ router.get('/:id/:filename', function (req, res, next) {
 });
 
 var process_sh = function (io, job, index) {
-    var child = spawn("sh", [job.sh_files[index].path]);
+    var child = spawn("bash", [job.sh_files[index].path]);
     console.log('Job pid [%s].', child.pid);
 
     job.sh_files[index].startDate = Date.now();
@@ -115,7 +115,7 @@ var process_sh = function (io, job, index) {
         input:    child.stdout,
         terminal: false
     }).on('line', function (line) {
-        var str = "[" + job.name + "] " + line + "\n";
+        var str = "[stdout] " + line + "\n";
         io.emit('news', {data: str})
     });
 
@@ -123,13 +123,13 @@ var process_sh = function (io, job, index) {
         input:    child.stderr,
         terminal: false
     }).on('line', function (line) {
-        var str = "[" + job.name + "] " + line + "\n";
+        var str = "[stderr] " + line + "\n";
         io.emit('news', {data: str})
     });
 
     child.on('exit', function (code, signal) {
         console.log('*** closed code=%s, signal=%s', code, signal);
-        io.emit('news', {data: "[Job: " + job.name + "] " + "*** CLOSED ***\n"});
+        io.emit('news', {data: "[Job: " + job.name + "] [Operation: " + job.sh_files[index].name +"] " + "*** DONE ***\n"});
 
         job.sh_files[index].endDate = Date.now();
         job.sh_files[index].exitCode = code;

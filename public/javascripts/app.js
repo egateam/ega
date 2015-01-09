@@ -35,7 +35,7 @@ egaApp.controller("FileListCtrl",
     function ($scope, $http, File) {
         $scope.files = File.index();
 
-        $scope.types = [".fasta", ".fasta.gz", ".fasta.zip", ".newick"];
+        $scope.types = [".fasta", ".fasta.gz", ".newick"];
 
         $scope.tooltip = {
             "upload": "Single file size limit: 20MB",
