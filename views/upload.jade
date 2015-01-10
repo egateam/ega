@@ -20,6 +20,7 @@ block content
                         tr
                             th #
                             th Name
+                            th Size
                             th Type
                             th Date
                             th
@@ -28,6 +29,7 @@ block content
                             td {{$index + 1}}
                             td
                                 a(href="/api/files/{{file._id}}") {{file.name}}
+                            td {{file.size | bytes}}
                             td
                                 select(ng-model='file.type')
                                     option(ng-repeat="type in types") {{type}}
