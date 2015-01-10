@@ -166,4 +166,4 @@ io.sockets.on('connection', function (socket) {
 
 module.exports = app;
 
-// cloc.pl . --exclude-dir=.git,.idea,node_modules,upload --by-file
+// cloc . --exclude-dir=.git,.idea,node_modules,upload,lib --by-file
