@@ -1,16 +1,17 @@
 var mongoose = require('mongoose');
 
 var shSchema = new mongoose.Schema({
-    name:       String,
-    exist:      Boolean,
-    path:       String,
-    pid:        Number,
-    startDate:  Date,
-    endDate:    Date,
-    exitCode:   String,
-    exitSignal: String,
+    name:        String,
+    exist:       Boolean,
+    description: String,
+    path:        String,
+    pid:         Number,
+    startDate:   Date,
+    endDate:     Date,
+    exitCode:    String,
+    exitSignal:  String,
     // running, failed, finished
-    status:     String
+    status:      String
 });
 
 var jobSchema = new mongoose.Schema({

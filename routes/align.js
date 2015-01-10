@@ -98,30 +98,32 @@ router.post('/', function (req, res, next) {
                     var sh_files = [
                         {
                             name:  'prepare.sh',
+                            description: 'Copy files and generate rest .sh scripts.',
                             exist: false
                         },
                         {
                             name:  '1_real_chr.sh',
+                            description: 'Calculate sequence lengths.',
                             exist: false
                         },
                         {
                             name:  '2_file_rm.sh',
+                            description: 'Mask repetitive parts from sequences to make alignments more accurate.',
                             exist: false
                         },
                         {
                             name:  '3_pair_cmd.sh',
+                            description: 'Pairwise alignments with target sequence.',
                             exist: false
                         },
                         {
                             name:  '4_rawphylo.sh',
+                            description: 'Generate a crude phylogenetic tree to guide following aligning.',
                             exist: false
                         },
                         {
                             name:  '5_multi_cmd.sh',
-                            exist: false
-                        },
-                        {
-                            name:  '6_multi_db_only.sh',
+                            description: 'Join pairwise alignments to get multiple final alignments.',
                             exist: false
                         }
                     ];
@@ -165,6 +167,7 @@ router.post('/', function (req, res, next) {
                     command += '    -w ' + userDir + "\\\n";
                     command += '    --name ' + alignName + "\\\n";
                     command += '    --use_name ' + "\\\n";
+                    command += '    --nostat ' + "\\\n";
                     command += '    -t ' + strip_path(argument.targetSeq) + "\\\n";
                     for (q in argument.querySeq) {
                         command += "    -q " + strip_path(argument.querySeq[q]) + "\\\n";
