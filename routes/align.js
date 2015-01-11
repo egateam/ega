@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var util = require("util");
+
 var fs = require("fs");
 var mkdirp = require('mkdirp');
 var path = require("path");
@@ -97,34 +98,37 @@ router.post('/', function (req, res, next) {
                     // Only .sh files listed below can be executed
                     var sh_files = [
                         {
-                            name:  'prepare.sh',
+                            name:        'prepare.sh',
                             description: 'Copy files and generate rest .sh scripts.',
-                            exist: false
+                            exist:       false
                         },
                         {
-                            name:  '1_real_chr.sh',
+                            name:        '1_real_chr.sh',
                             description: 'Calculate sequence lengths.',
-                            exist: false
+                            exist:       false
                         },
                         {
-                            name:  '2_file_rm.sh',
+                            name:        '2_file_rm.sh',
                             description: 'Mask repetitive parts from sequences to make alignments more accurate.',
-                            exist: false
+                            exist:       false
                         },
                         {
-                            name:  '3_pair_cmd.sh',
+                            name:        '3_pair_cmd.sh',
                             description: 'Pairwise alignments with target sequence.',
-                            exist: false
+                            need:        '1_real_chr.sh',
+                            exist:       false
                         },
                         {
-                            name:  '4_rawphylo.sh',
+                            name:        '4_rawphylo.sh',
                             description: 'Generate a crude phylogenetic tree to guide following aligning.',
-                            exist: false
+                            need:        '3_pair_cmd.sh',
+                            exist:       false
                         },
                         {
-                            name:  '5_multi_cmd.sh',
+                            name:        '5_multi_cmd.sh',
                             description: 'Join pairwise alignments to get multiple final alignments.',
-                            exist: false
+                            need:        '3_pair_cmd.sh',
+                            exist:       false
                         }
                     ];
 
@@ -134,12 +138,7 @@ router.post('/', function (req, res, next) {
                             "#/bin/bash\n\n"
                             + "sleep 1 \n"
                             + "echo 'We are going to start...' \n"
-                            + "sleep 1 \n"
-                            + "echo '3...' \n"
-                            + "sleep 1 \n"
-                            + "echo '2...' \n"
-                            + "sleep 1 \n"
-                            + "echo '1!' \n\n";
+                            + "sleep 1 \n\n";
 
                     // copying sequences and tree
                     command += "cd " + alignDir + "\n\n";
@@ -160,7 +159,6 @@ router.post('/', function (req, res, next) {
                         command += "\n";
                     }
                     command += "\n";
-
 
                     command += 'perl ~/Scripts/withncbi/taxon/strain_bz.pl ' + "\\\n";
                     command += '    --file ' + alignDir + '/' + alignName + '.csv ' + "\\\n";
@@ -208,7 +206,7 @@ router.post('/', function (req, res, next) {
                     });
 
                     // return is needed otherwise the page will be hanging.
-                    return res.redirect(303, '/process');
+                    return res.redirect('/process');
                 }
             });
         }

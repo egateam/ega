@@ -161,7 +161,7 @@ if (!module.parent) {
 
 io.sockets.on('connection', function (socket) {
     console.log('Someone connected');
-    io.emit('news', {data: "Welcome!"})
+    io.emit('console', {data: "Welcome!"})
 });
 
 module.exports = app;

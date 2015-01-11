@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var util = require("util");
 
 var fs = require("fs");
 var spawn = require('child_process').spawn;
@@ -80,6 +81,7 @@ router.get('/:id/:filename', function (req, res, next) {
             return res.redirect('/process/' + id);
         }
         else {
+            // Mark the jobs as finished and all sh files will not be able to be executed.
             if (filename == 'finish') {
                 item.status = 'finished';
                 item.finishDate = Date.now();
@@ -91,15 +93,30 @@ router.get('/:id/:filename', function (req, res, next) {
                 req.flash('info', "You have marked job <strong>[%s]</strong> as finished!", item.name);
                 return res.redirect('/process/' + id);
             }
+
+            // If there is an running operation, warn the user.
             var existing = _.find(item.sh_files, {status: 'running'});
             if (existing) {
                 console.log("You have a running operation [%s]!", existing.name);
                 req.flash('error', "You have a running operation <strong>[%s]</strong>!", existing.name);
                 return res.redirect('/process/' + id);
             }
+
             for (var i = 0, ln = item.sh_files.length; i < ln; i++) {
                 if (item.sh_files[i].name === filename) {
-                    console.log("find file %s", filename);
+                    var this_step = item.sh_files[i];
+                    console.log("find file %s", this_step.name);
+                    console.log(util.inspect(this_step));
+                    if (this_step.need) {
+                        console.log("need step %s", this_step.need);
+                        var need_step = _.find(item.sh_files, {name: this_step.need});
+
+                        if (need_step && need_step.status != 'finished') {
+                            console.log("Operation [%s] needs [%s] be done first.", this_step.name, need_step.name);
+                            req.flash("error", "Operation <strong>[%s]</strong> needs <strong>[%s]</strong> be done first.", this_step.name, need_step.name);
+                            return res.redirect('/process/' + id);
+                        }
+                    }
                     process_sh(req.app.get('io'), item, i);
                     req.flash("info", "Operation <strong>[%s]</strong> starts.", filename);
                     return res.redirect('/process/' + id);
@@ -154,7 +171,7 @@ var process_sh = function (io, job, index) {
             if (error) return next(error);
         });
         console.log('Job [%s] Operation [%s] finished and recorded', job.name, job.sh_files[index].name);
-        io.emit('console', {data: "[Job: " + job.name + "] [Operation: " + job.sh_files[index].name +"] " + "*** DONE ***\n"});
+        io.emit('console', {data: "[Job: " + job.name + "] [Operation: " + job.sh_files[index].name + "] " + "*** DONE ***\n"});
     });
 };
 

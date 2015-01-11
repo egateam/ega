@@ -30,6 +30,47 @@ egaApp.factory("Job", function ($resource, $http) {
     return resource;
 });
 
+egaApp.factory('socket', function ($rootScope) {
+    var socket = io.connect();
+    return {
+        on:   function (eventName, callback) {
+            socket.on(eventName, function () {
+                var args = arguments;
+                $rootScope.$apply(function () {
+                    callback.apply(socket, args);
+                });
+            });
+        },
+        emit: function (eventName, data, callback) {
+            socket.emit(eventName, data, function () {
+                var args = arguments;
+                $rootScope.$apply(function () {
+                    if (callback) {
+                        callback.apply(socket, args);
+                    }
+                });
+            })
+        }
+    };
+});
+
+// http://gist.github.com/thomseddon/3511330
+egaApp.filter('bytes', function () {
+    return function (bytes, precision) {
+        if (bytes === 0) {
+            return '0 bytes'
+        }
+        if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-';
+        if (typeof precision === 'undefined') precision = 1;
+
+        var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'],
+            number = Math.floor(Math.log(bytes) / Math.log(1024)),
+            val = (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision);
+
+        return (val.match(/\.0*$/) ? val.substr(0, val.indexOf('.')) : val) + ' ' + units[number];
+    }
+});
+
 // Controller for the file list
 egaApp.controller("FileListCtrl",
     function ($scope, $http, File) {
@@ -73,12 +114,6 @@ egaApp.controller("JobListCtrl",
             "guideTree":   "In the absence of a guide tree, EGA will take a while to generate one."
         };
 
-        //$scope.opts = {
-        //    alignName:         null,
-        //    alignLength:       1000,
-        //    reAlignmentMethod: "MAFFT"
-        //};
-
         $scope.deleteJob = function (index) {
             $http.delete("/api/jobs/" + $scope.jobs[index]._id).success(function () {
                 $scope.jobs = Job.index();
@@ -87,38 +122,16 @@ egaApp.controller("JobListCtrl",
     });
 
 egaApp.controller("ProcessArgCtrl",
-    function ($scope, $http, Job) {
+    function ($scope) {
         $scope.job;
-        //$scope.jsonPretty = JSON.stringify($scope.job.argument, null, "    ");
-
         $scope.tooltip = {
-            "delete":      "Delete this job.",
-            "alignName":   "This name should be unique in your account and at least 4 chars.",
-            "targetSeq":   "Select the most reliable/accurate one.",
-            "querySeq":    "As you wish, one or more.",
-            "alignLength": "we recommend a value larger than 100 bp.",
-            "MAFFT":       "Recommended. Fast.",
-            "ClustalW":    "Slow but more accurate.",
-            "guideTree":   "In the absence of a guide tree, EGA will take a while to generate one."
-        };
-
-        //$scope.opts = {
-        //    alignName:         null,
-        //    alignLength:       1000,
-        //    reAlignmentMethod: "MAFFT"
-        //};
-
-        $scope.deleteJob = function (index) {
-            $http.delete("/api/jobs/" + $scope.jobs[index]._id).success(function () {
-                $scope.jobs = Job.index();
-            });
-        };
+            "finish": "Mark this job as \"Finished\"."
+        }
     });
 
 egaApp.controller("ProcessShCtrl",
-    function ($scope, $http, Job) {
+    function ($scope, $http, socket, Job) {
         $scope.job;
-        //$scope.jsonPretty = JSON.stringify($scope.job.argument, null, "    ");
 
         $scope.tooltip = {
             "delete":      "Delete this job.",
@@ -131,30 +144,8 @@ egaApp.controller("ProcessShCtrl",
             "guideTree":   "In the absence of a guide tree, EGA will take a while to generate one."
         };
 
-        //$scope.opts = {
-        //    alignName:         null,
-        //    alignLength:       1000,
-        //    reAlignmentMethod: "MAFFT"
-        //};
-
-        $scope.deleteJob = function (index) {
-            $http.delete("/api/jobs/" + $scope.jobs[index]._id).success(function () {
-                $scope.jobs = Job.index();
-            });
-        };
+        socket.on('done', function (data) {
+            console.dir(data);
+            $scope.job = Job.show($scope.job._id);
+        });
     });
-
-// http://gist.github.com/thomseddon/3511330
-egaApp.filter('bytes', function() {
-    return function(bytes, precision) {
-        if (bytes === 0) { return '0 bytes' }
-        if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-';
-        if (typeof precision === 'undefined') precision = 1;
-
-        var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'],
-            number = Math.floor(Math.log(bytes) / Math.log(1024)),
-            val = (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision);
-
-        return  (val.match(/\.0*$/) ? val.substr(0, val.indexOf('.')) : val) +  ' ' + units[number];
-    }
-});

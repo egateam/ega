@@ -4,6 +4,7 @@ var shSchema = new mongoose.Schema({
     name:        String,
     exist:       Boolean,
     description: String,
+    need:        String,
     path:        String,
     pid:         Number,
     startDate:   Date,
