@@ -38,7 +38,6 @@ router.get('/:id', function (req, res, next) {
                     for (var i = 0, ln = item.sh_files.length; i < ln; i++) {
                         var sh_file = item.sh_files[i];
                         if (sh_file.name === file) {
-                            console.log("find file %s", file);
                             if (!item.sh_files[i].exist) {
                                 item.sh_files[i].exist = true;
                                 item.sh_files[i].path = curPath;
@@ -75,7 +74,23 @@ router.get('/:id/:filename', function (req, res, next) {
         else if (!item) {
             return next(new Error('Job is not found.'));
         }
+        else if (item.status != 'running') {
+            console.log("The job [%s] is not in running mode.", item.name);
+            req.flash('error', "The job <strong>[%s]</strong> is not in running mode.", item.name);
+            return res.redirect('/process/' + id);
+        }
         else {
+            if (filename == 'finish') {
+                item.status = 'finished';
+                item.finishDate = Date.now();
+
+                item.save(function (error) {
+                    if (error) return next(error);
+                });
+                console.log("Mark job [%s] as finished!", item.name);
+                req.flash('info', "You have marked job <strong>[%s]</strong> as finished!", item.name);
+                return res.redirect('/process/' + id);
+            }
             var existing = _.find(item.sh_files, {status: 'running'});
             if (existing) {
                 console.log("You have a running operation [%s]!", existing.name);
@@ -116,7 +131,7 @@ var process_sh = function (io, job, index) {
         terminal: false
     }).on('line', function (line) {
         var str = "[stdout] " + line + "\n";
-        io.emit('news', {data: str})
+        io.emit('console', {data: str})
     });
 
     readline.createInterface({
@@ -124,12 +139,11 @@ var process_sh = function (io, job, index) {
         terminal: false
     }).on('line', function (line) {
         var str = "[stderr] " + line + "\n";
-        io.emit('news', {data: str})
+        io.emit('console', {data: str})
     });
 
     child.on('exit', function (code, signal) {
         console.log('*** closed code=%s, signal=%s', code, signal);
-        io.emit('news', {data: "[Job: " + job.name + "] [Operation: " + job.sh_files[index].name +"] " + "*** DONE ***\n"});
 
         job.sh_files[index].endDate = Date.now();
         job.sh_files[index].exitCode = code;
@@ -140,6 +154,7 @@ var process_sh = function (io, job, index) {
             if (error) return next(error);
         });
         console.log('Job [%s] Operation [%s] finished and recorded', job.name, job.sh_files[index].name);
+        io.emit('console', {data: "[Job: " + job.name + "] [Operation: " + job.sh_files[index].name +"] " + "*** DONE ***\n"});
     });
 };
 
