@@ -57,7 +57,7 @@ router.post('/', function (req, res, next) {
                 else {
                     console.log("Running job: [%s]", alignName);
 
-                    if (alignName == 'chr_length' || alignName == 'taxon' || alignName == 'seq_pair' || alignName == 'id2name') {
+                    if (alignName == 'chr_length' || alignName == 'taxon' || alignName == 'fake_taxon' || alignName == 'seq_pair' || alignName == 'id2name') {
                         alignName += '_renamed';
                     }
 
@@ -161,7 +161,7 @@ router.post('/', function (req, res, next) {
                     command += "\n";
 
                     command += 'perl ~/Scripts/withncbi/taxon/strain_bz.pl ' + "\\\n";
-                    command += '    --file ' + alignDir + '/' + alignName + '.csv ' + "\\\n";
+                    command += '    --file ' + alignDir + '/fake_taxon.csv ' + "\\\n";
                     command += '    -w ' + userDir + "\\\n";
                     command += '    --name ' + alignName + "\\\n";
                     command += '    --use_name ' + "\\\n";
@@ -174,8 +174,8 @@ router.post('/', function (req, res, next) {
 
                     fs.writeFileSync(sh_file, command);
 
-                    // taxon.csv
-                    var csv_file = path.join(alignDir, alignName + '.csv');
+                    // fake_taxon.csv
+                    var csv_file = path.join(alignDir, 'fake_taxon.csv');
                     var arbitrary = 100000000; // give them arbitrary ids
                     var content =
                             'strain,strain_id,species,species_id,genus,genus_id,family,family_id,order,order_id' + "\n";
@@ -203,10 +203,9 @@ router.post('/', function (req, res, next) {
                     jobRecord.save(function (error) {
                         if (error) return next(error);
                         console.info('Added %s by %s', jobRecord.name, jobRecord.username);
+                        // return is needed otherwise the page will be hanging.
+                        return res.redirect('/process');
                     });
-
-                    // return is needed otherwise the page will be hanging.
-                    return res.redirect('/process');
                 }
             });
         }

@@ -26,7 +26,7 @@
     "jquery-form-validator": "~2.1.47",
     "lodash": "~2.4.1",
     "highlightjs": "~8.4.0",
-    "bootswatch": "~3.3.1+2",
+    "bootswatch": "~3.3.1",
     "angular-ui-grid": "~3.0.0-rc.16"
   }
 }
