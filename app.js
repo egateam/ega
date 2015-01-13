@@ -110,6 +110,12 @@ app.get('/api/jobs/:id', passportConf.isLoggedIn, api.job);
 app.put('/api/jobs/:id', passportConf.isLoggedIn, api.updateJob);
 app.delete('/api/jobs/:id', passportConf.isLoggedIn, api.destroyJob);
 
+// file browser
+app.get('/api/dir/:id', passportConf.isLoggedIn, api.dir);
+
+// file downloader
+app.get('/api/download/:id', passportConf.isLoggedIn, api.download);
+
 // account related routers
 var accountController = require('./routes/account');
 app.get('/login', accountController.getLogin);

@@ -1,4 +1,6 @@
 var fs = require("fs");
+var path = require("path");
+var _ = require('lodash');
 
 var File = require('../models/File');
 var Job = require('../models/Job');
@@ -135,4 +137,101 @@ var deleteFolderRecursive = function (path) {
         });
         fs.rmdirSync(path);
     }
+};
+
+// list dirs and files inside user jobs
+//https://chawlasumit.wordpress.com/2014/08/04/how-to-create-a-web-based-file-browser-using-nodejs-express-and-jquery-datatables/
+//https://github.com/sumitchawla/file-browser
+exports.dir = function (req, res, next) {
+    Job.findOne({username: req.user.username, _id: req.params.id}, function (error, item) {
+        if (error) {
+            return next(error);
+        }
+        else if (!item) {
+            return res.json(false);
+        }
+        else {
+            var currentDir = item.path;
+            var query = req.query.path || '';
+            if (query) currentDir = path.join(currentDir, query);
+            console.log("browsing ", currentDir);
+            fs.readdir(currentDir, function (error, files) {
+                if (error) {
+                    return next(error);
+                }
+                var data = [];
+                files.filter(function (file) {
+                    // filter out hidden files
+                    return !(/(^|.\/)\.+[^\/\.]/g).test(file);
+                }).forEach(function (file) {
+                    try {
+                        var isDirectory = fs.statSync(path.join(currentDir, file)).isDirectory();
+                        if (isDirectory) {
+                            data.push({
+                                name:        file,
+                                isDirectory: true,
+                                path:        path.join(query, file)
+                            });
+                        } else {
+                            // filter out all .sh files
+                            var ext = path.extname(file);
+                            if (_.contains([".sh", ".2bit"], ext)) {
+                                console.log("excluding file ", file);
+                                return;
+                            }
+
+                            // filter out files user shouldn't see
+                            if (_.contains(["chr_length.csv", "id2name.csv", "taxon.csv", "seq_pair.csv", "fake_tree.nwk"], file)) {
+                                console.log("excluding file ", file);
+                                return;
+                            }
+
+                            data.push({
+                                name:        file,
+                                ext:         ext,
+                                isDirectory: false,
+                                path:        path.join(query, file)
+                            });
+                        }
+
+                    } catch (e) {
+                        console.log(e);
+                    }
+
+                });
+                data = _.sortBy(data, function (f) {
+                    return f.name;
+                });
+                data = _.sortBy(data, function (f) {
+                    return !f.isDirectory;
+                });
+                res.json(data);
+            });
+        }
+    });
+};
+
+exports.download = function (req, res, next) {
+    Job.findOne({username: req.user.username, _id: req.params.id}, function (error, item) {
+        if (error) {
+            return next(error);
+        }
+        else if (!item) {
+            return res.json(false);
+        }
+        else {
+            var currentDir = item.path;
+            var query = req.query.path || '';
+            if (query) currentDir = path.join(currentDir, query);
+            console.log("Going to download %s", currentDir);
+
+            var isDirectory = fs.statSync(currentDir).isDirectory();
+            if (isDirectory) {
+                return res.json(false);
+            }
+            else {
+                res.download(currentDir);
+            }
+        }
+    });
 };

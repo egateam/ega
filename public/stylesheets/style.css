@@ -89,6 +89,38 @@ input[type="password"] {
     margin: 0 auto;
 }
 
+#fileBrowserPanel {
+    max-width: 50em;
+    margin: 0 auto;
+}
+
+#fileBrowserList {
+    /*max-width: 50em;*/
+    /*max-height: 30em;*/
+}
+
+#fileBrowserList ul {
+    list-style-type: none;
+}
+
+#fileBrowserList li {
+    font-size: 16px;
+    line-height: 1.5em;
+}
+
+#fileBrowserList li .fa {
+    margin-right: 5px;
+}
+
+#fileBrowserList a {
+    color: black;
+}
+
+#fileBrowserList .fa {
+    color: black;
+}
+
+
 /* http://stackoverflow.com/questions/13771101/centering-a-button-vertically-in-table-cell-using-twitter-bootstrap */
 .table tbody>tr>td.cell-align {
     vertical-align: middle;

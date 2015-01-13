@@ -1,6 +1,6 @@
 'use strict';
 
-var egaApp = angular.module("egaApp", ["ngResource", "ngAnimate", "mgcrea.ngStrap"]);
+var egaApp = angular.module("egaApp", ["ngResource", "ngAnimate", "mgcrea.ngStrap", "ui.grid"]);
 
 egaApp.factory("File", function ($resource, $http) {
     var resource = $resource("/api/files/:id", {id: "@_id"},
@@ -132,6 +132,7 @@ egaApp.controller("ProcessArgCtrl",
 egaApp.controller("ProcessShCtrl",
     function ($scope, $http, socket, Job) {
         $scope.job;
+        $scope.myDir;
 
         $scope.tooltip = {
             "delete":      "Delete this job.",
@@ -142,6 +143,69 @@ egaApp.controller("ProcessShCtrl",
             "MAFFT":       "Recommended. Fast.",
             "ClustalW":    "Slow but more accurate.",
             "guideTree":   "In the absence of a guide tree, EGA will take a while to generate one."
+        };
+
+        var extensionsMap = {
+            ".zip":  "fa-file-archive-o",
+            ".gz":   "fa-file-archive-o",
+            ".bz2":  "fa-file-archive-o",
+            ".xz":   "fa-file-archive-o",
+            ".rar":  "fa-file-archive-o",
+            ".tar":  "fa-file-archive-o",
+            ".tgz":  "fa-file-archive-o",
+            ".tbz2": "fa-file-archive-o",
+            ".z":    "fa-file-archive-o",
+            ".7z":   "fa-file-archive-o",
+            ".mp3":  "fa-file-audio-o",
+            ".cs":   "fa-file-code-o",
+            ".c++":  "fa-file-code-o",
+            ".cpp":  "fa-file-code-o",
+            ".js":   "fa-file-code-o",
+            ".csv":  "fa-file-excel-o",
+            ".xls":  "fa-file-excel-o",
+            ".xlsx": "fa-file-excel-o",
+            ".png":  "fa-file-image-o",
+            ".jpg":  "fa-file-image-o",
+            ".jpeg": "fa-file-image-o",
+            ".gif":  "fa-file-image-o",
+            ".pdf":  "fa-file-pdf-o",
+            ".txt":  "fa-file-text-o",
+            ".log":  "fa-file-text-o",
+            ".fa":  "fa-file-text-o"
+        };
+
+        function getFileIcon(ext) {
+            return ( ext && extensionsMap[ext.toLowerCase()]) || 'fa-file-o';
+        }
+
+        $scope.showDir = function (path) {
+            $http.get('/api/dir/' + $scope.job._id, {
+                params: {path: path ? path : ''}
+            }).success(function (data) {
+                //$scope.gridOptions = {data: data};
+                _(data).forEach(function(item){
+                    if (item.isDirectory) {
+                        item.icon = "fa-folder";
+                    }
+                    else {
+                        item.icon = getFileIcon(item.ext);
+                    }
+                });
+                $scope.myDir = data;
+
+                //$scope.gridOptions = {
+                //    data:       data,
+                //    columnDefs: [{
+                //        field:          'href',
+                //        displayName:    'link',
+                //        width:          "*",
+                //        enableCellEdit: false,
+                //        resizable:      false,
+                //        cellTemplate:   '<a href="{{row.getProperty(col.field)}}">Visible text</a>'
+                //    }]
+                //};
+
+            });
         };
 
         socket.on('done', function (data) {

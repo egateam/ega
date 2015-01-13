@@ -1,7 +1,5 @@
 extends layout
 block content
-    link(rel="stylesheet", href="/lib/highlightjs/styles/default.css")
-
     // arguments
     .wrapper(ng-controller="ProcessArgCtrl")
         .panel.panel-info(id="argumentsPanel")
@@ -9,9 +7,8 @@ block content
                 .panel-heading.panel-title(ng-init="job= #{JSON.stringify(job)}") [Job: {{job.name}}]
                     .pull-right
                         a.btn.btn-warning.btn-xs(role="button" href="/process/{{job._id}}/finish" ng-if="job.status == 'running'" bs-tooltip data-title="{{tooltip.finish}}") Finish
-                .panel-body
-                    pre.pre-scrollable
-                        code.json {{job.argument | json}}
+                pre.pre-scrollable
+                    code.json {{job.argument | json}}
             else
                 .panel-heading.panel-title No running job
 
@@ -43,27 +40,41 @@ block content
                             span.fa.fa-fw.fa-remove
                             | &nbsp;{{sh.status}}
                         td(ng-switch-default)
+            if (job.status == "finished")
+                .wrapper
+                    div#fileBrowserPanel.panel.panel-default
+                        .panel-heading.panel-title File Browser
+                            .pull-right
+                                button.btn.btn-primary.btn-xs(ng-click="showDir()")
+                                    span.fa.fa-files-o
+                                        | &nbsp;Show
+                        ul#fileBrowserList.list-group
+                            li.list-group-item(ng-repeat="data in myDir")
+                                a(href ng-click="showDir(data.path)" ng-if="data.isDirectory")
+                                    span(class="fa {{data.icon}}")
+                                        | &nbsp;{{data.name}}
+                                a(href="/api/download/{{job._id}}/?path={{data.path}}" target='_blank' ng-if="!data.isDirectory")
+                                    span(class="fa {{data.icon}}")
+                                        | &nbsp;{{data.name}}
 
-    // console
-    .wrapper
-        .panel.panel-default(id="consolePanel")
-            .panel-heading.panel-title Console messages
-            .panel-body
-                pre(id='consoleLog')
+                            //div#fileBrowserTable(ui-grid="gridOptions")
+            else
+                // console
+                .wrapper
+                    .panel.panel-default(id="consolePanel")
+                        .panel-heading.panel-title Console messages
+                        pre(id='consoleLog')
+                script(type="text/javascript").
+                    var socket = io.connect();
+                    socket.on("console", function (data) {
+                        $("#consoleLog").append(data.data);
+                        //scroll the div to follow last line added!
+                        var objDiv = document.getElementById("consoleLog");
+                        objDiv.scrollTop = objDiv.scrollHeight;
+                    });
 
 
     // highlight for arguments
     script(src="/lib/highlightjs/highlight.pack.js")
     script(type="text/javascript").
         hljs.initHighlightingOnLoad();
-
-    // for console
-    script(type="text/javascript").
-        var socket = io.connect();
-        socket.on("console", function (data) {
-            $("#consoleLog").append(data.data);
-            //scroll the div to follow last line added!
-            var objDiv = document.getElementById("consoleLog");
-            objDiv.scrollTop = objDiv.scrollHeight;
-        });
-
