@@ -210,6 +210,6 @@ egaApp.controller("ProcessShCtrl",
 
         socket.on('done', function (data) {
             console.dir(data);
-            $scope.job = Job.show($scope.job._id);
+            $scope.job = data;
         });
     });

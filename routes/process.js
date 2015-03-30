@@ -172,6 +172,7 @@ var process_sh = function (io, job, index) {
         });
         console.log('Job [%s] Operation [%s] finished and recorded', job.name, job.sh_files[index].name);
         io.emit('console', {data: "[Job: " + job.name + "] [Operation: " + job.sh_files[index].name + "] " + "*** DONE ***\n"});
+        io.emit('done', job);
     });
 };
 
