@@ -7,8 +7,13 @@ router.get('/', function (req, res) {
 });
 
 // static pages
-router.get('/about', function (req, res) {
-    res.render('about', {title: 'EGA About', user: req.user, id: 'about'});
+router.get('/contact', function (req, res) {
+    res.render('contact', {title: 'contact', user: req.user, id: 'contact'});
+});
+
+// static pages
+router.get('/tutorial', function (req, res) {
+    res.render('tutorial', {title: 'EGA Tutorial', user: req.user, id: 'tutorial'});
 });
 
 module.exports = router;
