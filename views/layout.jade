@@ -8,6 +8,7 @@ html(lang="en")
         //on our web server and will be delivered faster to the client than our own server.
         //link(rel="stylesheet", href="/lib/bootstrap/dist/css/bootstrap.min.css")
         link(rel="stylesheet", href="/lib/bootswatch/cerulean/bootstrap.min.css")
+        link(rel="stylesheet", href="/lib/bootswatch/cerulean/self.css")
         link(rel="stylesheet", href="/lib/font-awesome/css/font-awesome.min.css")
         link(rel="stylesheet", href="/lib/angular-ui-grid/ui-grid.min.css")
         link(rel="stylesheet", href="/lib/highlightjs/styles/default.css")
@@ -30,10 +31,11 @@ html(lang="en")
                                 span(class="icon-bar")
                                 span(class="icon-bar")
                                 span(class="icon-bar")
+                                span(class="icon-bar")
                             a.navbar-brand(href="/") Home
                         .navbar-collapse.collapse
                             ul.nav.navbar-nav
-                                - var obj = { "upload":"Upload", "align":"Align", "process":"Process", "about":"About"}
+                                - var obj = { "upload":"Upload", "align":"Align", "process":"Process", "tutorial":"Tutorial", "contact":"Contact"}
                                     - each val, key in obj
                                         - if (id == key)
                                             li.active
@@ -86,6 +88,7 @@ html(lang="en")
         script(src="/lib/jquery-form-validator/form-validator/jquery.form-validator.min.js")
         script(src="/lib/lodash/dist/lodash.min.js")
         script(src="/javascripts/app.js")
+        //script(src="/lib/angular/script.js")
         script(type="text/javascript").
             $(document).ready(function () {
                 $.validate({
