@@ -63,9 +63,9 @@ egaApp.filter('bytes', function () {
         if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-';
         if (typeof precision === 'undefined') precision = 1;
 
-        var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'],
+        var units  = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'],
             number = Math.floor(Math.log(bytes) / Math.log(1024)),
-            val = (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision);
+            val    = (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision);
 
         return (val.match(/\.0*$/) ? val.substr(0, val.indexOf('.')) : val) + ' ' + units[number];
     }
@@ -76,7 +76,7 @@ egaApp.controller("FileListCtrl",
     function ($scope, $http, File) {
         $scope.files = File.index();
 
-        $scope.types = [".fasta", ".fasta.gz", ".newick"];
+        $scope.types = ['.fa/.fa.gz', '.newick'];
 
         $scope.tooltip = {
             "upload": "Single file size limit: 20MB",
@@ -171,7 +171,7 @@ egaApp.controller("ProcessShCtrl",
             ".pdf":  "fa-file-pdf-o",
             ".txt":  "fa-file-text-o",
             ".log":  "fa-file-text-o",
-            ".fa":  "fa-file-text-o"
+            ".fa":   "fa-file-text-o"
         };
 
         function getFileIcon(ext) {
@@ -183,7 +183,7 @@ egaApp.controller("ProcessShCtrl",
                 params: {path: path ? path : ''}
             }).success(function (data) {
                 //$scope.gridOptions = {data: data};
-                _(data).forEach(function(item){
+                _(data).forEach(function (item) {
                     if (item.isDirectory) {
                         item.icon = "fa-folder";
                     }

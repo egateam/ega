@@ -31,8 +31,7 @@ block content
                                 a(href="/api/files/{{file._id}}") {{file.name}}
                             td {{file.size | bytes}}
                             td
-                                select(ng-model='file.type')
-                                    option(ng-repeat="type in types") {{type}}
+                                select(ng-model='file.type' ng-options="i for i in types")
                                 | &nbsp;
                                 button.btn.btn-success.btn-xs(ng-click="updateFile($index)" data-type="info" bs-tooltip data-title="{{tooltip.update}}")
                                     span.fa.fa-lg.fa-edit
