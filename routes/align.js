@@ -149,19 +149,27 @@ router.post('/', function (req, res, next) {
                     // copying sequences and tree
                     command += "cd " + alignDir + "\n\n";
 
+                    // a lot of backslash escaped chars :(
                     command += "echo 'Copy target sequence.'\n";
-                    command += "faops split-name " + argument.targetSeq + " " + strip_path(argument.targetSeq);
+                    command += "gzip --stdout --decompress --force " + argument.targetSeq + " \\\n";
+                    command += "    | perl -np -e \'m{^>} and m{gi\\|\\d+\\|\\w+\\|(\\w+)} and $_ = qq{>$1\\n}\' \\\n";
+                    command += "    | faops split-name stdin " + strip_path(argument.targetSeq);
+                    command += "\n";
                     command += "\n";
 
                     for (q in argument.querySeq) {
                         command += "echo 'Copy query [" + q + "] sequence.'\n";
-                        command += "faops split-about " + argument.querySeq[q] + " " + "10000000 " + strip_path(argument.querySeq[q]);
+                        command += "gzip --stdout --decompress --force " + argument.querySeq[q] + " \\\n";
+                        command += "    | perl -np -e \'m{^>} and m{gi\\|\\d+\\|\\w+\\|(\\w+)} and $_ = qq{>$1\\n}\' \\\n";
+                        command += "    | faops split-about stdin 10000000 " + strip_path(argument.querySeq[q]);
+                        command += "\n";
                         command += "\n";
                     }
 
                     if (argument.guideTree) {
                         command += "echo 'Copy guide tree.'\n";
                         command += "cp " + argument.guideTree + " .";
+                        command += "\n";
                         command += "\n";
                     }
                     command += "\n";
