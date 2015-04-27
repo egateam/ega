@@ -64,3 +64,6 @@ We use [vcftools](http://vcftools.sourceforge.net/index.html) and lindenb's [jva
 It's just a quick and dirty results. 
 If you want more accurate ones, please check another project from our team [alignDB](https://github.com/wang-q/alignDB).
 
+## Prepare your data
+
+You can just download sequences from NCBI's website. If you hate downloading hundreds of genomes or chromosomes manually, check [get_seq.pl](https://github.com/wang-q/withncbi/blob/master/util/get_seq.pl) and [batch_get_seq.pl](https://github.com/wang-q/withncbi/blob/master/util/batch_get_seq.pl). These scripts alse help you naming fasta files.
