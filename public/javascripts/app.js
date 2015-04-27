@@ -111,6 +111,7 @@ egaApp.controller("JobListCtrl",
             "alignLength": "we recommend a value larger than 100 bp.",
             "MAFFT":       "Recommended. Fast.",
             "ClustalW":    "Slow but more accurate.",
+            "None":        "Not recommended. Only if you want a crude result.",
             "guideTree":   "In the absence of a guide tree, EGA will take a while to generate one."
         };
 

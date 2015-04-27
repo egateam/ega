@@ -10,7 +10,7 @@ block content
                 label.control-label.col-xs-4(bs-tooltip data-title="{{tooltip.targetSeq}}") Select one as target
                 .col-xs-8
                     select.form-control(name="targetSeq" data-validation="required")
-                        option(ng-repeat="file in files | filter:{type: 'fasta'}" value="{{file.path}}") {{file.name}}
+                        option(ng-repeat="file in files | filter:{type: '.fa/.fa.gz'}" value="{{file.path}}") {{file.name}}
             .form-group
                 label.control-label.col-xs-4(bs-tooltip data-title="{{tooltip.querySeq}}") Select one or more as queries
                 .col-xs-8
@@ -31,9 +31,11 @@ block content
                 .col-xs-8
                     .btn-group(data-toggle="buttons")
                         label.btn.btn-default.active(bs-tooltip data-title="{{tooltip.MAFFT}}") MAFFT
-                            input(checked type="radio" name="reAlignmentMethod" value="MAFFT")
+                            input(checked type="radio" name="reAlignmentMethod" value="mafft")
                         label.btn.btn-default(bs-tooltip data-title="{{tooltip.ClustalW}}") ClustalW
-                            input(type="radio" name="reAlignmentMethod" value="ClustalW")
+                            input(type="radio" name="reAlignmentMethod" value="clustalw")
+                        label.btn.btn-default(bs-tooltip data-title="{{tooltip.None}}") None
+                            input(type="radio" name="reAlignmentMethod" value="none")
             button.btn.btn-lg.btn-primary.btn-block(type="submit") Begin aligning&nbsp;&nbsp;
                 span.fa.fa-gear.fa-angle-double-right
     // job list
