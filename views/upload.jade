@@ -4,7 +4,7 @@ block content
     .wrapper(ng-controller="FileListCtrl")
         form#fileUploadForm.form-horizontal(method="post" action="/upload" enctype="multipart/form-data")
             label Select a file to upload:
-            input.btn.btn-block(type="file" name="myFile" accept="*" data-validation="required size" data-validation-max-size="20M")
+            input.btn.btn-block(type="file" name="myFile" accept="*" data-validation="required size" data-validation-max-size="30M")
             button.btn.btn-lg.btn-primary.btn-block(type="submit" data-animation="am-fade-and-scale" bs-tooltip data-title="{{tooltip.upload}}")
                 span.fa.fa-file
                 | &nbsp;&nbsp;Upload

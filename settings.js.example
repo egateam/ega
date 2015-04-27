@@ -1,15 +1,11 @@
 exports.main = {
     secret: 'somethingsecret',
-    port: 3000
+    port: 3000,
+    file_size_limit: 30 * 1024 * 1024 // 30 MB
 };
 
 exports.mailgun = {
     api_key: 'yourkey',
     domain: 'yourdomain.mailgun.org',
-    from_who: 'noreply <youremail@yourdomain.edu.cn>'
-};
-
-exports.sockjs_opts = {
-    sockjs_url: "http://cdnjs.cloudflare.com/ajax/libs/sockjs-client/0.3.4/sockjs.min.js",
-    jsessionid: true
+    from_who: 'noreply <youremail@yourdomain.edu>'
 };

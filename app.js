@@ -78,7 +78,7 @@ app.use(multer({
         return filename.replace(/\W/g, '_').replace(/_+/g, '_');
     },
     limits:            {
-        fileSize: 20 * 1024 * 1024
+        fileSize: settings.main.file_size_limit
     },
     onFileUploadStart: function (file) {
         console.log(file.fieldname + ' is starting ...');
