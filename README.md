@@ -56,4 +56,11 @@ These three databases are also required.
 	* [GNU parallel](http://www.gnu.org/software/parallel/)
 	* [circos](http://circos.ca/)
 
+## RESULTS
+
+### Variations list
+
+We use [vcftools](http://vcftools.sourceforge.net/index.html) and lindenb's [jvarkit](https://github.com/lindenb/jvarkit/wiki/Biostar94573)  to generate a vcf file containing substitutions and indels. 
+It's just a quick and dirty results. 
+If you want more accurate ones, please check another project from our team [alignDB](https://github.com/wang-q/alignDB).
 

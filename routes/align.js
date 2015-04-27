@@ -129,6 +129,12 @@ router.post('/', function (req, res, next) {
                             description: 'Join pairwise alignments to get multiple final alignments.',
                             need:        '3_pair_cmd.sh',
                             exist:       false
+                        },
+                        {
+                            name:        '6_var_list.sh',
+                            description: 'Generate vcf files containing substitutions and indels.',
+                            need:        '5_multi_cmd.sh',
+                            exist:       false
                         }
                     ];
 
@@ -164,6 +170,7 @@ router.post('/', function (req, res, next) {
                     command += '    --file ' + alignDir + '/fake_taxon.csv ' + "\\\n";
                     command += '    -w ' + userDir + "\\\n";
                     command += '    --name ' + alignName + "\\\n";
+                    command += '    --msa ' + argument.reAlignmentMethod + "\\\n";
                     command += '    --use_name ' + "\\\n";
                     command += '    --nostat ' + "\\\n";
                     command += '    -t ' + strip_path(argument.targetSeq) + "\\\n";
