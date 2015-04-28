@@ -79,18 +79,19 @@ egaApp.controller("FileListCtrl",
         $scope.types = ['.fa/.fa.gz', '.newick'];
 
         $scope.tooltip = {
-            "upload": "Single file size limit: 20MB",
+            "upload": "Single file size limit: 30MB",
             "delete": "Delete this file.",
-            "update": "Edit the type of this file."
+            "update": "Change file type."
         };
 
-        $scope.updateFile = function (index) {
-            File.update($scope.files[index]);
-            $scope.files = File.index();
+        $scope.updateFile = function (file) {
+            File.update(file).success(function () {
+                $scope.files = File.index();
+            });
         };
 
-        $scope.deleteFile = function (index) {
-            $http.delete("/api/files/" + $scope.files[index]._id).success(function () {
+        $scope.deleteFile = function (id) {
+            $http.delete("/api/files/" + id).success(function () {
                 $scope.files = File.index();
             });
         };
