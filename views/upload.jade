@@ -10,6 +10,7 @@ block content
                 | &nbsp;&nbsp;Upload
     // file list
     .wrapper(ng-controller="FileListCtrl")
+        h3 {{currentPage}}
         div#filesListPanel.panel.panel-default
             .panel-heading Your files
             li.list-group-item(ng-if="files.length == 0")
@@ -25,7 +26,7 @@ block content
                             th Date
                             th
                     tbody
-                        tr(ng-repeat="file in files")
+                        tr(dir-paginate="file in files | itemsPerPage:pageSize " current-page="currentPage")
                             td {{$index + 1}}
                             td
                                 a(href="/api/files/{{file._id}}") {{file.name}}
@@ -36,3 +37,4 @@ block content
                             td.cell-align
                                 button.btn.btn-danger.btn-xs(ng-click="deleteFile(file._id)" data-type="info" bs-tooltip data-title="{{tooltip.delete}}")
                                     span.fa.fa-lg.fa-trash
+            dir-pagination-controls(max-size=6 boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" )

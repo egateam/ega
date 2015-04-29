@@ -1,6 +1,6 @@
 'use strict';
 
-var egaApp = angular.module("egaApp", ["ngResource", "ngAnimate", "mgcrea.ngStrap", "ui.grid"]);
+var egaApp = angular.module("egaApp", ["ngResource", "ngAnimate", "mgcrea.ngStrap", "angularUtils.directives.dirPagination"]);
 
 egaApp.factory("File", function ($resource, $http) {
     var resource = $resource("/api/files/:id", {id: "@_id"},
@@ -82,6 +82,14 @@ egaApp.controller("FileListCtrl",
             "upload": "Single file size limit: 30MB",
             "delete": "Delete this file.",
             "update": "Change file type."
+        };
+
+        // for pagination
+        $scope.currentPage = 1;
+        $scope.pageSize = 2;
+        $scope.number = ($scope.$index + 1) + ($scope.currentPage - 1) * $scope.pageSize;
+        $scope.pageChangeHandler = function(num) {
+            $scope.currentPage = num;
         };
 
         $scope.updateFile = function (file) {
@@ -194,19 +202,6 @@ egaApp.controller("ProcessShCtrl",
                     }
                 });
                 $scope.myDir = data;
-
-                //$scope.gridOptions = {
-                //    data:       data,
-                //    columnDefs: [{
-                //        field:          'href',
-                //        displayName:    'link',
-                //        width:          "*",
-                //        enableCellEdit: false,
-                //        resizable:      false,
-                //        cellTemplate:   '<a href="{{row.getProperty(col.field)}}">Visible text</a>'
-                //    }]
-                //};
-
             });
         };
 
