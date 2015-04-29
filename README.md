@@ -30,7 +30,7 @@ npm install
 bower install
 ```
 
-Three databases are also required.
+Three database backends are also required.
 
 * [mongodb](http://www.mongodb.org/). 
 * [redis](http://redis.io/)
@@ -42,7 +42,7 @@ Three databases are also required.
 	* We suggest using [plenv](https://github.com/tokuhirom/plenv).
 * Tons of Perl modules.
 	* Install all modules listed in [this page](https://stratopan.com/wangq/alignDB/master). (We are not kidding.)
-	* After you setup plenv and minicpan, you cound check [this page](https://github.com/wang-q/tool/blob/master/stpan.txt) for less suffering installation experiences.
+	* After you setup plenv and [minicpan](https://metacpan.org/release/CPAN-Mini), you could check [this page](https://github.com/wang-q/tool/blob/master/stpan.txt) for less suffering installation experiences.
 * [RepeatMasker](http://www.repeatmasker.org/) and companions.
 	* [rmblast](http://www.repeatmasker.org/RMBlast.html)
 	* [trf](http://tandem.bu.edu/trf/trf.html)
@@ -60,7 +60,7 @@ Three databases are also required.
     * We don't use blast+.
 * Other tools.
 	* [faops](https://github.com/wang-q/faops). Our own tool for manipulate fasta files.
-	* [GNU parallel](http://www.gnu.org/software/parallel/). MacOS's (BSD) ```xargs``` has some differences from Linux's (GNU).
+	* [GNU parallel](http://www.gnu.org/software/parallel/). MacOS's (BSD) `xargs` has some differences from Linux's (GNU).
 	* [circos](http://circos.ca/) for presenting paralogous parts.
 
 ## RESULTS
