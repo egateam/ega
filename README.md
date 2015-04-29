@@ -1,6 +1,4 @@
-# EGA
-
-Easy Genome Aligner.
+# EGA: Easy Genome Aligner.
 
 This repository is the web interface of the ega suite.
 
@@ -14,18 +12,27 @@ EGA use [Node.js](https://nodejs.org/) as web server.
 
 Run following commands to install global node.js packages.
 
-* npm --verbose -g install express-generator
-* npm --verbose -g install nodemon
-* npm --verbose -g install bower
+```bash
+npm --verbose -g install nodemon
+npm --verbose -g install bower
+```
 
-Run following commands to install server-side and client sides packages.
+This one is optional.
 
-* npm install
-* bower install
+```bash
+npm --verbose -g install express-generator
+```
 
-These three databases are also required.
+Install server-side and client sides packages.
 
-* [mongodb](http://www.mongodb.org/)
+```bash
+npm install
+bower install
+```
+
+Three databases are also required.
+
+* [mongodb](http://www.mongodb.org/). 
 * [redis](http://redis.io/)
 * [mysql](http://www.mysql.com/)
 
@@ -39,21 +46,22 @@ These three databases are also required.
 * [RepeatMasker](http://www.repeatmasker.org/) and companions.
 	* [rmblast](http://www.repeatmasker.org/RMBlast.html)
 	* [trf](http://tandem.bu.edu/trf/trf.html)
-	* [Repeat databse](www.girinst.org)
+	* [Repeat database](www.girinst.org)
 * Genomic aligning programs.
 	* [lastz](http://www.bx.psu.edu/~rsharris/lastz/)
 	* [multiz](http://www.bx.psu.edu/miller_lab/dist/multiz-tba.012109.tar.gz)
-	* [kent userApp](http://hgdownload.cse.ucsc.edu/admin/exe/)
+	* [Jim Kent's userApp](http://hgdownload.cse.ucsc.edu/admin/exe/)
 * Local aligning programs.
 	* [ClustalW](http://www.clustal.org/download/current/)
 	* [Mafft](http://mafft.cbrc.jp/alignment/software/)
-* Phylogenetic programs.
+* Phylogenetic program.
 	* [raxml](http://sco.h-its.org/exelixis/web/software/raxml/index.html)
-* [NCBI blast](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/release/LATEST/)
+* [NCBI blast](http://ftp.ncbi.nlm.nih.gov/blast/executables/release/LATEST/)
+    * We don't use blast+.
 * Other tools.
-	* [faops](https://github.com/wang-q/faops)
-	* [GNU parallel](http://www.gnu.org/software/parallel/)
-	* [circos](http://circos.ca/)
+	* [faops](https://github.com/wang-q/faops). Our own tool for manipulate fasta files.
+	* [GNU parallel](http://www.gnu.org/software/parallel/). MacOS's (BSD) ```xargs``` has some differences from Linux's (GNU).
+	* [circos](http://circos.ca/) for presenting paralogous parts.
 
 ## RESULTS
 
