@@ -67,7 +67,9 @@ router.post('/', function (req, res, next) {
                         querySeq:          [],
                         guideTree:         req.body.guideTree,
                         alignLength:       req.body.alignLength,
-                        reAlignmentMethod: req.body.reAlignmentMethod
+                        reAlignmentMethod: req.body.reAlignmentMethod,
+                        selfAlignment:     false,
+                        skipRepeatMask:    false
                     };
 
                     if (req.body.hasOwnProperty("querySeq")) {
@@ -84,7 +86,22 @@ router.post('/', function (req, res, next) {
                         });
                     }
 
+                    if (req.body.selfAlignment) {
+                        argument.selfAlignment = true;
+                    }
+
+                    if (req.body.skipRepeatMask) {
+                        argument.skipRepeatMask = true;
+                    }
+
                     console.log(util.inspect(argument));
+
+                    if (!argument.selfAlignment) {
+                        if (argument.querySeq.length == 0) {
+                            req.flash('error', 'A non-self job should at least contain <strong>two</strong> genomes.');
+                            return res.redirect('/align');
+                        }
+                    }
 
                     // make sure directory exists
                     var userDir = path.join('./upload', username);
@@ -181,6 +198,9 @@ router.post('/', function (req, res, next) {
                     command += '    --msa ' + argument.reAlignmentMethod + "\\\n";
                     command += '    --use_name ' + "\\\n";
                     command += '    --nostat ' + "\\\n";
+                    if (argument.skipRepeatMask) {
+                        command += '    --norm ' + "\\\n";
+                    }
                     command += '    -t ' + strip_path(argument.targetSeq) + "\\\n";
                     for (q in argument.querySeq) {
                         command += "    -q " + strip_path(argument.querySeq[q]) + "\\\n";

@@ -20,14 +20,12 @@ block content
             table#operationTable.table.table-bordered
                 thead
                     tr
-                        th #
                         th Operation
                         th Start
                         th End
                         th Status
                 tbody
                     tr(ng-repeat="sh in job.sh_files | filter:{exist: true}" ng-switch on="sh.status")
-                        td {{$index + 1}}
                         td
                             a.btn.btn-xs.btn-primary(role="button" href="/process/{{job._id}}/{{sh.name}}" bs-tooltip data-title="{{sh.description}}") {{sh.name}}
                         td {{ sh.startDate | date:"yyyy-MM-dd hh:mm"}}
