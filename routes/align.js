@@ -98,7 +98,7 @@ router.post('/', function (req, res, next) {
 
                     if (!argument.selfAlignment) {
                         if (argument.querySeq.length == 0) {
-                            req.flash('error', 'A non-self job should at least contain <strong>two</strong> genomes.');
+                            req.flash('error', 'A multiple (non-self) aligning job should at least contain <strong>two</strong> genomes.');
                             return res.redirect('/align');
                         }
                     }
@@ -119,6 +119,7 @@ router.post('/', function (req, res, next) {
                             description: 'Copy files and generate rest .sh scripts.',
                             exist:       false
                         },
+                        // strain_bz.pl
                         {
                             name:        '1_real_chr.sh',
                             description: 'Calculate sequence lengths.',
@@ -152,7 +153,26 @@ router.post('/', function (req, res, next) {
                             description: 'Generate vcf files containing substitutions and indels.',
                             need:        '5_multi_cmd.sh',
                             exist:       false
-                        }
+                        },
+                        // strain_bz_self.pl
+                        {
+                            name:        '3_self_cmd.sh',
+                            description: 'Target sequences align with themselves.',
+                            need:        '1_real_chr.sh',
+                            exist:       false
+                        },
+                        {
+                            name:        '4_proc_cmd.sh',
+                            description: 'Connect genome parts based on graph theory.',
+                            need:        '3_self_cmd.sh',
+                            exist:       false
+                        },
+                        {
+                            name:        '5_circos_cmd.sh',
+                            description: 'Generate a circos picture presenting connections among paralogs.',
+                            need:        '4_proc_cmd.sh',
+                            exist:       false
+                        },
                     ];
 
                     // sh header
@@ -191,7 +211,13 @@ router.post('/', function (req, res, next) {
                     }
                     command += "\n";
 
-                    command += 'perl ~/Scripts/withncbi/taxon/strain_bz.pl ' + "\\\n";
+                    if (!argument.selfAlignment) {
+                        command += 'perl ~/Scripts/withncbi/taxon/strain_bz.pl ' + "\\\n";
+                    }
+                    else {
+                        command += 'perl ~/Scripts/withncbi/taxon/strain_bz_self.pl ' + "\\\n";
+                    }
+
                     command += '    --file ' + alignDir + '/fake_taxon.csv ' + "\\\n";
                     command += '    -w ' + userDir + "\\\n";
                     command += '    --name ' + alignName + "\\\n";

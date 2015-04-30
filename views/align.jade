@@ -85,6 +85,7 @@ block content
                                     span.fa.fa-lg.fa-trash
     script(type="text/javascript").
         $(document).ready(function () {
+            // bootstrap method: http://getbootstrap.com/javascript/#buttons-methods
             $('#selfAlignment').on('click', function () {
                 $("#querySeq").attr("disabled", this.checked);
                 $("#guideTree").attr("disabled", this.checked);
