@@ -86,9 +86,9 @@ egaApp.controller("FileListCtrl",
 
         // for pagination
         $scope.currentPage = 1;
-        $scope.pageSize = 2;
+        $scope.pageSize = 20;
         $scope.number = ($scope.$index + 1) + ($scope.currentPage - 1) * $scope.pageSize;
-        $scope.pageChangeHandler = function(num) {
+        $scope.pageChangeHandler = function (num) {
             $scope.currentPage = num;
         };
 
@@ -113,15 +113,17 @@ egaApp.controller("JobListCtrl",
         $scope.jobs = Job.index();
 
         $scope.tooltip = {
-            "delete":      "Delete this job.",
-            "alignName":   "This name should be unique in your account and at least 4 chars.",
-            "targetSeq":   "Select the most reliable/accurate one.",
-            "querySeq":    "As you wish, one or more.",
-            "alignLength": "we recommend a value larger than 100 bp.",
-            "MAFFT":       "Recommended. Fast.",
-            "ClustalW":    "Slow but more accurate.",
-            "None":        "Not recommended. Only if you want a crude result.",
-            "guideTree":   "In the absence of a guide tree, EGA will take a while to generate one."
+            "delete":         "Delete this job.",
+            "alignName":      "This name should be unique in your account and at least 4 chars.",
+            "targetSeq":      "Select the most reliable/accurate one.",
+            "selfAlignment":  "Self alignment will finding paralogous parts inside one genome.",
+            "querySeq":       "As you wish, one or more.",
+            "alignLength":    "we recommend a value larger than 100 bp.",
+            "MAFFT":          "Recommended. Fast.",
+            "ClustalW":       "Slow but more accurate.",
+            "None":           "Not recommended. Only if you want a crude result.",
+            "skipRepeatMask": "All sequences you selected are masked.",
+            "guideTree":      "In the absence of a guide tree, EGA will take a while to generate one."
         };
 
         $scope.deleteJob = function (index) {
@@ -159,17 +161,8 @@ egaApp.controller("ProcessShCtrl",
             ".zip":  "fa-file-archive-o",
             ".gz":   "fa-file-archive-o",
             ".bz2":  "fa-file-archive-o",
-            ".xz":   "fa-file-archive-o",
-            ".rar":  "fa-file-archive-o",
             ".tar":  "fa-file-archive-o",
             ".tgz":  "fa-file-archive-o",
-            ".tbz2": "fa-file-archive-o",
-            ".z":    "fa-file-archive-o",
-            ".7z":   "fa-file-archive-o",
-            ".mp3":  "fa-file-audio-o",
-            ".cs":   "fa-file-code-o",
-            ".c++":  "fa-file-code-o",
-            ".cpp":  "fa-file-code-o",
             ".js":   "fa-file-code-o",
             ".csv":  "fa-file-excel-o",
             ".xls":  "fa-file-excel-o",
