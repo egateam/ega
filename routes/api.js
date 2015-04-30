@@ -175,7 +175,7 @@ exports.dir = function (req, res, next) {
                         } else {
                             // filter out all .sh files
                             var ext = path.extname(file);
-                            if (_.contains([".sh", ".2bit"], ext)) {
+                            if (_.contains([".sh", ".2bit", ".bat"], ext)) {
                                 console.log("excluding file ", file);
                                 return;
                             }

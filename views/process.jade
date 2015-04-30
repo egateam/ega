@@ -56,8 +56,6 @@ block content
                                 a(href="/api/download/{{job._id}}/?path={{data.path}}" target='_blank' ng-if="!data.isDirectory")
                                     span(class="fa {{data.icon}}")
                                     | &nbsp;{{data.name}}
-
-                            //div#fileBrowserTable(ui-grid="gridOptions")
             else
                 // console
                 .wrapper
@@ -72,7 +70,6 @@ block content
                         var objDiv = document.getElementById("consoleLog");
                         objDiv.scrollTop = objDiv.scrollHeight;
                     });
-
 
     // highlight for arguments
     script(src="/lib/highlightjs/highlight.pack.js")

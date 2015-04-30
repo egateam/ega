@@ -116,12 +116,12 @@ egaApp.controller("JobListCtrl",
             "delete":         "Delete this job.",
             "alignName":      "This name should be unique in your account and at least 4 chars.",
             "targetSeq":      "Select the most reliable/accurate one.",
-            "selfAlignment":  "Self alignment will finding paralogous parts inside one genome.",
             "querySeq":       "As you wish, one or more.",
             "alignLength":    "we recommend a value larger than 100 bp.",
             "MAFFT":          "Recommended. Fast.",
             "ClustalW":       "Slow but more accurate.",
             "None":           "Not recommended. Only if you want a crude result.",
+            "selfAlignment":  "Self alignment will finding paralogous parts inside one genome.",
             "skipRepeatMask": "All sequences you selected are masked.",
             "guideTree":      "In the absence of a guide tree, EGA will take a while to generate one."
         };

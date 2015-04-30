@@ -29,7 +29,7 @@ block content
                         option(value="")
                         option(ng-repeat="file in files | filter:{type: '.newick'}" value="{{file.path}}") {{file.name}}
             .form-group
-                label.control-label.col-xs-4 Sequences Masked
+                label.control-label.col-xs-4(bs-tooltip data-title="{{tooltip.skipRepeatMask}}") Sequences Masked
                 .col-xs-8
                     label.checkbox
                         input(name="skipRepeatMask" id="skipRepeatMask" type="checkbox")
