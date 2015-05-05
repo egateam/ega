@@ -146,16 +146,7 @@ egaApp.controller("ProcessShCtrl",
         $scope.job;
         $scope.myDir;
 
-        $scope.tooltip = {
-            "delete":      "Delete this job.",
-            "alignName":   "This name should be unique in your account and at least 4 chars.",
-            "targetSeq":   "Select the most reliable/accurate one.",
-            "querySeq":    "As you wish, one or more.",
-            "alignLength": "we recommend a value larger than 100 bp.",
-            "MAFFT":       "Recommended. Fast.",
-            "ClustalW":    "Slow but more accurate.",
-            "guideTree":   "In the absence of a guide tree, EGA will take a while to generate one."
-        };
+        $scope.tooltip = {};
 
         var extensionsMap = {
             ".zip":  "fa-file-archive-o",
@@ -185,7 +176,6 @@ egaApp.controller("ProcessShCtrl",
             $http.get('/api/dir/' + $scope.job._id, {
                 params: {path: path ? path : ''}
             }).success(function (data) {
-                //$scope.gridOptions = {data: data};
                 _(data).forEach(function (item) {
                     if (item.isDirectory) {
                         item.icon = "fa-folder";

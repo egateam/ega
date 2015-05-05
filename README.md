@@ -26,6 +26,7 @@ npm --verbose -g install express-generator
 Install server-side and client sides packages.
 
 ```bash
+cd ~/path/to/ega
 npm install
 bower install
 ```
