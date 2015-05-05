@@ -1,13 +1,14 @@
 extends layout
 block content
     // form for uploading a file
-    .wrapper(ng-controller="FileListCtrl")
-        form#fileUploadForm.form-horizontal(method="post" action="/upload" enctype="multipart/form-data")
-            label Select a file to upload:
-            input.btn.btn-block(type="file" name="myFile" accept="*" data-validation="required size" data-validation-max-size="30M")
-            button.btn.btn-lg.btn-primary.btn-block(type="submit" data-animation="am-fade-and-scale" bs-tooltip data-title="{{tooltip.upload}}")
-                span.fa.fa-file
-                | &nbsp;&nbsp;Upload
+    unless tutorial
+        .wrapper(ng-controller="FileListCtrl")
+            form#fileUploadForm.form-horizontal(method="post" action="/upload" enctype="multipart/form-data")
+                label Select a file to upload:
+                input.btn.btn-block(type="file" name="myFile" accept="*" data-validation="required size" data-validation-max-size="30M")
+                button.btn.btn-lg.btn-primary.btn-block(type="submit" data-animation="am-fade-and-scale" bs-tooltip data-title="{{tooltip.upload}}")
+                    span.fa.fa-file
+                    | &nbsp;&nbsp;Upload
     // file list
     .wrapper(ng-controller="FileListCtrl")
         div#filesListPanel.panel.panel-default
@@ -29,9 +30,13 @@ block content
                                 a(href="/api/files/{{file._id}}") {{file.name}}
                             td {{file.size | bytes}}
                             td
-                                select(ng-model="file.type" ng-options="i for i in types" ng-change="updateFile(file)" data-type="info" bs-tooltip data-title="{{tooltip.update}}")
-                            td {{ file.uploadDate | date:"yyyy-MM-dd hh:mm"}}
+                                unless tutorial
+                                    select(ng-model="file.type" ng-options="i for i in types" ng-change="updateFile(file)" data-type="info" bs-tooltip data-title="{{tooltip.update}}")
+                            td
+                                unless tutorial
+                                    {{ file.uploadDate | date:"yyyy-MM-dd hh:mm"}}
                             td.cell-align
-                                button.btn.btn-danger.btn-xs(ng-click="deleteFile(file._id)" data-type="info" bs-tooltip data-title="{{tooltip.delete}}")
-                                    span.fa.fa-lg.fa-trash
+                                unless tutorial
+                                    button.btn.btn-danger.btn-xs(ng-click="deleteFile(file._id)" data-type="info" bs-tooltip data-title="{{tooltip.delete}}")
+                                        span.fa.fa-lg.fa-trash
             dir-pagination-controls(max-size=6 boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" )
