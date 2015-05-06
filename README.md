@@ -55,8 +55,9 @@ Three database backends are also required.
 * Local aligning programs.
 	* [ClustalW](http://www.clustal.org/download/current/)
 	* [Mafft](http://mafft.cbrc.jp/alignment/software/)
-* Phylogenetic program.
+* Phylogenetic programs.
 	* [raxml](http://sco.h-its.org/exelixis/web/software/raxml/index.html)
+	* [Newick Utilities](http://cegg.unige.ch/newick_utils)
 * [NCBI blast](http://ftp.ncbi.nlm.nih.gov/blast/executables/release/LATEST/)
     * We don't use blast+.
 * Other tools.
