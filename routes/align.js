@@ -218,24 +218,24 @@ router.post('/', function (req, res, next) {
                     command += "\n";
 
                     if (!argument.selfAlignment) {
-                        command += 'perl ~/Scripts/withncbi/taxon/strain_bz.pl ' + "\\\n";
+                        command += 'perl ~/Scripts/withncbi/taxon/strain_bz.pl' + " \\\n";
                     }
                     else {
-                        command += 'perl ~/Scripts/withncbi/taxon/strain_bz_self.pl ' + "\\\n";
+                        command += 'perl ~/Scripts/withncbi/taxon/strain_bz_self.pl' + " \\\n";
                     }
 
-                    command += '    --file ' + alignDir + '/fake_taxon.csv ' + "\\\n";
-                    command += '    -w ' + userDir + "\\\n";
-                    command += '    --name ' + alignName + "\\\n";
-                    command += '    --msa ' + argument.reAlignmentMethod + "\\\n";
-                    command += '    --use_name ' + "\\\n";
-                    command += '    --nostat ' + "\\\n";
+                    command += '    --file ' + alignDir + '/fake_taxon.csv' + " \\\n";
+                    command += '    -w ' + userDir + " \\\n";
+                    command += '    --name ' + alignName + " \\\n";
+                    command += '    --msa ' + argument.reAlignmentMethod + " \\\n";
+                    command += '    --use_name ' + " \\\n";
+                    command += '    --nostat ' + " \\\n";
                     if (argument.skipRepeatMask) {
-                        command += '    --norm ' + "\\\n";
+                        command += '    --norm ' + " \\\n";
                     }
-                    command += '    -t ' + strip_path(argument.targetSeq) + "\\\n";
+                    command += '    -t ' + strip_path(argument.targetSeq) + " \\\n";
                     for (q in argument.querySeq) {
-                        command += "    -q " + strip_path(argument.querySeq[q]) + "\\\n";
+                        command += "    -q " + strip_path(argument.querySeq[q]) + " \\\n";
                     }
                     command += '    --parallel 4 ' + "\n";
 
