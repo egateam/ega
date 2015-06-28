@@ -230,6 +230,7 @@ router.post('/', function (req, res, next) {
                     command += '    --msa ' + argument.reAlignmentMethod + " \\\n";
                     command += '    --use_name ' + " \\\n";
                     command += '    --nostat ' + " \\\n";
+                    command += '    --norawphylo ' + " \\\n";
                     if (argument.skipRepeatMask) {
                         command += '    --norm ' + " \\\n";
                     }
