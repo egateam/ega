@@ -217,11 +217,12 @@ router.post('/', function (req, res, next) {
                     }
                     command += "\n";
 
+                    var withncbiPath = path.join(__dirname, '../../withncbi');
                     if (!argument.selfAlignment) {
-                        command += 'perl ~/Scripts/withncbi/taxon/strain_bz.pl' + " \\\n";
+                        command += 'perl ' + withncbiPath + '/taxon/strain_bz.pl' + " \\\n";
                     }
                     else {
-                        command += 'perl ~/Scripts/withncbi/taxon/strain_bz_self.pl' + " \\\n";
+                        command += 'perl ' + withncbiPath + '/taxon/strain_bz_self.pl' + " \\\n";
                     }
 
                     command += '    --file ' + alignDir + '/fake_taxon.csv' + " \\\n";
