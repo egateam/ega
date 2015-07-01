@@ -34,7 +34,7 @@ block content
                                     select(ng-model="file.type" ng-options="i for i in types" ng-change="updateFile(file)" data-type="info" bs-tooltip data-title="{{tooltip.update}}")
                             td
                                 unless tutorial
-                                    {{ file.uploadDate | date:"yyyy-MM-dd hh:mm"}}
+                                    p {{ file.uploadDate | date:"yyyy-MM-dd hh:mm"}}
                             td.cell-align
                                 unless tutorial
                                     button.btn.btn-danger.btn-xs(ng-click="deleteFile(file._id)" data-type="info" bs-tooltip data-title="{{tooltip.delete}}")
