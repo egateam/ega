@@ -104,7 +104,7 @@ router.post('/', function (req, res, next) {
                     }
 
                     // make sure directory exists
-                    var userDir = path.join('./upload', username);
+                    var userDir = path.join(__dirname, '../upload', username);
                     userDir = fs.realpathSync(userDir);
 
                     var alignDir = path.join(userDir, alignName);

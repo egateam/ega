@@ -29,6 +29,9 @@ Install server-side and client sides packages.
 cd ~/path/to/ega
 npm install
 bower install
+
+# start ega
+node app.js # be sure cwd is ~/path/to/ega
 ```
 
 Three database backends are also required.
