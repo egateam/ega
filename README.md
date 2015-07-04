@@ -31,7 +31,7 @@ npm install
 bower install
 
 # start ega
-node app.js # be sure cwd is ~/path/to/ega
+node app.js # IMPORTANT! Be sure your cwd is ~/path/to/ega
 ```
 
 Three database backends are also required.
