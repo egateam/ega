@@ -13,14 +13,7 @@ EGA use [Node.js](https://nodejs.org/) as web server.
 Run following commands to install global node.js packages.
 
 ```bash
-npm --verbose -g install nodemon
 npm --verbose -g install bower
-```
-
-This one is optional.
-
-```bash
-npm --verbose -g install express-generator
 ```
 
 Install server-side and client sides packages.
@@ -34,11 +27,10 @@ bower install
 node app.js # IMPORTANT! Be sure your cwd is ~/path/to/ega
 ```
 
-Three database backends are also required.
+Two database backends are also required.
 
 * [mongodb](http://www.mongodb.org/). 
 * [redis](http://redis.io/)
-* [mysql](http://www.mysql.com/)
 
 ### [EGAZ](https://github.com/wang-q/egaz) and [EGAS](https://github.com/wang-q/egas)
 
@@ -46,8 +38,7 @@ Three database backends are also required.
 	+ We suggest using [plenv](https://github.com/tokuhirom/plenv).
 
 * Tons of Perl modules.
-	+ Install all modules listed in [this page](https://stratopan.com/wangq/alignDB/master). (We are not kidding.)
-	+ After you setup plenv and [minicpan](https://metacpan.org/release/CPAN-Mini), you could check [this page](https://github.com/wang-q/tool/blob/master/stpan.txt) for less suffering installation experiences.
+	+ After you setup plenv and cpanm, you could check [this script](https://github.com/wang-q/egavm/blob/master/prepare/4-cpanm.sh) for less suffering installation experiences.
 
 * [RepeatMasker](http://www.repeatmasker.org/) and companions.
 	+ [rmblast](http://www.repeatmasker.org/RMBlast.html)
@@ -66,6 +57,7 @@ Three database backends are also required.
         - chainNet
         - chainPreNet
         - chainSplit
+        - chainStitchId
         - faSize
         - faToTwoBit
         - lavToPsl
@@ -73,7 +65,6 @@ Three database backends are also required.
         - netChainSubset
         - netFilter
         - netSplit
-        - chainStitchId
         - netSyntenic
         - netToAxt
 
