@@ -81,6 +81,7 @@ Two database backends are also required.
 
 * Other tools.
 	+ [faops](https://github.com/wang-q/faops). Our own tool for manipulate fasta files.
+	+ [fasops](https://github.com/wang-q/App-Fasops). Manipulate blocked fasta files.
 	+ [GNU parallel](http://www.gnu.org/software/parallel/). MacOS's (BSD) `xargs` has some differences from Linux's (GNU).
 	+ [circos](http://circos.ca/) for presenting paralogous parts.
 
