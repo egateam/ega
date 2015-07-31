@@ -104,7 +104,7 @@ router.post('/', function (req, res, next) {
                     }
 
                     // make sure directory exists
-                    var userDir = path.join('./upload', username);
+                    var userDir = path.join(__dirname, '../upload', username);
                     userDir = fs.realpathSync(userDir);
 
                     var alignDir = path.join(userDir, alignName);
@@ -152,6 +152,12 @@ router.post('/', function (req, res, next) {
                             name:        '6_var_list.sh',
                             description: 'Generate vcf files containing substitutions and indels.',
                             need:        '5_multi_cmd.sh',
+                            exist:       false
+                        },
+                        {
+                            name:        '9_pack_it_up.sh',
+                            description: 'Pack all files up as a .tar.gz compressed file.',
+                            need:        '1_real_chr.sh',
                             exist:       false
                         },
                         // strain_bz_self.pl
@@ -211,25 +217,27 @@ router.post('/', function (req, res, next) {
                     }
                     command += "\n";
 
+                    var withncbiPath = path.join(__dirname, '../../withncbi');
                     if (!argument.selfAlignment) {
-                        command += 'perl ~/Scripts/withncbi/taxon/strain_bz.pl ' + "\\\n";
+                        command += 'perl ' + withncbiPath + '/taxon/strain_bz.pl' + " \\\n";
                     }
                     else {
-                        command += 'perl ~/Scripts/withncbi/taxon/strain_bz_self.pl ' + "\\\n";
+                        command += 'perl ' + withncbiPath + '/taxon/strain_bz_self.pl' + " \\\n";
                     }
 
-                    command += '    --file ' + alignDir + '/fake_taxon.csv ' + "\\\n";
-                    command += '    -w ' + userDir + "\\\n";
-                    command += '    --name ' + alignName + "\\\n";
-                    command += '    --msa ' + argument.reAlignmentMethod + "\\\n";
-                    command += '    --use_name ' + "\\\n";
-                    command += '    --nostat ' + "\\\n";
+                    command += '    --file ' + alignDir + '/fake_taxon.csv' + " \\\n";
+                    command += '    -w ' + userDir + " \\\n";
+                    command += '    --name ' + alignName + " \\\n";
+                    command += '    --msa ' + argument.reAlignmentMethod + " \\\n";
+                    command += '    --use_name ' + " \\\n";
+                    command += '    --nostat ' + " \\\n";
+                    command += '    --norawphylo ' + " \\\n";
                     if (argument.skipRepeatMask) {
-                        command += '    --norm ' + "\\\n";
+                        command += '    --norm ' + " \\\n";
                     }
-                    command += '    -t ' + strip_path(argument.targetSeq) + "\\\n";
+                    command += '    -t ' + strip_path(argument.targetSeq) + " \\\n";
                     for (q in argument.querySeq) {
-                        command += "    -q " + strip_path(argument.querySeq[q]) + "\\\n";
+                        command += "    -q " + strip_path(argument.querySeq[q]) + " \\\n";
                     }
                     command += '    --parallel 4 ' + "\n";
 

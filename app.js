@@ -73,7 +73,7 @@ var passportConf = require('./models/passport');
 
 // multer uploading middleware
 app.use(multer({
-    dest:              './upload/',
+    dest:              path.join(__dirname, 'upload'),
     rename:            function (fieldname, filename) {
         return filename.replace(/\W/g, '_').replace(/_+/g, '_');
     },

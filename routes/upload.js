@@ -8,9 +8,10 @@ var File = require('../models/File');
 
 router.get('/', function (req, res) {
     res.render('upload', {
-        title: 'EGA Upload',
-        user:  req.user,
-        id:    'upload'
+        title:    'EGA Upload',
+        user:     req.user,
+        id:       'upload',
+        tutorial: req.user.username.match(/tutorial/)
     });
 });
 
