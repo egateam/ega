@@ -181,7 +181,7 @@ exports.dir = function (req, res, next) {
                             }
 
                             // filter out files user shouldn't see
-                            if (_.contains(["chr_length.csv", "id2name.csv", "taxon.csv", "seq_pair.csv", "fake_taxon.csv", "fake_tree.nwk"], file)) {
+                            if (_.contains(["chr_length.csv", "id2name.csv", "taxon.csv", "fake_taxon.csv", "fake_tree.nwk"], file)) {
                                 console.log("excluding file ", file);
                                 return;
                             }

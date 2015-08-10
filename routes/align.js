@@ -57,7 +57,7 @@ router.post('/', function (req, res, next) {
                 else {
                     console.log("Running job: [%s]", alignName);
 
-                    if (alignName == 'chr_length' || alignName == 'taxon' || alignName == 'fake_taxon' || alignName == 'seq_pair' || alignName == 'id2name') {
+                    if (alignName == 'chr_length' || alignName == 'taxon' || alignName == 'fake_taxon' || alignName == 'id2name') {
                         alignName += '_renamed';
                     }
 
