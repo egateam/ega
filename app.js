@@ -62,7 +62,6 @@ var redis = require('socket.io-redis');
 io.adapter(redis({host: 'localhost', port: 6379}));
 
 app.locals.appname = 'EGA: Easy Genome Aligner';
-app.locals.moment  = require('moment');
 app.set('port', settings.main.port);
 app.set('io', io);
 app.set('server', server);
