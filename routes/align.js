@@ -193,6 +193,8 @@ router.post('/', function (req, res, next) {
                     command += "cd " + alignDir + "\n\n";
 
                     // a lot of backslash escaped chars :(
+                    command += "mkdir -p Genomes\n";
+                    command += "cd " + alignDir + "/Genomes\n\n";
                     command += "echo 'Copy target sequence.'\n";
                     command += "gzip --stdout --decompress --force " + argument.targetSeq + " \\\n";
                     command += "    | perl -np -e \'m{^>} and m{gi\\|\\d+\\|\\w+\\|(\\w+)} and $_ = qq{>$1\\n}\' \\\n";
@@ -211,6 +213,7 @@ router.post('/', function (req, res, next) {
 
                     if (argument.guideTree) {
                         command += "echo 'Copy guide tree.'\n";
+                        command += "cd " + alignDir + "\n";
                         command += "cp " + argument.guideTree + " .";
                         command += "\n";
                         command += "\n";
