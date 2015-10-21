@@ -22,7 +22,6 @@ var jobSchema = new mongoose.Schema({
         targetSeq:         String,
         querySeq:          [String],
         guideTree:         String,
-        alignLength:       Number,
         reAlignmentMethod: String,
         selfAlignment:     Boolean,
         skipRepeatMask:    Boolean

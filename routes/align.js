@@ -66,7 +66,6 @@ router.post('/', function (req, res, next) {
                         targetSeq:         req.body.targetSeq,
                         querySeq:          [],
                         guideTree:         req.body.guideTree,
-                        alignLength:       req.body.alignLength,
                         reAlignmentMethod: req.body.reAlignmentMethod,
                         selfAlignment:     false,
                         skipRepeatMask:    false
