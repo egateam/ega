@@ -1,22 +1,20 @@
 var express = require('express');
 
 // middleware
-var favicon      = require('serve-favicon'),
-    logger       = require('morgan'),
-    bodyParser   = require('body-parser'),
-    cookieParser = require('cookie-parser'),
-    path         = require('path'),
-    multer       = require("multer"),
-    flash        = require('express-flash'),
-    session      = require('express-session'),
-    mongoose     = require('mongoose'),
-    passport     = require('passport')
-    ;
+var favicon      = require('serve-favicon');
+var logger       = require('morgan');
+var bodyParser   = require('body-parser');
+var cookieParser = require('cookie-parser');
+var path         = require('path');
+var flash        = require('express-flash');
+var session      = require('express-session');
+var mongoose     = require('mongoose');
+var passport     = require('passport');
 
 var RedisStore = require('connect-redis')(session);
 
 // app
-var app = express();
+var app      = express();
 var settings = require('./settings');
 
 // view engine setup
@@ -64,31 +62,17 @@ var redis = require('socket.io-redis');
 io.adapter(redis({host: 'localhost', port: 6379}));
 
 app.locals.appname = 'EGA: Easy Genome Aligner';
-app.locals.moment = require('moment');
+app.locals.moment  = require('moment');
 app.set('port', settings.main.port);
 app.set('io', io);
 app.set('server', server);
 
 var passportConf = require('./models/passport');
 
-// multer uploading middleware
-app.use(multer({
-    dest:              path.join(__dirname, 'upload'),
-    rename:            function (fieldname, filename) {
-        return filename.replace(/\W/g, '_').replace(/_+/g, '_');
-    },
-    limits:            {
-        fileSize: settings.main.file_size_limit
-    },
-    onFileUploadStart: function (file) {
-        console.log(file.fieldname + ' is starting ...');
-    },
-}));
-
 // route section
-var routes = require('./routes/index');
-var upload = require('./routes/upload');
-var align = require('./routes/align');
+var routes  = require('./routes/index');
+var upload  = require('./routes/upload');
+var align   = require('./routes/align');
 var process = require('./routes/process');
 
 var api = require('./routes/api');
@@ -130,7 +114,7 @@ app.post('/reset/:token', accountController.postReset);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-    var err = new Error('Not Found');
+    var err    = new Error('Not Found');
     err.status = 404;
     next(err);
 });
