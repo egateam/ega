@@ -1,9 +1,6 @@
 # packages installed by npm
 node_modules
 
-# uploaded files
-upload
-
 # webstorm project files
 .idea
 
