@@ -1,9 +1,9 @@
 {
   "name": "ega",
-  "version": "0.0.1",
-  "homepage": "https://github.com/wang-q/ega",
+  "version": "1.0.0",
+  "homepage": "https://github.com/egateam/ega",
   "authors": [
-    "wang-q <wang-q@outlook.com>"
+    "wangq"
   ],
   "license": "MIT",
   "private": true,
