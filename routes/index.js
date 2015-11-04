@@ -11,9 +11,9 @@ router.get('/contact', function (req, res) {
     res.render('contact', {title: 'contact', user: req.user, id: 'contact'});
 });
 
-// static pages
-router.get('/tutorial', function (req, res) {
-    res.render('tutorial', {title: 'EGA Tutorial', user: req.user, id: 'tutorial'});
+// redirect
+router.get('/manual', function (req, res) {
+    res.redirect('http://egateam.github.io');
 });
 
 module.exports = router;

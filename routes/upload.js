@@ -13,7 +13,6 @@ router.get('/', function (req, res) {
         title:    'EGA Upload',
         user:     req.user,
         id:       'upload',
-        tutorial: req.user.username.match(/tutorial/)
     });
 });
 

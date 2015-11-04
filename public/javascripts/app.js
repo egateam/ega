@@ -85,9 +85,9 @@ egaApp.controller("FileListCtrl",
         };
 
         // for pagination
-        $scope.currentPage = 1;
-        $scope.pageSize = 20;
-        $scope.number = ($scope.$index + 1) + ($scope.currentPage - 1) * $scope.pageSize;
+        $scope.currentPage       = 1;
+        $scope.pageSize          = 20;
+        $scope.number            = ($scope.$index + 1) + ($scope.currentPage - 1) * $scope.pageSize;
         $scope.pageChangeHandler = function (num) {
             $scope.currentPage = num;
         };
