@@ -54,9 +54,9 @@ mongoose.connect('mongodb://localhost:27017/ega', {server: {auto_reconnect: true
 mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
 
 // socket.io
-var http   = require('http'),
-    server = http.createServer(app),
-    io     = require('socket.io').listen(server);
+var http   = require('http');
+var server = http.createServer(app);
+var io     = require('socket.io').listen(server);
 
 var redis = require('socket.io-redis');
 io.adapter(redis({host: 'localhost', port: 6379}));
@@ -119,26 +119,11 @@ app.use(function (req, res, next) {
 });
 
 // error handlers
-
-// development error handler
-// will print stack trace
-if (app.get('env') === 'development') {
-    app.use(function (err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error:   err
-        });
-    });
-}
-
-// production error handler
-// no stack traces leaked to user
 app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,
-        error:   {}
+        error:   err
     });
 });
 

@@ -1,9 +1,9 @@
-var fs = require("fs");
+var fs   = require("fs");
 var path = require("path");
-var _ = require('lodash');
+var _    = require('lodash');
 
 var File = require('../models/File');
-var Job = require('../models/Job');
+var Job  = require('../models/Job');
 
 // API for files
 exports.files = function (req, res, next) {
@@ -110,15 +110,15 @@ exports.destroyJob = function (req, res, next) {
         Job.findOneAndRemove({"_id": item._id}, function (error) {
             if (error) return next(error);
             console.info('Deleted job record %s with id=%s completed.', item.name, item._id);
+            if (fs.existsSync(item.path)) {
+                deleteFolderRecursive(item.path);
+                console.info('Job record %s is deleted from file system.', item.path);
+            }
+            else {
+                console.info('Job record %s does not exist in file system.', item.path);
+            }
         });
 
-        if (fs.existsSync(item.path)) {
-            deleteFolderRecursive(item.path);
-            console.info('Job record %s is deleted from file system.', item.path);
-        }
-        else {
-            console.info('Job record %s does not exist in file system.', item.path);
-        }
         return res.json(true);
     });
 };
@@ -152,7 +152,7 @@ exports.dir = function (req, res, next) {
         }
         else {
             var currentDir = item.path;
-            var query = req.query.path || '';
+            var query      = req.query.path || '';
             if (query) currentDir = path.join(currentDir, query);
             console.log("browsing ", currentDir);
             fs.readdir(currentDir, function (error, files) {
@@ -199,10 +199,10 @@ exports.dir = function (req, res, next) {
                     }
 
                 });
-                data = _.sortBy(data, function (f) {
+                data     = _.sortBy(data, function (f) {
                     return f.name;
                 });
-                data = _.sortBy(data, function (f) {
+                data     = _.sortBy(data, function (f) {
                     return !f.isDirectory;
                 });
                 res.json(data);
@@ -221,7 +221,7 @@ exports.download = function (req, res, next) {
         }
         else {
             var currentDir = item.path;
-            var query = req.query.path || '';
+            var query      = req.query.path || '';
             if (query) currentDir = path.join(currentDir, query);
             console.log("Going to download %s", currentDir);
 

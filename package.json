@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "author": {
-    "name": "wangq",
+    "name": "wangq"
   },
   "dependencies": {
     "async": "0.9.0",
@@ -24,7 +24,7 @@
     "mailgun-js": "0.6.7",
     "method-override": "2.3.0",
     "mkdirp": "0.5.0",
-    "mongoose": "3.8.31",
+    "mongoose": "3.8.36",
     "morgan": "1.4.1",
     "multer": "0.1.8",
     "passport": "0.2.1",
