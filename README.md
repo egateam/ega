@@ -61,7 +61,6 @@ Two database backends are also required.
         - faSize
         - faToTwoBit
         - lavToPsl
-        - mafSpeciesList
         - netChainSubset
         - netFilter
         - netSplit
