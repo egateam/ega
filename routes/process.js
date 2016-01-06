@@ -11,6 +11,7 @@ var Job = require('../models/Job');
 
 router.get('/', function (req, res, next) {
     var username = req.user.username;
+
     Job.findOne({"username": username, status: "running"}).exec(function (error, item) {
         if (error) return next(error);
         if (item) {
@@ -28,6 +29,7 @@ router.get('/', function (req, res, next) {
 
 router.get('/:id', function (req, res, next) {
     var username = req.user.username;
+
     Job.findOne({"username": username, "_id": req.params.id}).exec(function (error, item) {
         if (error) return next(error);
 
@@ -117,7 +119,7 @@ router.get('/:id/:filename', function (req, res, next) {
                             return res.redirect('/process/' + id);
                         }
                     }
-                    process_sh(req.app.get('io'), item, i);
+                    process_sh(req.app.get('io'), username, item, i);
                     req.flash("info", "Operation <strong>[%s]</strong> starts.", filename);
                     return res.redirect('/process/' + id);
                 }
@@ -128,7 +130,7 @@ router.get('/:id/:filename', function (req, res, next) {
     });
 });
 
-var process_sh = function (io, job, index) {
+var process_sh = function (io, username, job, index) {
     var child = spawn("bash", [job.sh_files[index].path]);
     console.log('Job pid [%s].', child.pid);
 
@@ -143,12 +145,13 @@ var process_sh = function (io, job, index) {
         if (error) return next(error);
     });
 
+    // messages to channel username
     readline.createInterface({
         input:    child.stdout,
         terminal: false
     }).on('line', function (line) {
         var str = "[stdout] " + line + "\n";
-        io.emit('console', {data: str})
+        io.emit(username, {data: str})
     });
 
     readline.createInterface({
@@ -156,7 +159,7 @@ var process_sh = function (io, job, index) {
         terminal: false
     }).on('line', function (line) {
         var str = "[stderr] " + line + "\n";
-        io.emit('console', {data: str})
+        io.emit(username, {data: str})
     });
 
     child.on('exit', function (code, signal) {
@@ -171,7 +174,7 @@ var process_sh = function (io, job, index) {
             if (error) return next(error);
         });
         console.log('Job [%s] Operation [%s] finished and recorded', job.name, job.sh_files[index].name);
-        io.emit('console', {data: "[Job: " + job.name + "] [Operation: " + job.sh_files[index].name + "] " + "*** DONE ***\n"});
+        io.emit(username, {data: "[Job: " + job.name + "] [Operation: " + job.sh_files[index].name + "] " + "*** DONE ***\n"});
         io.emit('done', job);
     });
 };

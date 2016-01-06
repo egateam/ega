@@ -133,11 +133,6 @@ if (!module.parent) {
     });
 }
 
-io.sockets.on('connection', function (socket) {
-    console.log('Someone connected');
-    io.emit('console', {data: "Welcome!"})
-});
-
 module.exports = app;
 
 // cloc . --exclude-dir=.git,.idea,node_modules,upload,lib --by-file
