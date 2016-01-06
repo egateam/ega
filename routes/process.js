@@ -1,11 +1,12 @@
 var express = require('express');
-var router = express.Router();
-var util = require("util");
+var router  = express.Router();
+var util    = require("util");
 
-var fs = require("fs");
-var spawn = require('child_process').spawn;
+var fs       = require("fs");
+var spawn    = require('child_process').spawn;
 var readline = require('readline');
-var _ = require('lodash');
+var _        = require('lodash');
+var running  = require('is-running');
 
 var Job = require('../models/Job');
 
@@ -43,12 +44,23 @@ router.get('/:id', function (req, res, next) {
                         if (sh_file.name === file) {
                             if (!item.sh_files[i].exist) {
                                 item.sh_files[i].exist = true;
-                                item.sh_files[i].path = curPath;
+                                item.sh_files[i].path  = curPath;
 
                                 item.save(function (error) {
                                     if (error) return next(error);
                                 });
                                 console.log("Set file %s to be existing", file);
+                            }
+                            if (item.sh_files[i].status === "running") {
+                                var pid  = item.sh_files[i].pid;
+                                var live = running(pid);
+                                if (!live) {
+                                    item.sh_files[i].status = "failed";
+                                    item.save(function (error) {
+                                        if (error) return next(error);
+                                    });
+                                    console.log("Set Operation %s to be failed", item.sh_files[i].name);
+                                }
                             }
                         }
                     }
@@ -67,7 +79,7 @@ router.get('/:id', function (req, res, next) {
 
 router.get('/:id/:filename', function (req, res, next) {
     var username = req.user.username;
-    var id = req.params.id;
+    var id       = req.params.id;
     var filename = req.params.filename;
 
     Job.findOne({username: username, "_id": id}, function (error, item) {
@@ -85,7 +97,7 @@ router.get('/:id/:filename', function (req, res, next) {
         else {
             // Mark the jobs as finished and all sh files will not be able to be executed.
             if (filename == 'finish') {
-                item.status = 'finished';
+                item.status     = 'finished';
                 item.finishDate = Date.now();
 
                 item.save(function (error) {
@@ -134,12 +146,12 @@ var process_sh = function (io, username, job, index) {
     var child = spawn("bash", [job.sh_files[index].path]);
     console.log('Job pid [%s].', child.pid);
 
-    job.sh_files[index].startDate = Date.now();
-    job.sh_files[index].pid = child.pid;
-    job.sh_files[index].endDate = null;
-    job.sh_files[index].exitCode = null;
+    job.sh_files[index].startDate  = Date.now();
+    job.sh_files[index].pid        = child.pid;
+    job.sh_files[index].endDate    = null;
+    job.sh_files[index].exitCode   = null;
     job.sh_files[index].exitSignal = null;
-    job.sh_files[index].status = "running";
+    job.sh_files[index].status     = "running";
 
     job.save(function (error) {
         if (error) return next(error);
@@ -165,10 +177,10 @@ var process_sh = function (io, username, job, index) {
     child.on('exit', function (code, signal) {
         console.log('*** closed code=%s, signal=%s', code, signal);
 
-        job.sh_files[index].endDate = Date.now();
-        job.sh_files[index].exitCode = code;
+        job.sh_files[index].endDate    = Date.now();
+        job.sh_files[index].exitCode   = code;
         job.sh_files[index].exitSignal = signal;
-        job.sh_files[index].status = code === 0 ? "finished" : "failed";
+        job.sh_files[index].status     = code === 0 ? "finished" : "failed";
 
         job.save(function (error) {
             if (error) return next(error);

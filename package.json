@@ -19,6 +19,7 @@
     "express-flash": "0.0.2",
     "express-session": "1.9.1",
     "express-validator": "2.6.0",
+    "is-running": "2.0.0",
     "jade": "1.6.0",
     "lodash": "2.4.1",
     "mailgun-js": "0.6.7",
