@@ -10,27 +10,29 @@ EGA runs under recent versions of Linux or Mac OSX.
 
 EGA use [Node.js](https://nodejs.org/) as web server.
 
-Run following commands to install global node.js packages.
-
-```bash
-npm --verbose -g install bower
-```
-
-Install server-side and client sides packages.
-
-```bash*
-cd ~/path/to/ega
-npm install
-bower install
-
-# start ega
-node app.js # IMPORTANT! Be sure your cwd is ~/path/to/ega
-```
-
 Two database backends are also required.
 
 * [mongodb](http://www.mongodb.org/). 
 * [redis](http://redis.io/)
+
+Run following commands run ega.
+
+```bash
+cd ~/path/to/ega
+
+# Install server-side packages
+npm --verbose -g install bower
+npm install
+
+# and client sides packages
+bower install
+
+# settings
+cp seetings.js.example settings.js
+
+# start ega
+node app.js # IMPORTANT! Be sure your cwd is ~/path/to/ega
+```
 
 ### Major components: [egaz](https://github.com/wang-q/egaz) and [egas](https://github.com/wang-q/egas)
 
@@ -82,7 +84,7 @@ Two database backends are also required.
     * [faops](https://github.com/wang-q/faops). Our own tool for manipulate fasta files.
     * [fasops](https://github.com/wang-q/App-Fasops). Manipulate blocked fasta files.
     * [runlist](https://github.com/wang-q/App-RL). Chromosome coverages.
-    * [sparseMEM](http://compbio.cs.princeton.edu/mems/). Fix errors in lastz self-alignments.
+    * [sparseMEM](http://compbio.cs.princeton.edu/mems/). Finding exact matches in genome.
     * [GNU parallel](http://www.gnu.org/software/parallel/). MacOS's (BSD) `xargs` has some differences from Linux's (GNU).
     * [circos](http://circos.ca/) for presenting paralogous parts.
 
