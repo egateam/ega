@@ -81,13 +81,16 @@ app.use('/upload', passportConf.isLoggedIn, upload);
 app.use('/align', passportConf.isLoggedIn, align);
 app.use('/process', passportConf.isLoggedIn, process);
 
+// username
+app.get('/api/user', passportConf.isLoggedIn, api.user);
+
 // "Recipes with Angular.js", page 94
 // Backend Integration with Node Express
 app.get('/api/files', passportConf.isLoggedIn, api.files);
 app.get('/api/files/:id', passportConf.isLoggedIn, api.file);
 app.put('/api/files/:id', passportConf.isLoggedIn, api.updateFile);
-app.delete('/api/files/:id', passportConf.isLoggedIn, api.destroyFile);
 
+app.delete('/api/files/:id', passportConf.isLoggedIn, api.destroyFile);
 app.get('/api/jobs', passportConf.isLoggedIn, api.jobs);
 app.get('/api/jobs/:id', passportConf.isLoggedIn, api.job);
 app.put('/api/jobs/:id', passportConf.isLoggedIn, api.updateJob);

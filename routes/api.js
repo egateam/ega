@@ -5,6 +5,10 @@ var _    = require('lodash');
 var File = require('../models/File');
 var Job  = require('../models/Job');
 
+exports.user = function (req, res, next) {
+    return res.json(req.user);
+};
+
 // API for files
 exports.files = function (req, res, next) {
     File.find({username: req.user.username}, function (error, items) {

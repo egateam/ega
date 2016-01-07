@@ -141,8 +141,7 @@ egaApp.controller("ProcessArgCtrl",
     });
 
 egaApp.controller("ProcessShCtrl",
-    function ($scope, $http, socket, Job) {
-        $scope.job;
+    function ($scope, $http, socket) {
         $scope.myDir;
 
         $scope.tooltip = {};
@@ -171,6 +170,13 @@ egaApp.controller("ProcessShCtrl",
             return ( ext && extensionsMap[ext.toLowerCase()]) || 'fa-file-o';
         }
 
+        $http.get('/api/user' ).success(function (user) {
+            socket.on(user.username + '-done', function (data) {
+                console.log("Got done messages [%s].", data.name);
+                $scope.job = data;
+            });
+        });
+
         $scope.showDir = function (path) {
             $http.get('/api/dir/' + $scope.job._id, {
                 params: {path: path ? path : ''}
@@ -186,9 +192,4 @@ egaApp.controller("ProcessShCtrl",
                 $scope.myDir = data;
             });
         };
-
-        socket.on('done', function (data) {
-            console.dir(data);
-            $scope.job = data;
-        });
     });
