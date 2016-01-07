@@ -9,11 +9,11 @@ block content
                         a.btn.btn-warning.btn-xs(role="button" href="/process/{{job._id}}/finish" ng-if="job.status == 'running'" bs-tooltip data-title="{{tooltip.finish}}")
                             span.fa.fa-beer
                             | &nbsp;Finish
-                pre.pre-scrollable
-                    code.json {{job.argument | json}}
+                pre.pre-scrollable {{job.argument | json}}
             else
                 .panel-heading.panel-title No running job
-                p You may click a job link in the Align page.
+                .panel-body
+                    p You may click a job link in the Align page.
 
     // list of sh files
     if (job)
