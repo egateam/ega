@@ -153,12 +153,6 @@ router.post('/', function (req, res, next) {
                             need:        '5_multi_cmd.sh',
                             exist:       false
                         },
-                        {
-                            name:        '9_pack_it_up.sh',
-                            description: 'Pack all files up as a .tar.gz compressed file.',
-                            need:        '1_real_chr.sh',
-                            exist:       false
-                        },
                         // strain_bz_self.pl
                         {
                             name:        '3_self_cmd.sh',
@@ -176,6 +170,13 @@ router.post('/', function (req, res, next) {
                             name:        '5_circos_cmd.sh',
                             description: 'Generate a circos picture presenting connections among paralogs.',
                             need:        '4_proc_cmd.sh',
+                            exist:       false
+                        },
+                        // pack up
+                        {
+                            name:        '9_pack_it_up.sh',
+                            description: 'Pack all files up as a .tar.gz compressed file.',
+                            need:        '1_real_chr.sh',
                             exist:       false
                         },
                     ];
