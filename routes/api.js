@@ -113,13 +113,12 @@ exports.destroyJob = function (req, res, next) {
 
         Job.findOneAndRemove({"_id": item._id}, function (error) {
             if (error) return next(error);
-            console.info('Deleted job record %s with id=%s completed.', item.name, item._id);
             if (fs.existsSync(item.path)) {
                 deleteFolderRecursive(item.path);
-                console.info('Job record %s is deleted from file system.', item.path);
+                console.info('Job record [%s] is deleted from file system.', item.path);
             }
             else {
-                console.info('Job record %s does not exist in file system.', item.path);
+                console.info('Job record [%s] does not exist in file system.', item.path);
             }
         });
 

@@ -34,7 +34,7 @@ router.get('/:id', function (req, res, next) {
     Job.findOne({"username": username, "_id": req.params.id}).exec(function (error, item) {
         if (error) return next(error);
 
-        fs.readdirSync(item.path).forEach(function (file, index) {
+        fs.readdirSync(item.path).forEach(function (file) {
             var curPath = item.path + "/" + file;
             if (fs.lstatSync(curPath).isFile()) {
                 if (/\.sh$/.test(curPath)) {
@@ -96,7 +96,7 @@ router.get('/:id/:filename', function (req, res, next) {
         }
         else {
             // Mark the jobs as finished and all sh files will not be able to be executed.
-            if (filename == 'finish') {
+            if (filename === 'finish') {
                 item.status     = 'finished';
                 item.finishDate = Date.now();
 
