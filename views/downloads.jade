@@ -1,0 +1,36 @@
+extends layout
+
+block content
+    .container(id="downloadsPanel")
+        .wrapper
+            .panel.panel-info
+                .panel-heading.panel-title EGA Virtual Machine
+                .panel-body Read the manual for details.
+                ul.list-group
+                    li.list-group-item
+                        a(href="/downloads/egavm.ova") egavm.ova
+        .wrapper
+            .panel.panel-default
+                .panel-heading.panel-title VirtualBox
+                .panel-body This version is we used to build <code>egavm.ova</code>.
+                ul.list-group
+                    li.list-group-item
+                        a(href="/downloads/VirtualBox-5.0.12-104815-OSX.dmg") VirtualBox-5.0.12-104815-OSX.dmg
+                    li.list-group-item
+                        a(href="/downloads/VirtualBox-5.0.12-104815-Win.exe") VirtualBox-5.0.12-104815-Win.exe
+                    li.list-group-item
+                        a(href="/downloads/Oracle_VM_VirtualBox_Extension_Pack-5.0.12-104815.vbox-extpack") Oracle_VM_VirtualBox_Extension_Pack-5.0.12-104815.vbox-extpack
+        .wrapper
+            .panel.panel-default
+                .panel-heading.panel-title Vagrant
+                .panel-body Using vagrant let you config shared directories and forwarding ports more easily.
+                    | For experienced users only.
+                ul.list-group
+                    li.list-group-item
+                        a(href="/downloads/egavm.box") egavm.box
+                    li.list-group-item
+                        a(href="/downloads/Vagrantfile") Vagrantfile
+                    li.list-group-item
+                        a(href="/downloads/vagrant_1.8.1.dmg") vagrant_1.8.1.dmg
+                    li.list-group-item
+                        a(href="/downloads/vagrant_1.8.1.msi") vagrant_1.8.1.msi

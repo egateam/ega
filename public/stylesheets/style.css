@@ -120,6 +120,10 @@ input[type="password"] {
     color: black;
 }
 
+#downloadsPanel {
+    max-width: 50em;
+    margin: 0 auto;
+}
 
 /* http://stackoverflow.com/questions/13771101/centering-a-button-vertically-in-table-cell-using-twitter-bootstrap */
 .table tbody>tr>td.cell-align {

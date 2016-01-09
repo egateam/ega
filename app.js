@@ -21,7 +21,10 @@ var settings = require('./settings');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), {
+    maxAge: '24h',
+    index:  false
+}));
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -100,7 +103,7 @@ app.delete('/api/jobs/:id', passportConf.isLoggedIn, api.destroyJob);
 app.get('/api/dir/:id', passportConf.isLoggedIn, api.dir);
 
 // file downloader
-app.get('/api/download/:id', passportConf.isLoggedIn, api.download);
+app.get('/api/downloads/:id', passportConf.isLoggedIn, api.download);
 
 // account related routers
 var accountController = require('./routes/account');
