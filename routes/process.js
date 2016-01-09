@@ -131,7 +131,12 @@ router.get('/:id/:filename', function (req, res, next) {
                             return res.redirect('/process/' + id);
                         }
                     }
-                    process_sh(req.app.get('io'), username, item, i);
+                    try {
+                        process_sh(req.app.get('io'), username, item, i, next);
+                    }
+                    catch (e) {
+                        console.log(util.inspect(e));
+                    }
                     req.flash("info", "Operation <strong>[%s]</strong> starts.", filename);
                     return res.redirect('/process/' + id);
                 }
@@ -142,7 +147,7 @@ router.get('/:id/:filename', function (req, res, next) {
     });
 });
 
-var process_sh = function (io, username, job, index) {
+var process_sh = function (io, username, job, index, next) {
     var child = spawn("bash", [job.sh_files[index].path]);
     console.log('Job pid [%s].', child.pid);
 
