@@ -132,45 +132,41 @@ egaApp.controller("JobListCtrl",
         };
     });
 
-egaApp.controller("ProcessArgCtrl",
-    function ($scope) {
-        $scope.job;
-        $scope.tooltip = {
-            "finish": "Mark this job as \"Finished\"."
-        }
-    });
-
 egaApp.controller("ProcessShCtrl",
     function ($scope, $http, socket) {
         $scope.myDir;
 
-        $scope.tooltip = {};
+        $scope.tooltip = {
+            "finish": "Mark this job as \"Finished\"."
+        };
 
         var extensionsMap = {
-            ".zip":  "fa-file-archive-o",
-            ".gz":   "fa-file-archive-o",
-            ".bz2":  "fa-file-archive-o",
-            ".tar":  "fa-file-archive-o",
-            ".tgz":  "fa-file-archive-o",
-            ".js":   "fa-file-code-o",
-            ".csv":  "fa-file-excel-o",
-            ".xls":  "fa-file-excel-o",
-            ".xlsx": "fa-file-excel-o",
-            ".png":  "fa-file-image-o",
-            ".jpg":  "fa-file-image-o",
-            ".jpeg": "fa-file-image-o",
-            ".gif":  "fa-file-image-o",
-            ".pdf":  "fa-file-pdf-o",
-            ".txt":  "fa-file-text-o",
-            ".log":  "fa-file-text-o",
-            ".fa":   "fa-file-text-o"
+            ".zip":   "fa-file-archive-o",
+            ".gz":    "fa-file-archive-o",
+            ".bz2":   "fa-file-archive-o",
+            ".tar":   "fa-file-archive-o",
+            ".tgz":   "fa-file-archive-o",
+            ".js":    "fa-file-code-o",
+            ".csv":   "fa-file-excel-o",
+            ".xls":   "fa-file-excel-o",
+            ".xlsx":  "fa-file-excel-o",
+            ".png":   "fa-file-image-o",
+            ".jpg":   "fa-file-image-o",
+            ".jpeg":  "fa-file-image-o",
+            ".gif":   "fa-file-image-o",
+            ".pdf":   "fa-file-pdf-o",
+            ".txt":   "fa-file-text-o",
+            ".log":   "fa-file-text-o",
+            ".fa":    "fa-file-text-o",
+            ".fas":   "fa-file-text-o",
+            ".fasta": "fa-file-text-o"
         };
 
         function getFileIcon(ext) {
             return ( ext && extensionsMap[ext.toLowerCase()]) || 'fa-file-o';
         }
 
-        $http.get('/api/user' ).success(function (user) {
+        $http.get('/api/user').success(function (user) {
             socket.on(user.username + '-done', function (data) {
                 console.log("Got done messages [%s].", data.name);
                 $scope.job = data;

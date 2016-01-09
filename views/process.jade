@@ -1,73 +1,76 @@
 extends layout
 block content
-    // arguments
-    .wrapper(ng-controller="ProcessArgCtrl")
-        .panel.panel-info(id="argumentsPanel")
-            if (job)
-                .panel-heading.panel-title(ng-init="job= #{JSON.stringify(job)}") [Job: {{job.name}}]
-                    .pull-right
-                        a.btn.btn-warning.btn-xs(role="button" href="/process/{{job._id}}/finish" ng-if="job.status == 'running'" bs-tooltip data-title="{{tooltip.finish}}")
-                            span.fa.fa-beer
-                            | &nbsp;Finish
-                pre.pre-scrollable {{job.argument | json}}
-            else
+    if (job)
+        .container(ng-controller="ProcessShCtrl" ng-init="job= #{JSON.stringify(job)}")
+            // arguments
+            .wrapper
+                .panel.panel-info(id="argumentsPanel")
+                    .panel-heading.panel-title() [Job: {{job.name}}]
+                        .pull-right
+                            a.btn.btn-warning.btn-xs(role="button" href="/process/{{job._id}}/finish" ng-if="job.status == 'running'" bs-tooltip data-title="{{tooltip.finish}}")
+                                span.fa.fa-beer
+                                | &nbsp;Finish
+                    pre.pre-scrollable {{job.argument | json}}
+
+            // list of sh files
+            .wrapper(ng-controller="ProcessShCtrl")
+                table#operationTable.table.table-bordered
+                    thead
+                        tr
+                            th Operation
+                            th Start
+                            th End
+                            th Status
+                    tbody
+                        tr(ng-repeat="sh in job.sh_files | filter:{exist: true}" ng-switch on="sh.status")
+                            td
+                                a.btn.btn-xs.btn-primary(role="button" href="/process/{{job._id}}/{{sh.name}}" bs-tooltip data-title="{{sh.description}}") {{sh.name}}
+                            td {{ sh.startDate | date:"yyyy-MM-dd hh:mm"}}
+                            td {{ sh.endDate | date:"yyyy-MM-dd hh:mm"}}
+                            td.success(ng-switch-when="finished")
+                                span.fa.fa-fw.fa-check
+                                | &nbsp;{{sh.status}}
+                            td.warning(ng-switch-when="running")
+                                span.fa.fa-fw.fa-spin.fa-spinner
+                                | &nbsp;{{sh.status}}
+                            td.danger(ng-switch-when="failed")
+                                span.fa.fa-fw.fa-remove
+                                | &nbsp;{{sh.status}}
+                            td(ng-switch-default)
+                if (job.status == "finished")
+                    .wrapper
+                        div#fileBrowserPanel.panel.panel-default
+                            .panel-heading.panel-title File Browser
+                                .pull-right
+                                    button.btn.btn-primary.btn-xs(ng-click="showDir()")
+                                        span.fa.fa-files-o
+                                        | &nbsp;Show
+                            ul#fileBrowserList.list-group
+                                li.list-group-item(ng-repeat="data in myDir")
+                                    a(href ng-click="showDir(data.path)" ng-if="data.isDirectory")
+                                        span(class="fa {{data.icon}}")
+                                        | &nbsp;{{data.name}}
+                                    a(href="/api/download/{{job._id}}/?path={{data.path}}" target='_blank' ng-if="!data.isDirectory")
+                                        span(class="fa {{data.icon}}")
+                                        | &nbsp;{{data.name}}
+                else
+                    // console
+                    .wrapper
+                        .panel.panel-default(id="consolePanel")
+                            .panel-heading.panel-title Console messages
+                            pre(id='consoleLog')
+                    script(type="text/javascript").
+                        var socket = io.connect();
+                        socket.on("#{user.username}", function (data) {
+                            $("#consoleLog").append(data.data);
+                            //scroll the div to follow last line added!
+                            var objDiv       = document.getElementById("consoleLog");
+                            objDiv.scrollTop = objDiv.scrollHeight;
+                        });
+
+    else
+        .container.wrapper
+            .panel.panel-info(id="argumentsPanel")
                 .panel-heading.panel-title No running job
                 .panel-body
                     p You may click a job link in the Align page.
-
-    // list of sh files
-    if (job)
-        .wrapper(ng-controller="ProcessShCtrl" ng-init="job= #{JSON.stringify(job)}")
-            table#operationTable.table.table-bordered
-                thead
-                    tr
-                        th Operation
-                        th Start
-                        th End
-                        th Status
-                tbody
-                    tr(ng-repeat="sh in job.sh_files | filter:{exist: true}" ng-switch on="sh.status")
-                        td
-                            a.btn.btn-xs.btn-primary(role="button" href="/process/{{job._id}}/{{sh.name}}" bs-tooltip data-title="{{sh.description}}") {{sh.name}}
-                        td {{ sh.startDate | date:"yyyy-MM-dd hh:mm"}}
-                        td {{ sh.endDate | date:"yyyy-MM-dd hh:mm"}}
-                        td.success(ng-switch-when="finished")
-                            span.fa.fa-fw.fa-check
-                            | &nbsp;{{sh.status}}
-                        td.warning(ng-switch-when="running")
-                            span.fa.fa-fw.fa-spin.fa-spinner
-                            | &nbsp;{{sh.status}}
-                        td.danger(ng-switch-when="failed")
-                            span.fa.fa-fw.fa-remove
-                            | &nbsp;{{sh.status}}
-                        td(ng-switch-default)
-            if (job.status == "finished")
-                .wrapper
-                    div#fileBrowserPanel.panel.panel-default
-                        .panel-heading.panel-title File Browser
-                            .pull-right
-                                button.btn.btn-primary.btn-xs(ng-click="showDir()")
-                                    span.fa.fa-files-o
-                                    | &nbsp;Show
-                        ul#fileBrowserList.list-group
-                            li.list-group-item(ng-repeat="data in myDir")
-                                a(href ng-click="showDir(data.path)" ng-if="data.isDirectory")
-                                    span(class="fa {{data.icon}}")
-                                    | &nbsp;{{data.name}}
-                                a(href="/api/download/{{job._id}}/?path={{data.path}}" target='_blank' ng-if="!data.isDirectory")
-                                    span(class="fa {{data.icon}}")
-                                    | &nbsp;{{data.name}}
-            else
-                // console
-                .wrapper
-                    .panel.panel-default(id="consolePanel")
-                        .panel-heading.panel-title Console messages
-                        pre(id='consoleLog')
-                script(type="text/javascript").
-                    var socket = io.connect();
-                    socket.on("#{user.username}", function (data) {
-                        $("#consoleLog").append(data.data);
-                        //scroll the div to follow last line added!
-                        var objDiv = document.getElementById("consoleLog");
-                        objDiv.scrollTop = objDiv.scrollHeight;
-                    });
