@@ -92,8 +92,8 @@ app.get('/api/user', passportConf.isLoggedIn, api.user);
 app.get('/api/files', passportConf.isLoggedIn, api.files);
 app.get('/api/files/:id', passportConf.isLoggedIn, api.file);
 app.put('/api/files/:id', passportConf.isLoggedIn, api.updateFile);
-
 app.delete('/api/files/:id', passportConf.isLoggedIn, api.destroyFile);
+
 app.get('/api/jobs', passportConf.isLoggedIn, api.jobs);
 app.get('/api/jobs/:id', passportConf.isLoggedIn, api.job);
 app.put('/api/jobs/:id', passportConf.isLoggedIn, api.updateJob);
@@ -103,7 +103,7 @@ app.delete('/api/jobs/:id', passportConf.isLoggedIn, api.destroyJob);
 app.get('/api/dir/:id', passportConf.isLoggedIn, api.dir);
 
 // file downloader
-app.get('/api/downloads/:id', passportConf.isLoggedIn, api.download);
+app.get('/api/download/:id', passportConf.isLoggedIn, api.download);
 
 // account related routers
 var accountController = require('./routes/account');
