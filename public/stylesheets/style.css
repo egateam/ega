@@ -67,6 +67,7 @@ input[type="password"] {
 }
 
 /*override bootstrap default value*/
+/* For job arguments */
 .pre-scrollable {
     max-height: 20em;
 }

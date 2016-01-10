@@ -5,6 +5,7 @@ var fs       = require("fs");
 var mkdirp   = require('mkdirp');
 var path     = require("path");
 var multer   = require('multer');
+
 var File     = require('../models/File');
 var settings = require('../settings');
 
@@ -12,7 +13,7 @@ router.get('/', function (req, res) {
     res.render('upload', {
         title:    'EGA Upload',
         user:     req.user,
-        id:       'upload',
+        id:       'upload'
     });
 });
 
