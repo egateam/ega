@@ -1,3 +1,5 @@
+--ignore-dir=.git
 --ignore-dir=.idea
 --ignore-dir=node_modules
+--ignore-dir=upload
 --ignore-dir=public/lib
