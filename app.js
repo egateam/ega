@@ -1,15 +1,16 @@
 var express = require('express');
 
 // middleware
-var favicon      = require('serve-favicon');
-var logger       = require('morgan');
-var bodyParser   = require('body-parser');
-var cookieParser = require('cookie-parser');
-var path         = require('path');
-var flash        = require('express-flash');
-var session      = require('express-session');
-var mongoose     = require('mongoose');
-var passport     = require('passport');
+var favicon        = require('serve-favicon');
+var logger         = require('morgan');
+var bodyParser     = require('body-parser');
+var methodOverride = require('method-override');
+var cookieParser   = require('cookie-parser');
+var path           = require('path');
+var flash          = require('express-flash');
+var session        = require('express-session');
+var mongoose       = require('mongoose');
+var passport       = require('passport');
 
 var RedisStore = require('connect-redis')(session);
 
@@ -32,6 +33,7 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(methodOverride());
 app.use(flash());
 
 // session
@@ -52,7 +54,7 @@ app.use(session({
     secret:            settings.main.secret
 }));
 
-// account
+// passport initiation
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -68,16 +70,17 @@ var io     = require('socket.io').listen(server);
 var redis = require('socket.io-redis');
 io.adapter(redis({host: 'localhost', port: 6379}));
 
+// store information in app
 app.locals.appname = 'EGA: Easy Genome Aligner';
 app.set('port', settings.main.port);
 app.set('io', io);
 app.set('server', server);
 
-var passportConf = require('./models/passport');
-
 // ----------------------------
 // route section
 // ----------------------------
+// passport for accounts
+var passportConf = require('./models/passport');
 
 // static pages
 var static_pages = require('./routes/index');
@@ -138,7 +141,7 @@ app.get('/api/download/:id', passportConf.isLoggedIn, api.download);
 app.use(function (req, res, next) {
     var err    = new Error('Not Found');
     err.status = 404;
-    next(err);
+    return next(err);
 });
 app.use(function (err, req, res, next) {
     res.status(err.status || 500);
