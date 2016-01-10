@@ -25,13 +25,11 @@ block content
                             th
                     tbody
                         tr(dir-paginate="file in files | itemsPerPage:pageSize " current-page="currentPage")
-                            td
-                                a(href="/api/files/{{file._id}}") {{file.name}}
+                            td {{file.name}}
                             td {{file.size | bytes}}
                             td
                                 select(ng-model="file.type" ng-options="i for i in types" ng-change="updateFile(file)" data-type="info" bs-tooltip data-title="{{tooltip.update}}")
-                            td
-                                p {{ file.uploadDate | date:"yyyy-MM-dd hh:mm"}}
+                            td {{ file.uploadDate | date:"yyyy-MM-dd hh:mm"}}
                             td.cell-align
                                 button.btn.btn-danger.btn-xs(ng-click="deleteFile(file._id)" data-type="info" bs-tooltip data-title="{{tooltip.delete}}")
                                     span.fa.fa-lg.fa-trash
