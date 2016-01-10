@@ -133,14 +133,14 @@ egaApp.controller("JobListCtrl",
     });
 
 egaApp.controller("ProcessShCtrl",
-    function ($scope, $http, Job, socket) {
+    function ($scope, $http, $alert, Job, socket) {
         // initiated by express (process.jade: line 4)
         $scope.job;
 
         $scope.tooltip = {
-            "finish": "Mark this job as \"Finished\".",
+            "finish":    "Mark this job as \"Finished\".",
             "operation": "Refresh operations in this job.",
-            "showdir": "List results."
+            "showdir":   "List results."
         };
 
         // finish this job
@@ -151,11 +151,83 @@ egaApp.controller("ProcessShCtrl",
             });
         };
 
-        // get status manually
+        // refresh status manually
         $scope.refreshOperation = function () {
             $http.get('/api/processes/' + $scope.job._id + '/refresh').success(function (data) {
                 $scope.job = data;
             });
+
+        };
+
+        // run bash operation
+        $scope.shOperation = function (filename) {
+            var running_sh = _.find($scope.job.sh_files, {status: 'running'});
+            var this_step  = _.find($scope.job.sh_files, {name: filename});
+            var myAlert;
+
+            console.dir(filename);
+
+            // other operation running
+            if (running_sh) {
+                myAlert = $alert({
+                    title:     running_sh.name + " is running",
+                    type:      'danger',
+                    container: "#alerts-container",
+                    duration:  5
+                });
+                myAlert.$promise.then(function () {
+                    myAlert.show();
+                });
+            }
+            // can't find operation
+            else if (!this_step) {
+                myAlert = $alert({
+                    title:     filename + " isn't available",
+                    type:      'danger',
+                    container: "#alerts-container",
+                    duration:  5
+                });
+                myAlert.$promise.then(function () {
+                    myAlert.show();
+                });
+            }
+            else {
+                if (this_step.need) {
+                    //console.log("need step %s", this_step.need);
+                    var needed_step = _.find($scope.job.sh_files, {name: this_step.need});
+
+                    // need other operation
+                    if (needed_step && needed_step.status != 'finished') {
+                        //console.log("Operation [%s] needs [%s] be done first.", this_step.name, needed_step.name);
+
+                        myAlert = $alert({
+                            title:     filename + " needs " + needed_step.name + " be done first",
+                            type:      'danger',
+                            container: "#alerts-container",
+                            duration:  5
+                        });
+                        myAlert.$promise.then(function () {
+                            myAlert.show();
+                        });
+
+                        return;
+                    }
+                }
+
+                myAlert = $alert({
+                    title:     filename + " starts",
+                    type:      'info',
+                    container: "#alerts-container",
+                    duration:  5
+                });
+                myAlert.$promise.then(function () {
+                    myAlert.show();
+                });
+
+                $http.get('/api/processes/' + $scope.job._id + '/' + filename).success(function (data) {
+                    $scope.job = data;
+                });
+            }
         };
 
         // get status from socket.io
@@ -188,6 +260,7 @@ egaApp.controller("ProcessShCtrl",
             ".fas":   "fa-file-text-o",
             ".fasta": "fa-file-text-o"
         };
+
         function getFileIcon(ext) {
             return ( ext && extensionsMap[ext.toLowerCase()]) || 'fa-file-o';
         }

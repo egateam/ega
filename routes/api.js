@@ -1,6 +1,11 @@
 var fs   = require("fs");
 var path = require("path");
+var util = require('util');
 var _    = require('lodash');
+
+var spawn    = require('child_process').spawn;
+var readline = require('readline');
+var running  = require('is-running');
 
 var File = require('../models/File');
 var Job  = require('../models/Job');
@@ -192,6 +197,85 @@ exports.finishProcess = function (req, res, next) {
     });
 };
 
+exports.shProcess = function (req, res, next) {
+    Job.findOne({username: req.user.username, "_id": req.params.id}, function (error, item) {
+        if (error) return next(error);
+        if (!item) return next(new Error('Job is not found.'));
+
+        if (item.status !== 'running') return next(new Error('Job is not in running mode.'));
+
+        var username = req.user.username;
+        var filename = req.params.filename;
+        console.log("User request to execute [%s].", filename);
+
+        for (var i = 0, ln = item.sh_files.length; i < ln; i++) {
+            if (item.sh_files[i].name === filename) {
+                var this_step = item.sh_files[i];
+                console.log("find file %s", this_step.name);
+                console.log(util.inspect(this_step));
+
+                try {
+                    process_sh(req.app.get('io'), username, item, i, next);
+                }
+                catch (exception) {
+                    console.log(util.inspect(exception));
+                }
+            }
+        }
+
+        return res.json(item);
+    });
+};
+
+var process_sh = function (io, username, job, index, next) {
+    var child = spawn("bash", [job.sh_files[index].path]);
+    console.log('Job pid [%s].', child.pid);
+
+    job.sh_files[index].startDate  = Date.now();
+    job.sh_files[index].pid        = child.pid;
+    job.sh_files[index].endDate    = null;
+    job.sh_files[index].exitCode   = null;
+    job.sh_files[index].exitSignal = null;
+    job.sh_files[index].status     = "running";
+
+    job.save(function (error) {
+        if (error) return next(error);
+    });
+
+    // messages to channel username
+    readline.createInterface({
+        input:    child.stdout,
+        terminal: false
+    }).on('line', function (line) {
+        var str = "[stdout] " + line + "\n";
+        io.emit(username, {data: str})
+    });
+
+    readline.createInterface({
+        input:    child.stderr,
+        terminal: false
+    }).on('line', function (line) {
+        var str = "[stderr] " + line + "\n";
+        io.emit(username, {data: str})
+    });
+
+    child.on('exit', function (code, signal) {
+        console.log('*** closed code=%s, signal=%s', code, signal);
+
+        job.sh_files[index].endDate    = Date.now();
+        job.sh_files[index].exitCode   = code;
+        job.sh_files[index].exitSignal = signal;
+        job.sh_files[index].status     = code === 0 ? "finished" : "failed";
+
+        job.save(function (error) {
+            if (error) return next(error);
+        });
+        console.log('Job [%s] Operation [%s] finished and recorded', job.name, job.sh_files[index].name);
+        io.emit(username, {data: "[Job: " + job.name + "] [Operation: " + job.sh_files[index].name + "] " + "*** DONE ***\n"});
+        io.emit(username + '-done', job);
+    });
+};
+
 // Codes come from
 // http://www.geedew.com/2012/10/24/remove-a-directory-that-is-not-empty-in-nodejs/
 var deleteFolderRecursive = function (path) {
@@ -268,10 +352,10 @@ exports.dir = function (req, res, next) {
                     }
 
                 });
-                data     = _.sortBy(data, function (f) {
+                data = _.sortBy(data, function (f) {
                     return f.name;
                 });
-                data     = _.sortBy(data, function (f) {
+                data = _.sortBy(data, function (f) {
                     return !f.isDirectory;
                 });
                 res.json(data);
@@ -282,25 +366,20 @@ exports.dir = function (req, res, next) {
 
 exports.download = function (req, res, next) {
     Job.findOne({username: req.user.username, _id: req.params.id}, function (error, item) {
-        if (error) {
-            return next(error);
-        }
-        else if (!item) {
+        if (error) return next(error);
+        if (!item)  return res.json(false);
+
+        var currentDir = item.path;
+        var query      = req.query.path || '';
+        if (query) currentDir = path.join(currentDir, query);
+        console.log("Going to download %s", currentDir);
+
+        var isDirectory = fs.statSync(currentDir).isDirectory();
+        if (isDirectory) {
             return res.json(false);
         }
         else {
-            var currentDir = item.path;
-            var query      = req.query.path || '';
-            if (query) currentDir = path.join(currentDir, query);
-            console.log("Going to download %s", currentDir);
-
-            var isDirectory = fs.statSync(currentDir).isDirectory();
-            if (isDirectory) {
-                return res.json(false);
-            }
-            else {
-                res.download(currentDir);
-            }
+            res.download(currentDir);
         }
     });
 };

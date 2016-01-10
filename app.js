@@ -126,6 +126,7 @@ app.delete('/api/jobs/:id', passportConf.isLoggedIn, api.destroyJob);
 // Process
 app.get('/api/processes/:id/refresh', passportConf.isLoggedIn, api.refreshProcess); // refresh process for sh files
 app.get('/api/processes/:id/finish', passportConf.isLoggedIn, api.finishProcess);
+app.get('/api/processes/:id/:filename', passportConf.isLoggedIn, api.shProcess);
 
 // result file browser
 app.get('/api/dir/:id', passportConf.isLoggedIn, api.dir);

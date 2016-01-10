@@ -18,14 +18,14 @@ block content
                     thead
                         tr
                             th
-                                button.btn.btn-success.btn-sm(ng-click="refreshOperation()" bs-tooltip data-title="{{tooltip.operation}}") Operation
+                                button.btn.btn-success.btn-sm(ng-click="refreshOperation()" ng-disabled="job.status != 'running'" bs-tooltip data-title="{{tooltip.operation}}") Operation
                             th Start
                             th End
                             th Status
                     tbody
                         tr(ng-repeat="sh in job.sh_files | filter:{exist: true}" ng-switch on="sh.status")
                             td
-                                a.btn.btn-xs.btn-primary(role="button" href="/process/{{job._id}}/{{sh.name}}" bs-tooltip data-title="{{sh.description}}") {{sh.name}}
+                                button.btn.btn-xs.btn-primary(ng-click="shOperation(sh.name)" ng-disabled="job.status != 'running'" bs-tooltip data-title="{{sh.description}}") {{sh.name}}
                             td {{ sh.startDate | date:"yyyy-MM-dd hh:mm"}}
                             td {{ sh.endDate | date:"yyyy-MM-dd hh:mm"}}
                             td.success(ng-switch-when="finished")
