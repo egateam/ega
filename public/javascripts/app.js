@@ -133,13 +133,40 @@ egaApp.controller("JobListCtrl",
     });
 
 egaApp.controller("ProcessShCtrl",
-    function ($scope, $http, socket) {
-        $scope.myDir;
+    function ($scope, $http, Job, socket) {
+        // initiated by express (process.jade: line 4)
+        $scope.job;
 
         $scope.tooltip = {
-            "finish": "Mark this job as \"Finished\"."
+            "finish": "Mark this job as \"Finished\".",
+            "operation": "Refresh operations in this job.",
+            "showdir": "List results."
         };
 
+        // finish this job
+        // Mark the job as finished and all sh files will not be able to be executed.
+        $scope.finishOperation = function () {
+            $http.get('/api/processes/' + $scope.job._id + '/finish').success(function (data) {
+                $scope.job = data;
+            });
+        };
+
+        // get status manually
+        $scope.refreshOperation = function () {
+            $http.get('/api/processes/' + $scope.job._id + '/refresh').success(function (data) {
+                $scope.job = data;
+            });
+        };
+
+        // get status from socket.io
+        $http.get('/api/user').success(function (user) {
+            socket.on(user.username + '-done', function (data) {
+                console.log("Got done messages [%s].", data.name);
+                $scope.job = data;
+            });
+        });
+
+        $scope.myDir;
         var extensionsMap = {
             ".zip":   "fa-file-archive-o",
             ".gz":    "fa-file-archive-o",
@@ -161,17 +188,9 @@ egaApp.controller("ProcessShCtrl",
             ".fas":   "fa-file-text-o",
             ".fasta": "fa-file-text-o"
         };
-
         function getFileIcon(ext) {
             return ( ext && extensionsMap[ext.toLowerCase()]) || 'fa-file-o';
         }
-
-        $http.get('/api/user').success(function (user) {
-            socket.on(user.username + '-done', function (data) {
-                console.log("Got done messages [%s].", data.name);
-                $scope.job = data;
-            });
-        });
 
         $scope.showDir = function (path) {
             $http.get('/api/dir/' + $scope.job._id, {

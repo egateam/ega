@@ -7,17 +7,18 @@ block content
                 .panel.panel-info(id="argumentsPanel")
                     .panel-heading.panel-title() [Job: {{job.name}}]
                         .pull-right
-                            a.btn.btn-warning.btn-xs(role="button" href="/process/{{job._id}}/finish" ng-if="job.status == 'running'" bs-tooltip data-title="{{tooltip.finish}}")
+                            button.btn.btn-warning.btn-xs(ng-click="finishOperation()" ng-if="job.status == 'running'" bs-tooltip data-title="{{tooltip.finish}}")
                                 span.fa.fa-beer
                                 | &nbsp;Finish
                     pre.pre-scrollable {{job.argument | json}}
 
-            // list of sh files
-            .wrapper(ng-controller="ProcessShCtrl")
+            .wrapper
+                // list of sh files
                 table#operationTable.table.table-bordered
                     thead
                         tr
-                            th Operation
+                            th
+                                button.btn.btn-success.btn-sm(ng-click="refreshOperation()" bs-tooltip data-title="{{tooltip.operation}}") Operation
                             th Start
                             th End
                             th Status
@@ -37,28 +38,27 @@ block content
                                 span.fa.fa-fw.fa-remove
                                 | &nbsp;{{sh.status}}
                             td(ng-switch-default)
-                if (job.status == "finished")
-                    .wrapper
-                        div#fileBrowserPanel.panel.panel-default
-                            .panel-heading.panel-title File Browser
-                                .pull-right
-                                    button.btn.btn-primary.btn-xs(ng-click="showDir()")
-                                        span.fa.fa-files-o
-                                        | &nbsp;Show
-                            ul#fileBrowserList.list-group
-                                li.list-group-item(ng-repeat="data in myDir")
-                                    a(href ng-click="showDir(data.path)" ng-if="data.isDirectory")
-                                        span(class="fa {{data.icon}}")
-                                        | &nbsp;{{data.name}}
-                                    a(href="/api/download/{{job._id}}/?path={{data.path}}" target='_blank' ng-if="!data.isDirectory")
-                                        span(class="fa {{data.icon}}")
-                                        | &nbsp;{{data.name}}
-                else
-                    // console
-                    .wrapper
-                        .panel.panel-default(id="consolePanel")
-                            .panel-heading.panel-title Console messages
-                            pre(id='consoleLog')
+                // result files
+                .wrapper(ng-if="job.status === 'finished'")
+                    div#fileBrowserPanel.panel.panel-default
+                        .panel-heading.panel-title File Browser
+                            .pull-right
+                                button.btn.btn-primary.btn-xs(ng-click="showDir()" bs-tooltip data-title="{{tooltip.showdir}}")
+                                    span.fa.fa-files-o
+                                    | &nbsp;Show
+                        ul#fileBrowserList.list-group
+                            li.list-group-item(ng-repeat="data in myDir")
+                                a(href ng-click="showDir(data.path)" ng-if="data.isDirectory")
+                                    span(class="fa {{data.icon}}")
+                                    | &nbsp;{{data.name}}
+                                a(href="/api/download/{{job._id}}/?path={{data.path}}" target='_blank' ng-if="!data.isDirectory")
+                                    span(class="fa {{data.icon}}")
+                                    | &nbsp;{{data.name}}
+                // console
+                .wrapper(ng-if="job.status !== 'finished'")
+                    .panel.panel-default(id="consolePanel")
+                        .panel-heading.panel-title Console messages
+                        pre(id='consoleLog')
                     script(type="text/javascript").
                         var socket = io.connect();
                         socket.on("#{user.username}", function (data) {

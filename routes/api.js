@@ -126,6 +126,72 @@ exports.destroyJob = function (req, res, next) {
     });
 };
 
+exports.refreshProcess = function (req, res, next) {
+    Job.findOne({username: req.user.username, "_id": req.params.id}, function (error, item) {
+        if (error) return next(error);
+        if (!item) return next(new Error('Job is not found.'));
+
+        // Mark disappeared operation as failed
+        for (var i = 0, ln = item.sh_files.length; i < ln; i++) {
+            if (item.sh_files[i].status === "running") {
+                var pid  = item.sh_files[i].pid;
+                var live = running(pid);
+                if (!live) {
+                    item.sh_files[i].status = "failed";
+                    item.save(function (error) {
+                        if (error) return next(error);
+                    });
+                    console.log("Set disappeared operation [%s] to be failed", item.sh_files[i].name);
+                }
+            }
+        }
+
+        // Match existing sh files
+        fs.readdirSync(item.path).forEach(function (file) {
+            var curPath = item.path + "/" + file;
+            if (fs.lstatSync(curPath).isFile()) {
+                if (/\.sh$/.test(curPath)) {
+                    // Loop through sh_files
+                    for (var i = 0, ln = item.sh_files.length; i < ln; i++) {
+                        var sh_file = item.sh_files[i];
+                        if (sh_file.name === file) {
+                            if (!item.sh_files[i].exist) {
+                                item.sh_files[i].exist = true;
+                                item.sh_files[i].path  = curPath;
+
+                                item.save(function (error) {
+                                    if (error) return next(error);
+                                });
+                                console.log("Set file %s to be existing", file);
+                            }
+
+                        }
+                    }
+                }
+            }
+        });
+
+        return res.json(item);
+    });
+};
+
+exports.finishProcess = function (req, res, next) {
+    Job.findOne({username: req.user.username, "_id": req.params.id}, function (error, item) {
+        if (error) return next(error);
+        if (!item) return next(new Error('Job is not found.'));
+
+        item.status     = 'finished';
+        item.finishDate = Date.now();
+
+        item.save(function (error) {
+            if (error) return next(error);
+        });
+        console.log("Mark job [%s] as finished!", item.name);
+
+        return res.json(item);
+    });
+};
+
 // Codes come from
 // http://www.geedew.com/2012/10/24/remove-a-directory-that-is-not-empty-in-nodejs/
 var deleteFolderRecursive = function (path) {

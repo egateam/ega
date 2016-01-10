@@ -15,8 +15,14 @@ router.get('/', function (req, res, next) {
 
     Job.findOne({"username": username, status: "running"}).exec(function (error, item) {
         if (error) return next(error);
+
         if (item) {
-            res.redirect('/process/' + item._id);
+            res.render('process', {
+                title: 'EGA Process',
+                user:  req.user,
+                id:    'process',
+                job:   item
+            });
         }
         else {
             res.render('process', {
@@ -34,46 +40,21 @@ router.get('/:id', function (req, res, next) {
     Job.findOne({"username": username, "_id": req.params.id}).exec(function (error, item) {
         if (error) return next(error);
 
-        fs.readdirSync(item.path).forEach(function (file) {
-            var curPath = item.path + "/" + file;
-            if (fs.lstatSync(curPath).isFile()) {
-                if (/\.sh$/.test(curPath)) {
-                    // Loop through sh_files
-                    for (var i = 0, ln = item.sh_files.length; i < ln; i++) {
-                        var sh_file = item.sh_files[i];
-                        if (sh_file.name === file) {
-                            if (!item.sh_files[i].exist) {
-                                item.sh_files[i].exist = true;
-                                item.sh_files[i].path  = curPath;
-
-                                item.save(function (error) {
-                                    if (error) return next(error);
-                                });
-                                console.log("Set file %s to be existing", file);
-                            }
-                            if (item.sh_files[i].status === "running") {
-                                var pid  = item.sh_files[i].pid;
-                                var live = running(pid);
-                                if (!live) {
-                                    item.sh_files[i].status = "failed";
-                                    item.save(function (error) {
-                                        if (error) return next(error);
-                                    });
-                                    console.log("Set Operation %s to be failed", item.sh_files[i].name);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        res.render('process', {
-            title: 'EGA Process',
-            user:  req.user,
-            id:    'process',
-            job:   item
-        });
+        if (item) {
+            res.render('process', {
+                title: 'EGA Process',
+                user:  req.user,
+                id:    'process',
+                job:   item
+            });
+        }
+        else {
+            res.render('process', {
+                title: 'EGA Process',
+                user:  req.user,
+                id:    'process',
+            });
+        }
     });
 });
 
@@ -95,24 +76,11 @@ router.get('/:id/:filename', function (req, res, next) {
             return res.redirect('/process/' + id);
         }
         else {
-            // Mark the jobs as finished and all sh files will not be able to be executed.
-            if (filename === 'finish') {
-                item.status     = 'finished';
-                item.finishDate = Date.now();
-
-                item.save(function (error) {
-                    if (error) return next(error);
-                });
-                console.log("Mark job [%s] as finished!", item.name);
-                req.flash('info', "You have marked job <strong>[%s]</strong> as finished!", item.name);
-                return res.redirect('/process/' + id);
-            }
-
             // If there is an running operation, warn the user.
-            var existing = _.find(item.sh_files, {status: 'running'});
-            if (existing) {
-                console.log("You have a running operation [%s]!", existing.name);
-                req.flash('error', "You have a running operation <strong>[%s]</strong>!", existing.name);
+            var running_exists = _.find(item.sh_files, {status: 'running'});
+            if (running_exists) {
+                console.log("You have a running operation [%s]!", running_exists.name);
+                req.flash('error', "You have a running operation <strong>[%s]</strong>!", running_exists.name);
                 return res.redirect('/process/' + id);
             }
 
