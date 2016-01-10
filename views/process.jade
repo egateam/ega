@@ -60,15 +60,7 @@ block content
                 .wrapper(ng-if="job.status !== 'finished'")
                     .panel.panel-default(id="consolePanel")
                         .panel-heading.panel-title Console messages
-                        pre(id='consoleLog')
-                    script(type="text/javascript").
-                        var socket = io.connect();
-                        socket.on("#{user.username}", function (data) {
-                            $("#consoleLog").append(data.data);
-                            //scroll the div to follow last line added!
-                            var objDiv       = document.getElementById("consoleLog");
-                            objDiv.scrollTop = objDiv.scrollHeight;
-                        });
+                        pre(id='consoleLog') {{consoleMessages}}
 
     else
         .container.wrapper

@@ -133,7 +133,7 @@ egaApp.controller("JobListCtrl",
     });
 
 egaApp.controller("ProcessShCtrl",
-    function ($scope, $http, $alert, Job, socket) {
+    function ($scope, $http, $alert, $timeout, Job, socket) {
         // initiated by express (process.jade: line 4)
         $scope.job;
 
@@ -235,6 +235,21 @@ egaApp.controller("ProcessShCtrl",
             socket.on(user.username + '-done', function (data) {
                 console.log("Got done messages [%s].", data.name);
                 $scope.job = data;
+            });
+        });
+
+        // get messages from socket.io
+        $scope.consoleMessages = "Welcome!\n";
+        $http.get('/api/user').success(function (user) {
+            socket.on(user.username, function (data) {
+                console.log("Got running messages [%s].", data.data);
+                $scope.consoleMessages += data.data;
+
+                // http://stackoverflow.com/a/33019516
+                $timeout(function() {
+                    var scrollDiv = document.getElementById("consoleLog");
+                    scrollDiv.scrollTop = scrollDiv.scrollHeight;
+                }, 0, false);
             });
         });
 
