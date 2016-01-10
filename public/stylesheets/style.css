@@ -127,25 +127,27 @@ input[type="password"] {
 }
 
 /* http://stackoverflow.com/questions/13771101/centering-a-button-vertically-in-table-cell-using-twitter-bootstrap */
-.table tbody>tr>td.cell-align {
+.table tbody > tr > td.cell-align {
     vertical-align: middle;
     float: none;
     text-align: center;
 }
 
+/* Index and contact pages */
 .bor {
     border: thin solid #BDBDBD;
     background-color: #F2F2F2;
-    border-radius:5px;
+    border-radius: 5px;
     width: 350px;
     padding: 10px 10px 25px 15px;
     margin: 1%;
-
 }
+
 .bor:hover {
     border: thin solid #83C6E3;
 }
-.pic{
+
+.pic {
     margin-right: 10px;
 }
 
@@ -154,21 +156,25 @@ input[type="password"] {
     font-weight: 300;
     font-size: 50px;
 }
+
 .font-semibold {
     font-family: "Titillium Web", sans-serif;
     font-weight: 600;
 }
+
 .line-row .hr {
     background-color: #e4e6e5;
     height: 5px;
     margin: 0 auto;
     width: 33%;
 }
+
 .subtitle-row {
     font-size: 35px;
     padding-bottom: 40px;
     padding-top: 40px;
 }
+
 .hidden-sm {
     display: block;
 }
@@ -184,8 +190,9 @@ input[type="password"] {
     padding-top: 1em;
     margin-top: 2em;
     margin-bottom: 4em;
-    border-radius:10px;
+    border-radius: 10px;
 }
+
 .alink {
     font-family: sans-serif;
 }

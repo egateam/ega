@@ -242,12 +242,12 @@ egaApp.controller("ProcessShCtrl",
         $scope.consoleMessages = "Welcome!\n";
         $http.get('/api/user').success(function (user) {
             socket.on(user.username, function (data) {
-                console.log("Got running messages [%s].", data.data);
+                //console.log("Got running messages [%s].", data.data);
                 $scope.consoleMessages += data.data;
 
                 // http://stackoverflow.com/a/33019516
-                $timeout(function() {
-                    var scrollDiv = document.getElementById("consoleLog");
+                $timeout(function () {
+                    var scrollDiv       = document.getElementById("consoleLog");
                     scrollDiv.scrollTop = scrollDiv.scrollHeight;
                 }, 0, false);
             });
