@@ -39,10 +39,9 @@ router.post('/', function (req, res, next) {
     var alignName = req.body.alignName;
 
     Job.findOne({username: username, status: "running"}).exec(function (error, existing) {
-        if (error) {
-            return next(error);
-        }
-        else if (existing) {
+        if (error) return next(error);
+
+        if (existing) {
             console.log("You have a running job [%s]!", existing.name);
             req.flash('error', "You have a running job <strong>[%s]</strong>! Go finishing it or delete it.", existing.name);
             return res.redirect('/align');
@@ -104,6 +103,9 @@ router.post('/', function (req, res, next) {
 
                     // make sure directory exists
                     var userDir = path.join(__dirname, '../upload', username);
+                    mkdirp.sync(userDir, function (error) {
+                        if (error) console.error(error);
+                    });
                     userDir = fs.realpathSync(userDir);
 
                     var alignDir = path.join(userDir, alignName);
