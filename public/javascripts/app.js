@@ -286,7 +286,7 @@ egaApp.controller("ProcessShCtrl",
             }).success(function (data) {
                 _(data).forEach(function (item) {
                     if (item.isDirectory) {
-                        item.icon = "fa-folder";
+                        item.icon = "fa-folder-o";
                     }
                     else {
                         item.icon = getFileIcon(item.ext);
