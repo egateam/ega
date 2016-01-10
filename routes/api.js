@@ -152,31 +152,34 @@ exports.refreshProcess = function (req, res, next) {
         }
 
         // Match existing sh files
-        fs.readdirSync(item.path).forEach(function (file) {
-            var curPath = item.path + "/" + file;
-            if (fs.lstatSync(curPath).isFile()) {
-                if (/\.sh$/.test(curPath)) {
-                    // Loop through sh_files
-                    for (var i = 0, ln = item.sh_files.length; i < ln; i++) {
-                        var sh_file = item.sh_files[i];
-                        if (sh_file.name === file) {
-                            if (!item.sh_files[i].exist) {
-                                item.sh_files[i].exist = true;
-                                item.sh_files[i].path  = curPath;
+        fs.readdir(item.path, function (error, files) {
+            if (error) return next(error);
 
-                                item.save(function (error) {
-                                    if (error) return next(error);
-                                });
-                                console.log("Set file %s to be existing", file);
+            files.forEach(function (file) {
+                var curPath = item.path + "/" + file;
+                if (fs.lstatSync(curPath).isFile()) {
+                    if (/\.sh$/.test(curPath)) {
+                        // Loop through sh_files
+                        for (var i = 0, ln = item.sh_files.length; i < ln; i++) {
+                            var sh_file = item.sh_files[i];
+                            if (sh_file.name === file) {
+                                if (!item.sh_files[i].exist) {
+                                    item.sh_files[i].exist = true;
+                                    item.sh_files[i].path  = curPath;
+
+                                    item.save(function (error) {
+                                        if (error) return next(error);
+                                    });
+                                    console.log("Set file %s to be existing", file);
+                                }
+
                             }
-
                         }
                     }
                 }
-            }
+            });
+            return res.json(item);
         });
-
-        return res.json(item);
     });
 };
 
