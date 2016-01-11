@@ -1,14 +1,14 @@
 var express = require('express');
-var router = express.Router();
-var util = require("util");
+var router  = express.Router();
+var util    = require("util");
 
-var fs = require("fs");
+var fs     = require("fs");
 var mkdirp = require('mkdirp');
-var path = require("path");
-var _ = require('lodash');
+var path   = require("path");
+var _      = require('lodash');
 
 var File = require('../models/File');
-var Job = require('../models/Job');
+var Job  = require('../models/Job');
 
 router.get('/', function (req, res) {
     res.render('align', {
@@ -35,7 +35,7 @@ router.get('/running', function (req, res, next) {
 
 router.post('/', function (req, res, next) {
     console.log(util.inspect(req.body));
-    var username = req.user.username;
+    var username  = req.user.username;
     var alignName = req.body.alignName;
 
     Job.findOne({username: username, status: "running"}).exec(function (error, existing) {
@@ -118,41 +118,48 @@ router.post('/', function (req, res, next) {
                         {
                             name:        'prepare.sh',
                             description: 'Copy files and generate rest .sh scripts.',
+                            path:        undefined,
                             exist:       false
                         },
                         // strain_bz.pl
                         {
                             name:        '1_real_chr.sh',
                             description: 'Calculate sequence lengths.',
+                            path:        undefined,
                             exist:       false
                         },
                         {
                             name:        '2_file_rm.sh',
                             description: 'Mask repetitive parts from sequences to make alignments more accurate.',
+                            path:        undefined,
                             exist:       false
                         },
                         {
                             name:        '3_pair_cmd.sh',
                             description: 'Pairwise alignments with target sequence.',
                             need:        '1_real_chr.sh',
+                            path:        undefined,
                             exist:       false
                         },
                         {
                             name:        '4_rawphylo.sh',
                             description: 'Generate a crude phylogenetic tree to guide following aligning.',
                             need:        '3_pair_cmd.sh',
+                            path:        undefined,
                             exist:       false
                         },
                         {
                             name:        '5_multi_cmd.sh',
                             description: 'Join pairwise alignments to get multiple final alignments.',
                             need:        '3_pair_cmd.sh',
+                            path:        undefined,
                             exist:       false
                         },
                         {
                             name:        '6_var_list.sh',
                             description: 'Generate vcf files containing substitutions and indels.',
                             need:        '5_multi_cmd.sh',
+                            path:        undefined,
                             exist:       false
                         },
                         // strain_bz_self.pl
@@ -160,18 +167,21 @@ router.post('/', function (req, res, next) {
                             name:        '3_self_cmd.sh',
                             description: 'Target sequences align with themselves.',
                             need:        '1_real_chr.sh',
+                            path:        undefined,
                             exist:       false
                         },
                         {
                             name:        '4_proc_cmd.sh',
                             description: 'Connect genome parts based on graph theory.',
                             need:        '3_self_cmd.sh',
+                            path:        undefined,
                             exist:       false
                         },
                         {
                             name:        '5_circos_cmd.sh',
                             description: 'Generate a circos picture presenting connections among paralogs.',
                             need:        '4_proc_cmd.sh',
+                            path:        undefined,
                             exist:       false
                         },
                         // pack up
@@ -179,8 +189,9 @@ router.post('/', function (req, res, next) {
                             name:        '9_pack_it_up.sh',
                             description: 'Pack all files up as a .tar.gz compressed file.',
                             need:        '1_real_chr.sh',
+                            path:        undefined,
                             exist:       false
-                        },
+                        }
                     ];
 
                     // sh header
@@ -249,7 +260,7 @@ router.post('/', function (req, res, next) {
                     fs.writeFileSync(sh_file, command);
 
                     // fake_taxon.csv
-                    var csv_file = path.join(alignDir, 'fake_taxon.csv');
+                    var csv_file  = path.join(alignDir, 'fake_taxon.csv');
                     var arbitrary = 100000000; // give them arbitrary ids
                     var content =
                             'strain,strain_id,species,species_id,genus,genus_id,family,family_id,order,order_id' + "\n";

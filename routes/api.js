@@ -142,10 +142,17 @@ exports.refreshProcess = function (req, res, next) {
                 var pid  = item.sh_files[i].pid;
                 var live = running(pid);
                 if (!live) {
-                    item.sh_files[i].status = "failed";
-                    item.save(function (error) {
-                        if (error) return next(error);
-                    });
+                    Job.update({"_id": req.params.id, 'sh_files._id': item.sh_files[i]._id},
+                        {
+                            '$set': {
+                                'sh_files.$.status': "failed"
+                            }
+                        }, function (error) {
+                            if (error) {
+                                console.log("Saving status errors for [%s]", item.name);
+                                return next(error);
+                            }
+                        });
                     console.log("Set disappeared operation [%s] to be failed", item.sh_files[i].name);
                 }
             }
@@ -156,20 +163,25 @@ exports.refreshProcess = function (req, res, next) {
             if (error) return next(error);
 
             files.forEach(function (file) {
-                var curPath = item.path + "/" + file;
+                var curPath = path.join(item.path, file);
                 if (fs.lstatSync(curPath).isFile()) {
                     if (/\.sh$/.test(curPath)) {
                         // Loop through sh_files
                         for (var i = 0, ln = item.sh_files.length; i < ln; i++) {
-                            var sh_file = item.sh_files[i];
-                            if (sh_file.name === file) {
+                            if (item.sh_files[i].name === file) {
                                 if (!item.sh_files[i].exist) {
-                                    item.sh_files[i].exist = true;
-                                    item.sh_files[i].path  = curPath;
-
-                                    item.save(function (error) {
-                                        if (error) return next(error);
-                                    });
+                                    Job.update({"_id": req.params.id, 'sh_files._id': item.sh_files[i]._id},
+                                        {
+                                            '$set': {
+                                                'sh_files.$.exist': true,
+                                                'sh_files.$.path':  curPath
+                                            }
+                                        }, function (error) {
+                                            if (error) {
+                                                console.log("Saving path errors for [%s]", item.name);
+                                                return next(error);
+                                            }
+                                        });
                                     console.log("Set file %s to be existing", file);
                                 }
 
@@ -178,7 +190,13 @@ exports.refreshProcess = function (req, res, next) {
                     }
                 }
             });
-            return res.json(item);
+            Job.findOne({username: req.user.username, "_id": req.params.id}, function (error, item) {
+                if (error) return next(error);
+                if (!item) return next(new Error('Job is not found.'));
+
+                // return updated job
+                return res.json(item);
+            });
         });
     });
 };
