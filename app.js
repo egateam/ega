@@ -104,7 +104,7 @@ app.post('/signup', accountController.postSignup);
 app.get('/forgot', accountController.getForgot);
 app.post('/forgot', accountController.postForgot);
 app.get('/reset/:token', accountController.getReset);
-app.post('/reset/:token', accountController.postReset);
+app.post('/reset', accountController.postReset);
 
 // REST APIs
 // "Recipes with Angular.js", page 94
@@ -139,8 +139,9 @@ app.get('/api/download/:id', passportConf.isLoggedIn, api.download);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-    var err    = new Error('Not Found');
-    err.status = 404;
+    var err     = new Error('Not Found');
+    err.status  = 404;
+    err.request = req;
     return next(err);
 });
 app.use(function (err, req, res, next) {
