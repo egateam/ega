@@ -104,7 +104,7 @@ app.post('/signup', accountController.postSignup);
 app.get('/forgot', accountController.getForgot);
 app.post('/forgot', accountController.postForgot);
 app.get('/reset/:token', accountController.getReset);
-app.post('/reset', accountController.postReset);
+app.post('/reset/:token', accountController.postReset);
 
 // REST APIs
 // "Recipes with Angular.js", page 94
