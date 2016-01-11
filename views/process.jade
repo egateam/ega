@@ -60,7 +60,7 @@ block content
                 .wrapper(ng-if="job.status !== 'finished'")
                     .panel.panel-default(id="consolePanel")
                         .panel-heading.panel-title Console messages
-                        pre(id='consoleLog') {{consoleMessages}}
+                        pre.pre-scrollable(id='consoleLog') {{consoleMessages}}
 
     else
         .container.wrapper

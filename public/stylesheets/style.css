@@ -69,19 +69,15 @@ input[type="password"] {
 /*override bootstrap default value*/
 /* For job arguments */
 .pre-scrollable {
-    max-height: 20em;
+    max-height: 12em;
+    word-wrap: break-word;
+    overflow: auto;
 }
 
 /*console panel*/
 #consolePanel {
     max-width: 50em;
     margin: 0 auto;
-}
-
-#consoleLog {
-    max-height: 18em;
-    word-wrap: break-word;
-    overflow: auto;
 }
 
 /* allJobs list */

@@ -137,6 +137,9 @@ egaApp.controller("ProcessShCtrl",
         // initiated by express (process.jade: line 4)
         $scope.job;
 
+        var alertContainer = "#alerts-container";
+        var alertDuration  = 5;
+
         $scope.tooltip = {
             "finish":    "Mark this job as \"Finished\".",
             "operation": "Refresh operations in this job.",
@@ -146,6 +149,16 @@ egaApp.controller("ProcessShCtrl",
         // finish this job
         // Mark the job as finished and all sh files will not be able to be executed.
         $scope.finishOperation = function () {
+            var myAlert = $alert({
+                title:     "You have marked this job as finished!",
+                type:      'success',
+                container: alertContainer,
+                duration:  alertDuration
+            });
+            myAlert.$promise.then(function () {
+                myAlert.show();
+            });
+
             $http.get('/api/processes/' + $scope.job._id + '/finish').success(function (data) {
                 $scope.job = data;
             });
@@ -172,8 +185,8 @@ egaApp.controller("ProcessShCtrl",
                 myAlert = $alert({
                     title:     running_sh.name + " is running",
                     type:      'danger',
-                    container: "#alerts-container",
-                    duration:  5
+                    container: alertContainer,
+                    duration:  alertDuration
                 });
                 myAlert.$promise.then(function () {
                     myAlert.show();
@@ -184,8 +197,8 @@ egaApp.controller("ProcessShCtrl",
                 myAlert = $alert({
                     title:     filename + " isn't available",
                     type:      'danger',
-                    container: "#alerts-container",
-                    duration:  5
+                    container: alertContainer,
+                    duration:  alertDuration
                 });
                 myAlert.$promise.then(function () {
                     myAlert.show();
@@ -203,8 +216,8 @@ egaApp.controller("ProcessShCtrl",
                         myAlert = $alert({
                             title:     filename + " needs " + needed_step.name + " be done first",
                             type:      'danger',
-                            container: "#alerts-container",
-                            duration:  5
+                            container: alertContainer,
+                            duration:  alertDuration
                         });
                         myAlert.$promise.then(function () {
                             myAlert.show();
@@ -217,8 +230,8 @@ egaApp.controller("ProcessShCtrl",
                 myAlert = $alert({
                     title:     filename + " starts",
                     type:      'info',
-                    container: "#alerts-container",
-                    duration:  5
+                    container: alertContainer,
+                    duration:  alertDuration
                 });
                 myAlert.$promise.then(function () {
                     myAlert.show();
