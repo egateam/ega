@@ -88,6 +88,29 @@ node app.js # IMPORTANT! Be sure your cwd is ~/path/to/ega
     * [GNU parallel](http://www.gnu.org/software/parallel/). MacOS's (BSD) `xargs` has some differences from Linux's (GNU).
     * [circos](http://circos.ca/) for presenting paralogous parts.
 
+## Prepare your data
+
+You can just download fasta sequences from NCBI's website. 
+
+NCBI's eutils provide an easy way to download sequences from command line.
+
+```bash
+curl http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=NC_000913&rettype=fasta -o Ecoli_K_12.fa
+curl http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=NC_011750&rettype=fasta -o Ecoli_IAI39.fa
+curl http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=NC_018658&rettype=fasta -o Ecoli_O104_H4.fa
+curl http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=NC_002695&rettype=fasta -o Ecoli_O157_H7.fa
+curl http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=NC_017634&rettype=fasta -o Ecoli_O83_H1.fa
+curl http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=NC_011751&rettype=fasta -o Ecoli_UMN026.fa
+```
+
+If you hate downloading hundreds of genomes or chromosomes manually, 
+check [get_seq.pl](https://github.com/wang-q/withncbi/blob/master/util/get_seq.pl) 
+and [batch_get_seq.pl](https://github.com/wang-q/withncbi/blob/master/util/batch_get_seq.pl). 
+These scripts alse help you naming fasta files.
+
+However, you should be cautious that these scripts depend on [bioperl](https://github.com/bioperl/bioperl-live)
+and [Bio::EUtilities](https://github.com/bioperl/Bio-EUtilities).
+
 ## RESULTS
 
 ### Variations list
@@ -97,9 +120,3 @@ to generate a vcf file containing substitutions and indels.
 It's just a quick and dirty results.
 
 If you want more accurate ones, please check another project from our team [alignDB](https://github.com/wang-q/alignDB).
-
-## Prepare your data
-
-You can just download sequences from NCBI's website. If you hate downloading hundreds of genomes or chromosomes manually, check [get_seq.pl](https://github.com/wang-q/withncbi/blob/master/util/get_seq.pl) and [batch_get_seq.pl](https://github.com/wang-q/withncbi/blob/master/util/batch_get_seq.pl). These scripts alse help you naming fasta files.
-
-However, you should be cautious that these scripts depend on [bioperl](https://github.com/bioperl/bioperl-live) and [NCBI's eutils](https://github.com/bioperl/Bio-EUtilities).
