@@ -90,22 +90,55 @@ node app.js # IMPORTANT! Be sure your cwd is ~/path/to/ega
 
 ## Prepare your data
 
-You can just download fasta sequences from NCBI's website. 
+### Download fasta sequences from NCBI's website. 
+
+There are plenty of tutorials available in the web, such as [this one](https://www.youtube.com/watch?v=qtXf4DstQDU). 
+
+### Download with NCBI etuils
 
 NCBI's eutils provide an easy way to download sequences from command line.
 
 ```bash
-curl http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=NC_000913&rettype=fasta -o Ecoli_K_12.fa
-curl http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=NC_011750&rettype=fasta -o Ecoli_IAI39.fa
-curl http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=NC_018658&rettype=fasta -o Ecoli_O104_H4.fa
-curl http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=NC_002695&rettype=fasta -o Ecoli_O157_H7.fa
-curl http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=NC_017634&rettype=fasta -o Ecoli_O83_H1.fa
-curl http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=NC_011751&rettype=fasta -o Ecoli_UMN026.fa
+wget "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=NC_000913&rettype=fasta" -nc -O Ecoli_K_12.fa
+wget "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=NC_011750&rettype=fasta" -nc -O Ecoli_IAI39.fa
+wget "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=NC_018658&rettype=fasta" -nc -O Ecoli_O104_H4.fa
+wget "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=NC_002695&rettype=fasta" -nc -O Ecoli_O157_H7.fa
+wget "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=NC_017634&rettype=fasta" -nc -O Ecoli_O83_H1.fa
+wget "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=NC_011751&rettype=fasta" -nc -O Ecoli_UMN026.fa
 ```
 
+### More complex command lines
+
+For example, you want all genomes of [*Bacillus subtilis*](http://www.ncbi.nlm.nih.gov/genome/genomes/665) at chromosome level. 
+
+Current (Jan. 2016) number of genomes is 37. But *Bacillus subtilis* subsp. subtilis str. 168 occured three times, so there will be 35 files.
+
+```bash
+mkdir -p ~/Bsub
+cd ~/Bsub
+
+wget -O - 'http://www.ncbi.nlm.nih.gov/genomes/Genome2BE/genome2srv.cgi?action=download&orgn=Bacillus%20subtilis[orgn]&status=50|40|&report=proks&group=--%20All%20Prokaryotes%20--&subgroup=--%20All%20Prokaryotes%20--&format=' \
+    | grep -v '^#' \
+    | cut -f2,11 \
+    | perl -na -F"\t" -e '
+    $F[0] =~ s/\W+/_/g;
+    $F[1] =~ /chromosome:([\w_]+)/;
+    printf q{wget "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=%s&rettype=fasta" -nc -O Bsub_%s.fa}, $1, $F[0];
+    print qq{\n};
+    ' \
+    > download.sh
+    
+bash download.sh
+
+find . -type f -name "*.fa" | xargs gzip
+find . -type f -name "*.fa.gz" | wc -l
+```
+
+### Download with helper scripts
+
 If you hate downloading hundreds of genomes or chromosomes manually, 
-check [get_seq.pl](https://github.com/wang-q/withncbi/blob/master/util/get_seq.pl) 
-and [batch_get_seq.pl](https://github.com/wang-q/withncbi/blob/master/util/batch_get_seq.pl). 
+check [get_seq.pl](https://github.com/wang-q/withncbi/blob/master/taxon/get_seq.pl) 
+and [batch_get_seq.pl](https://github.com/wang-q/withncbi/blob/master/taxon/batch_get_seq.pl). 
 These scripts alse help you naming fasta files.
 
 However, you should be cautious that these scripts depend on [bioperl](https://github.com/bioperl/bioperl-live)
