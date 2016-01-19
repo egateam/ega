@@ -39,8 +39,12 @@ node app.js # IMPORTANT! Be sure your cwd is ~/path/to/ega
 * [Perl](http://www.perl.org/) 5.10.1 or higher.
     * We suggest using [plenv](https://github.com/tokuhirom/plenv).
 
-* Tons of Perl modules.
-    * After you setup `plenv` and `cpanm`, you could check [this script](https://github.com/wang-q/egavm/blob/master/prepare/4-cpanm.sh) for less suffering installation experiences.
+* Perl modules.
+    * After you setup `plenv` and `cpanm`, install a bunch of Perl modules by
+    
+    ```bash
+    cpanm --mirror-only --mirror https://stratopan.com/wangq/ega/full --interactive Task::EGA 
+    ```
 
 * [RepeatMasker](http://www.repeatmasker.org/) and companions.
     * [rmblast](http://www.repeatmasker.org/RMBlast.html)
