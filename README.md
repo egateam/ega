@@ -43,7 +43,7 @@ node app.js # IMPORTANT! Be sure your cwd is ~/path/to/ega
     * After you setup `plenv` and `cpanm`, install a bunch of Perl modules by
     
     ```bash
-    cpanm --mirror-only --mirror https://stratopan.com/wangq/ega/full --interactive Task::EGA 
+    cpanm --mirror-only --mirror https://stratopan.com/wangq/ega/full Task::EGA 
     ```
 
 * [RepeatMasker](http://www.repeatmasker.org/) and companions.
