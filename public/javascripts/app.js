@@ -164,12 +164,16 @@ egaApp.controller("ProcessShCtrl",
             });
         };
 
-        // refresh status manually
+        // refresh status manually then automatically
         $scope.refreshOperation = function () {
             $http.get('/api/processes/' + $scope.job._id + '/refresh').success(function (data) {
                 $scope.job = data;
             });
 
+            // http://stackoverflow.com/a/33273106
+            $timeout(function () {
+                $scope.refreshOperation();
+            }, 300 * 1000);
         };
 
         // run bash operation
