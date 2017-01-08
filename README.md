@@ -4,7 +4,7 @@ This repository is the web interface of the ega suite.
 
 ## REQUIREMENTS: Software
 
-EGA runs under recent versions of Linux or Mac OSX.
+EGA runs under recent versions of Linux or macOS.
 
 ### Web interface
 
@@ -12,7 +12,7 @@ EGA use [Node.js](https://nodejs.org/) as web server.
 
 Two database backends are also required.
 
-* [mongodb](http://www.mongodb.org/). 
+* [mongodb](http://www.mongodb.org/)
 * [redis](http://redis.io/)
 
 Run following commands run ega.
@@ -34,7 +34,7 @@ cp seetings.js.example settings.js
 node app.js # IMPORTANT! Be sure your cwd is ~/path/to/ega
 ```
 
-### Major components: [egaz](https://github.com/wang-q/egaz) and [egas](https://github.com/wang-q/egas)
+### The real backend - [egaz](https://github.com/wang-q/egaz)
 
 * [Perl](http://www.perl.org/) 5.10.1 or higher.
     * We suggest using [plenv](https://github.com/tokuhirom/plenv).
@@ -54,7 +54,7 @@ node app.js # IMPORTANT! Be sure your cwd is ~/path/to/ega
 * Genomic aligning programs.
     * [lastz](http://www.bx.psu.edu/~rsharris/lastz/)
     * [multiz](http://www.bx.psu.edu/miller_lab/dist/multiz-tba.012109.tar.gz)
-        * We use [a modified version](https://github.com/wang-q/multiz) supporting gzipped files.
+        * We use [a modified version](https://github.com/wang-q/multiz) which supports gzipped files.
     * [Jim Kent's userApp](http://hgdownload.cse.ucsc.edu/admin/exe/)
         * axtChain
         * axtSort
@@ -80,7 +80,6 @@ node app.js # IMPORTANT! Be sure your cwd is ~/path/to/ega
 
 * Phylogenetic programs.
     * [raxml](http://sco.h-its.org/exelixis/web/software/raxml/index.html)
-    * [Newick Utilities](http://cegg.unige.ch/newick_utils)
 
 * [NCBI blast+](http://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)
 
@@ -89,7 +88,7 @@ node app.js # IMPORTANT! Be sure your cwd is ~/path/to/ega
     * [fasops](https://github.com/wang-q/App-Fasops). Manipulate blocked fasta files.
     * [runlist](https://github.com/wang-q/App-RL). Chromosome coverages.
     * [sparseMEM](http://compbio.cs.princeton.edu/mems/). Finding exact matches in genome.
-    * [GNU parallel](http://www.gnu.org/software/parallel/). MacOS's (BSD) `xargs` has some differences from Linux's (GNU).
+    * [GNU parallel](http://www.gnu.org/software/parallel/). macOS's (BSD) `xargs` has some differences from Linux's (GNU).
     * [circos](http://circos.ca/) for presenting paralogous parts.
 
 ## Prepare your data
